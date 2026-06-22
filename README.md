@@ -39,22 +39,33 @@ And then we looked at the bill.
 
 ## The Numbers
 
-**One day of heavy agent work. Real logs, not estimates.**
+**One day of heavy agent work. Direct from the billing dashboard.**
 
-June 21, 2026: 2,045 API calls. 237 million tokens (236M input, 850K output). Two agents running full throttle — building, deploying, debugging, voice tuning, workspace construction.
+June 21, 2026 — DeepSeek V4 Pro:
 
-**What those same tokens cost — same volume, same day:**
+| | Tokens |
+|---|---|
+| Total | **1,517,526,985** |
+| Cache hit (97.5%) | 1,473,037,184 |
+| Cache miss | 37,383,843 |
+| Output | 7,105,958 |
 
-| Platform | Input (237M) | Output (850K) | **Total** |
-|----------|-------------|---------------|-----------|
-| **CEM888** | — | — | **$16** |
-| Gemini 2.5 Pro | $296 | $9 | **$305** |
-| Claude Opus 4.8 | $1,185 | $21 | **$1,206** |
-| GPT-5.5 | $1,185 | $26 | **$1,211** |
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CEM888AI/cem888/main/deepseek-usage-june21.png" alt="DeepSeek Platform — June 21 Usage" width="100%" />
+</p>
 
-*Pricing at published API rates as of June 2026. CEM888 uses DeepSeek V4 Pro direct.*
+**What 1.5B tokens cost — with caching on every platform:**
 
-**75× less than Claude. 19× less than Gemini. Every single day.**
+| Platform | Cache Hit (1,473M) | Cache Miss (37M) | Output (7.1M) | **Total** |
+|----------|-------------------|------------------|---------------|-----------|
+| **CEM888** | — | — | — | **$16** |
+| Gemini 2.5 Pro | $184 | $47 | $71 | **$302** |
+| Claude Opus 4.8 | $737 | $187 | $178 | **$1,101** |
+| GPT-5.5 | $737 | $187 | $213 | **$1,137** |
+
+*All platforms: published API rates with prompt caching applied. 97.5% cache hit rate used uniformly. Claude cache read: $0.50/M (90% off). GPT-5.5 cache read: $0.50/M (90% off). Gemini cache read: $0.125/M (90% off). Sources: anthropic.com/pricing, openai.com/api/pricing, ai.google.dev/pricing — June 2026.*
+
+**69× less than Claude. 71× less than GPT-5.5. Every single day.**
 
 ---
 
