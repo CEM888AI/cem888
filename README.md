@@ -58,20 +58,20 @@ June 21, 2026 — DeepSeek V4 Pro:
 
 | Platform | Cache Hit (1,473M) | Cache Miss (37M) | Output (7.1M) | **Total** |
 |----------|-------------------|------------------|---------------|-----------|
-| **CEM888** | — | — | — | **$16** |
+| **CEM888** | — | — | — | **$14.45** |
 | Gemini 2.5 Pro | $184 | $47 | $71 | **$302** |
 | Claude Opus 4.8 | $737 | $187 | $178 | **$1,101** |
 | GPT-5.5 | $737 | $187 | $213 | **$1,137** |
 
 *All platforms: published API rates with prompt caching applied. 97.5% cache hit rate used uniformly. Claude cache read: $0.50/M (90% off). GPT-5.5 cache read: $0.50/M (90% off). Gemini cache read: $0.125/M (90% off). Sources: anthropic.com/pricing, openai.com/api/pricing, ai.google.dev/pricing — June 2026.*
 
-**69× less than Claude. 71× less than GPT-5.5. Every single day.**
+**69× less than Claude. 76× less than GPT-5.5. For $14.45.**
 
 ---
 
 ## This Changes Things
 
-When agents cost $16 a day instead of $1,200 — they don't sleep. They don't take breaks. They keep iterating while you walk the dog.
+When agents cost $14 a day instead of $1,100 — they don't sleep. They don't take breaks. They keep iterating while you walk the dog.
 
 We're not selling AI. We're selling what happens when AI becomes too cheap to meter.
 
