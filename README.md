@@ -24,14 +24,14 @@ We pointed two AI agents at a problem and they built for seven days. One buildin
 </p>
 
 <p align="center">
-  <img src="https://cem888.ai/images/dashboard.png" alt="Portal Chat" width="100%" />
+  <img src="https://raw.githubusercontent.com/CEM888AI/cem888/main/sovereign-gateway.png" alt="Sovereign Gateway" width="100%" />
 </p>
 
 <p align="center">
-  <img src="https://cem888.ai/images/workspace.png" alt="Workspace" width="100%" />
+  <img src="https://raw.githubusercontent.com/CEM888AI/cem888/main/portal-chat.png" alt="Portal Chat" width="100%" />
 </p>
 
-They built an entire sovereign AI platform. Portal chat. Agent workspace. Community marketplace. Profile and billing. Voice. Mobile app. Desktop control. Smart glasses integration. Installers for every platform.
+They built an entire sovereign AI platform. Immersive sovereign gateway. Portal chat. Agent workspace. Community marketplace. Profile and billing. Voice. Mobile app. Desktop control. Smart glasses integration. Installers for every platform.
 
 And then we looked at the bill.
 
