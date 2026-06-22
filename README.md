@@ -39,24 +39,28 @@ And then we looked at the bill.
 
 ## The Numbers
 
-Two agents. Full throttle. 15 hours. Building, deploying, debugging, benchmarking.
+**One day of heavy agent work. Real logs, not estimates.**
 
-**987 million tokens processed.**
+June 21, 2026: 2,045 API calls. 237 million tokens (236M input, 850K output). Two agents running full throttle — building, deploying, debugging, voice tuning, workspace construction.
 
-| Platform | Would Have Cost |
-|----------|----------------|
-| Gemini 2.5 Pro | $1,289 |
-| GPT-5 | $15,469 |
-| Claude Opus 4.8 | $15,691 |
-| **CEM888** | **$16** |
+**What those same tokens cost — same volume, same day:**
 
-**981× less than Claude Opus. For the same work.**
+| Platform | Input (237M) | Output (850K) | **Total** |
+|----------|-------------|---------------|-----------|
+| **CEM888** | — | — | **$16** |
+| Gemini 2.5 Pro | $296 | $9 | **$305** |
+| Claude Opus 4.8 | $1,185 | $21 | **$1,206** |
+| GPT-5.5 | $1,185 | $26 | **$1,211** |
+
+*Pricing at published API rates as of June 2026. CEM888 uses DeepSeek V4 Pro direct.*
+
+**75× less than Claude. 19× less than Gemini. Every single day.**
 
 ---
 
 ## This Changes Things
 
-When agents cost $16 a day instead of $16,000 — they don't sleep. They don't take breaks. They keep iterating while you walk the dog.
+When agents cost $16 a day instead of $1,200 — they don't sleep. They don't take breaks. They keep iterating while you walk the dog.
 
 We're not selling AI. We're selling what happens when AI becomes too cheap to meter.
 
