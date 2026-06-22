@@ -20,6 +20,10 @@
 We pointed two AI agents at a problem and they built for seven days. One building and deploying, the other benchmarking and debugging. Around the clock. One human directing — the agents executing.
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/CEM888AI/cem888/main/landing.png" alt="Landing Page" width="100%" />
+</p>
+
+<p align="center">
   <img src="https://cem888.ai/images/dashboard.png" alt="Portal Chat" width="100%" />
 </p>
 
