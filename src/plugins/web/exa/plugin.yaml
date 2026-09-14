@@ -1,0 +1,7 @@
+name: Exa Search
+version: "1.0.0"
+description: >-
+  Web search and page extraction via Exa. Requires EXA_API_KEY. Supports both
+  search and extract.
+author: CEM888.AI
+kind: backend

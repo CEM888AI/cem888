@@ -1,0 +1,7 @@
+name: Brave Search (Free)
+version: "1.0.0"
+description: >-
+  Web search via Brave Search. Requires BRAVE_SEARCH_API_KEY. Search only:
+  this provider cannot extract page content.
+author: CEM888.AI
+kind: backend

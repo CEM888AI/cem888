@@ -1,0 +1,7 @@
+name: xAI Search
+version: "1.0.0"
+description: >-
+  Web search via xAI's built-in search. Requires XAI_API_KEY. Search only:
+  this provider cannot extract page content.
+author: CEM888.AI
+kind: backend

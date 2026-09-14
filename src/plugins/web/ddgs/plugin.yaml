@@ -1,0 +1,7 @@
+name: DuckDuckGo Search
+version: "1.0.0"
+description: >-
+  Keyless web search via the community ddgs package (DuckDuckGo HTML results).
+  No API key required. Search only: this provider cannot extract page content.
+author: CEM888.AI
+kind: backend

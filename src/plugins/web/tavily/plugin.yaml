@@ -1,0 +1,7 @@
+name: Tavily Search
+version: "1.0.0"
+description: >-
+  Web search and page extraction via Tavily. Requires TAVILY_API_KEY. Supports
+  both search and extract.
+author: CEM888.AI
+kind: backend
