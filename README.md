@@ -11,16 +11,20 @@
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
 [![MemoryAgentBench AR](https://img.shields.io/badge/MemoryAgentBench_AR-99.9%25-1f6feb?style=flat-square)](https://github.com/CEM888AI/benchmarks)
 [![Local-first](https://img.shields.io/badge/local--first-your_machine-238636?style=flat-square)](https://cem888.ai)
-[![Public beta](https://img.shields.io/badge/public_beta-v1.0.3-orange?style=flat-square)](#install)
-[![Python](https://img.shields.io/badge/python-3.14-3776ab?style=flat-square)](#install)
+[![Public beta](https://img.shields.io/badge/public_beta-v1.0.3-orange?style=flat-square)](#get-cem888)
+[![Python](https://img.shields.io/badge/python-3.14-3776ab?style=flat-square)](#get-cem888)
 
-**⭐ Star this repo** · **[cem888.ai](https://cem888.ai)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
+**⭐ Star this repo** · **[⬇️ Install](#get-cem888)** · **[🚀 Hosted account](https://cem888.ai/register.html)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
 
 </div>
 
 ---
 
-## Install
+## Get CEM888
+
+Two ways in. Both give you the same runtime.
+
+### 1. Self-host — free, open source
 
 Requires **CPython 3.14**.
 
@@ -30,7 +34,15 @@ cd cem888
 pip install -e .
 ```
 
-Then point it at any model provider — Claude, GPT, DeepSeek, Gemini, or a fully local model — using your own keys. Nothing phones home; no central server holds your state.
+Point it at any provider — Claude, GPT, DeepSeek, Gemini, or a fully local model — using your own keys. Nothing phones home; no central server holds your state. No account required, ever.
+
+### 2. Hosted account — managed, nothing to run
+
+**→ [Create your account](https://cem888.ai/register.html)**
+
+Same runtime, hosted and managed, if you'd rather not operate it yourself. Agents, memory and verification without standing up infrastructure.
+
+---
 
 Source provenance, including the rebuild digests, is in [PROVENANCE.md](./PROVENANCE.md).
 
