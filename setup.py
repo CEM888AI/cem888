@@ -19,9 +19,9 @@ TOP_LEVEL_MODULES = [
 setup(
     name="cem888-agent",
     version="1.0.3",
-    description="CEM888 customer runtime",
-    author="CEM888.AI",
-    author_email="hello@cem888.ai",
+    description="CEM888 — local-first, model-agnostic agent runtime (public beta)",
+    author="CEM888",
+    author_email="creator@cem888.ai",
     url="https://cem888.ai",
     package_dir={"": "src"},
     packages=find_packages("src"),

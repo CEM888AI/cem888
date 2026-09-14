@@ -4,12 +4,14 @@
 
 ### Tell your agents once.
 
+*First public beta — September 2026*
+
 **STATE decides what is true. MODELS decide what to do about it.**
 
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
 [![MemoryAgentBench AR](https://img.shields.io/badge/MemoryAgentBench_AR-99.9%25-1f6feb?style=flat-square)](https://github.com/CEM888AI/benchmarks)
 [![Local-first](https://img.shields.io/badge/local--first-your_machine-238636?style=flat-square)](https://cem888.ai)
-[![Release](https://img.shields.io/badge/release-v1.0.3-238636?style=flat-square)](https://github.com/CEM888AI/cem888)
+[![Public beta](https://img.shields.io/badge/public_beta-v1.0.3-orange?style=flat-square)](#install)
 [![Python](https://img.shields.io/badge/python-3.14-3776ab?style=flat-square)](#install)
 
 **⭐ Star this repo** · **[cem888.ai](https://cem888.ai)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
@@ -32,7 +34,13 @@ Then point it at any model provider — Claude, GPT, DeepSeek, Gemini, or a full
 
 Source provenance, including the rebuild digests, is in [PROVENANCE.md](./PROVENANCE.md).
 
-**Released:** community runtime `v1.0.3`, AGPL-3.0, September 14 2026.
+**This is the first public release — a beta.** `v1.0.3`, AGPL-3.0, September 14 2026.
+
+Expect rough edges: packaging is minimal, the API surface may change between
+releases, and there is one maintainer. It runs, and the evidence below is real,
+but don't put it under anything load-bearing yet without reading the code.
+
+Bug reports are the most useful thing you can give me right now — [open an issue](https://github.com/CEM888AI/cem888/issues).
 
 ## The problem
 
