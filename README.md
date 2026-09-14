@@ -14,7 +14,7 @@
 [![Public beta](https://img.shields.io/badge/public_beta-v1.0.3-orange?style=flat-square)](#get-cem888)
 [![Python](https://img.shields.io/badge/python-3.14-3776ab?style=flat-square)](#get-cem888)
 
-**⭐ Star this repo** · **[⬇️ Install](#get-cem888)** · **[🚀 Hosted account](https://cem888.ai/register.html)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
+**⭐ Star this repo** · **[⬇️ Install](#get-cem888)** · **[🚀 Create account](https://cem888.ai/register.html)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
 
 </div>
 
@@ -22,9 +22,9 @@
 
 ## Get CEM888
 
-Two ways in. Both give you the same runtime.
+The runtime is free and open source. An account adds the dashboard, extra agents, and integrations on top of it.
 
-### 1. Self-host — free, open source
+### 1. Install the runtime — free, open source
 
 Requires **CPython 3.14**.
 
@@ -36,11 +36,18 @@ pip install -e .
 
 Point it at any provider — Claude, GPT, DeepSeek, Gemini, or a fully local model — using your own keys. Nothing phones home; no central server holds your state. No account required, ever.
 
-### 2. Hosted account — managed, nothing to run
+### 2. Create an account — dashboard, more agents, integrations
 
 **→ [Create your account](https://cem888.ai/register.html)**
 
-Same runtime, hosted and managed, if you'd rather not operate it yourself. Agents, memory and verification without standing up infrastructure.
+The runtime above is yours to run without an account. An account adds the things that live around it:
+
+- **Dashboard** — talk to your agents from a Matrix-based chat interface instead of a terminal
+- **More agents** — download additional agents beyond what ships in this repo
+- **Integrations and plugins** — connect the tools your agents actually work in
+- **Sign back in** — your setup is still there on a new machine, or after you've been away
+
+Free to create. Your state still lives locally; the account is how you reach and manage it.
 
 ---
 
