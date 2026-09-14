@@ -9,19 +9,30 @@
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
 [![MemoryAgentBench AR](https://img.shields.io/badge/MemoryAgentBench_AR-99.9%25-1f6feb?style=flat-square)](https://github.com/CEM888AI/benchmarks)
 [![Local-first](https://img.shields.io/badge/local--first-your_machine-238636?style=flat-square)](https://cem888.ai)
-[![Status](https://img.shields.io/badge/status-pre--release-orange?style=flat-square)](#status)
+[![Release](https://img.shields.io/badge/release-v1.0.3-238636?style=flat-square)](https://github.com/CEM888AI/cem888)
+[![Python](https://img.shields.io/badge/python-3.14-3776ab?style=flat-square)](#install)
 
-**⭐ Star this repo** to get the release · **[cem888.ai](https://cem888.ai)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
+**⭐ Star this repo** · **[cem888.ai](https://cem888.ai)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
 
 </div>
 
 ---
 
-## Status
+## Install
 
-**The source is not published yet.** This repository is the home of the CEM888 runtime and where the first AGPL-3.0 release will land. It's public now so there is one clear address to watch, star, and point at.
+Requires **CPython 3.14**.
 
-Star it and you'll see the release when it happens. Everything below is verifiable today.
+```bash
+git clone https://github.com/CEM888AI/cem888.git
+cd cem888
+pip install -e .
+```
+
+Then point it at any model provider — Claude, GPT, DeepSeek, Gemini, or a fully local model — using your own keys. Nothing phones home; no central server holds your state.
+
+Source provenance, including the rebuild digests, is in [PROVENANCE.md](./PROVENANCE.md).
+
+**Released:** community runtime `v1.0.3`, AGPL-3.0, September 14 2026.
 
 ## The problem
 
@@ -52,7 +63,7 @@ Memory is necessary and not sufficient. An agent that remembers perfectly can st
 - **Provider-neutral execution** — same runtime behind Claude, GPT, DeepSeek, Gemini, or local. Swapping the model doesn't reset the agent
 - **Failure containment** — retries, duplicate completions, and exactly-once semantics handled as a lifecycle problem, not left to model discretion
 
-## Evidence you can check right now
+## Evidence
 
 | Measurement | Result |
 |---|---|
