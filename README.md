@@ -1,51 +1,120 @@
-# CEM888 — Sovereign, Provider-Neutral Agent Runtime
+<div align="center">
 
-**State decides what is true. Models decide what to do about it.**
+# CEM888
 
-CEM888 is a local-first state and control layer that runs underneath AI agents: deterministic memory, tool governance, and verification, with the reasoning model treated as a replaceable driver rather than the source of truth. The goal is agents — on Claude, GPT, DeepSeek, Gemini, or a fully local model — that behave reliably over long-running, multi-session work instead of drifting, over-calling tools, or reporting completion that never happened.
+### Tell your agents once.
 
-> Part of **[CEM888.AI](https://github.com/CEM888AI)** · profile and evidence index: **[CEM888AI](https://github.com/CEM888AI/CEM888AI)**
+**STATE decides what is true. MODELS decide what to do about it.**
+
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
+[![MemoryAgentBench AR](https://img.shields.io/badge/MemoryAgentBench_AR-99.9%25-1f6feb?style=flat-square)](https://github.com/CEM888AI/benchmarks)
+[![Local-first](https://img.shields.io/badge/local--first-your_machine-238636?style=flat-square)](https://cem888.ai)
+[![Status](https://img.shields.io/badge/status-pre--release-orange?style=flat-square)](#status)
+
+**⭐ Star this repo** to get the release · **[cem888.ai](https://cem888.ai)** · **[💗 Sponsor](https://ko-fi.com/cem888ai)**
+
+</div>
+
+---
+
+## Status
+
+**The source is not published yet.** This repository is the home of the CEM888 runtime and where the first AGPL-3.0 release will land. It's public now so there is one clear address to watch, star, and point at.
+
+Star it and you'll see the release when it happens. Everything below is verifiable today.
 
 ## The problem
 
-Most agent frameworks let the model hold the state: what happened, what's true right now, whether a task actually finished. That means every new session starts blind, every provider swap resets context, and "the agent said it's done" is the only completion signal you get. CEM888 inverts that: an external, deterministic runtime owns state, memory, and verification; the model is called in to reason and act, and its output is checked against that state rather than trusted at face value.
+Your agent forgets. Every new session starts blind. Switch models and the work resets. And when it reports "done," the only evidence you have is that it said so.
 
-## What's different about the architecture
+That happens because almost every agent framework lets the **model** hold the state — what happened, what's true now, whether the task finished. Models are stochastic and their context windows are finite. Putting the ledger inside them is the architectural mistake.
 
-- **Deterministic state authority** — a runtime-owned record of what's true, independent of any one model's context window or recollection of the conversation
-- **Minimal Sufficient Context (MSCC) compilation** — a small, bounded context packet is compiled for each turn instead of replaying growing conversation history into the model
-- **Tool governance / action authority** — the model proposes actions; a separate authority layer decides whether they're allowed to run, and at what scope
-- **Deterministic verification & completion receipts** — a claim of "done" is checked against evidence (file diffs, executed commands, recorded state changes), not accepted because the model asserted it
-- **Provider-neutral execution** — the same runtime and state layer runs behind Claude, GPT, DeepSeek, Gemini, or a fully local model; swapping the model doesn't reset the agent's state
-- **Failure containment, retry, and exactly-once semantics** — turns, retries, and duplicate completions are handled as a lifecycle problem, not left to model discretion
-- **Local-first, BYOK execution** — each agent runs on its owner's own machine against their own model access; there is no central server holding customer state
+CEM888 takes it out. Identity, state, continuity, authority, retrieval, execution control, and verification live **outside** the model in a deterministic runtime. The model is called in to reason and act, and its output is checked against runtime state rather than trusted at face value. Swap Claude for GPT for DeepSeek for a fully local model mid-project — the agent keeps its state, its permissions, and its work.
 
-Full write-ups with real before/after measurements → **[runtime-case-studies](https://github.com/CEM888AI/runtime-case-studies)**
+It runs on your machine, against your own model keys. No central server holds your state.
 
-## In numbers
+## Where this sits
 
-- **99.9%** (1,998/2,000) on MemoryAgentBench AR, live agent, no answer-key access — next-best published score on the same benchmark is 71.8%. [Full result →](https://github.com/CEM888AI/benchmarks)
-- A runaway **207-message** context window, caused by a backward-search anchoring bug, bounded down to a **1,010-token** task-relevant context packet. [Case study →](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-context-window-bounding.md)
-- A live workflow cut from **4 model calls / 25.6s** to **1 model call / 15.7s** by scoping the tool schema surface to what the turn actually needed, out of 84 registered tools (~29.3K schema tokens). [Case study →](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-tool-schema-scoping.md)
+| | What it does | Who holds authority | Runs where |
+|---|---|---|---|
+| **Memory layers** (Mem0, Zep, Graphiti) | Store and retrieve facts for the model | The model | Cloud-managed, self-host option |
+| **Stateful runtimes** (Letta / MemGPT) | Model self-edits tiered memory blocks | The model | Cloud-managed, self-host option |
+| **CEM888** | Runtime owns state, governs tool access, verifies completion against evidence | **The runtime** | **Local-first, your keys** |
 
-## Evidence
+Memory is necessary and not sufficient. An agent that remembers perfectly can still call the wrong tool, exceed its scope, or report a task complete that never ran. CEM888 treats state, authority, and verification as one control layer.
 
-| What | Where |
+## How it works
+
+- **Deterministic state authority** — a runtime-owned record of what's true, independent of any model's context window
+- **Minimal Sufficient Context compilation** — a small bounded packet compiled per turn, instead of replaying growing history into the model
+- **Tool governance** — the model *proposes* actions; a separate authority layer decides whether they run, and at what scope
+- **Verification receipts** — "done" is checked against evidence: file diffs, executed commands, recorded state changes
+- **Provider-neutral execution** — same runtime behind Claude, GPT, DeepSeek, Gemini, or local. Swapping the model doesn't reset the agent
+- **Failure containment** — retries, duplicate completions, and exactly-once semantics handled as a lifecycle problem, not left to model discretion
+
+## Evidence you can check right now
+
+| Measurement | Result |
 |---|---|
-| Memory retrieval benchmarks — raw data, reproducible, sourced | [CEM888AI/benchmarks](https://github.com/CEM888AI/benchmarks) |
-| Engineering case studies — problem → root cause → fix → measurement | [CEM888AI/runtime-case-studies](https://github.com/CEM888AI/runtime-case-studies) |
-| Reliability & control-layer evidence from production runs | [CEM888AI/agent-systems-lab](https://github.com/CEM888AI/agent-systems-lab) |
-| Terms, Privacy, EULA, IP documents | [CEM888AI/legal](https://github.com/CEM888AI/legal) |
-| Conceptual architecture | [runtime-case-studies/architecture.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/architecture.md) |
-| Live product | [cem888.ai](https://cem888.ai) |
-| Agent interview demo | [cem888.ai/agent-interviews.html](https://cem888.ai/agent-interviews.html) |
+| MemoryAgentBench AR — live agent, no answer-key access | **99.9%** (1,998/2,000) · next-best published: **71.8%** · [raw data →](https://github.com/CEM888AI/benchmarks) |
+| Runaway context from a backward-search anchoring bug | **207 messages → 1,010-token** bounded packet · [case study →](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-context-window-bounding.md) |
+| Workflow with tool-schema surface scoped per turn | **4 calls / 25.6s → 1 call / 15.7s**, from 84 tools (~29.3K schema tokens) · [case study →](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-tool-schema-scoping.md) |
 
-## Why the engine itself isn't here
+| | |
+|---|---|
+| **Benchmarks** — raw, reproducible, sourced | [CEM888AI/benchmarks](https://github.com/CEM888AI/benchmarks) |
+| **Engineering case studies** — problem → root cause → fix → measurement | [CEM888AI/runtime-case-studies](https://github.com/CEM888AI/runtime-case-studies) |
+| **Production reliability evidence** | [CEM888AI/agent-systems-lab](https://github.com/CEM888AI/agent-systems-lab) |
+| **Architecture** | [architecture.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/architecture.md) |
+| **Terms, Privacy, EULA, IP** | [CEM888AI/legal](https://github.com/CEM888AI/legal) |
 
-CEM888's runtime internals, memory indexing, tool-governance logic, and provider routing are proprietary and stay private. What's public here is the evidence: benchmarks with raw, reproducible data, and case studies with real measurements from the running system — without shipping the implementation that produces them. See [runtime-case-studies](https://github.com/CEM888AI/runtime-case-studies) for exactly what's shown and what's intentionally withheld.
+The case studies include the failures and root causes, not just the wins. Read those before trusting any of the numbers.
 
-## About
+## License
 
-Built solo by **Chandler Morone** — self-taught engineer, founder of CEM888. Background before software: dressage trainer, TIG fabricator, self-taught builder of cars, motorcycles, and businesses. Building CEM888 full-time, using AI coding agents as engineering labor while owning the architecture, debugging, acceptance criteria, and system design directly — that division of labor is part of the engineering story, not something hidden behind it. More: [runtime-case-studies/about.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/about.md)
+**Community lane — AGPL-3.0.** Individuals, builders, startups, and companies may use and build on CEM888, including commercially, provided they comply with AGPL-3.0.
 
-→ [cem888.ai](https://cem888.ai) · creator@cem888.ai
+**Commercial lane — negotiated paid license.** Required to keep a CEM888-based implementation proprietary: embedding, white-labeling, reselling, redistributing, or offering it as part of a closed product or hosted service without AGPL obligations. The trigger is proprietary use or distribution that doesn't comply with AGPL — not company size.
+
+→ **[creator@cem888.ai](mailto:creator@cem888.ai)**
+
+## Enterprise
+
+1. **Commercial licensing** — embed CEM888 in a proprietary product
+2. **Private / on-prem integration** — CEM888 inside your environment, your models, your compliance boundary
+3. **Custom builds** — agent runtimes for workloads where losing state, or trusting an unverified completion, is expensive
+
+→ **[creator@cem888.ai](mailto:creator@cem888.ai)**
+
+## Support this work
+
+I'm Chandler Morone. I build CEM888 alone, and I paid for it myself.
+
+My background isn't a CS degree — it's dressage, TIG welding, CNC programming, and reading blueprints against what metal actually does under heat. Work where a bad weld doesn't throw an exception; it fails in someone's hands. That's the mindset underneath this runtime: verify the claim, don't trust the report.
+
+I sold my dressage horse to keep building. That funded the runtime. It doesn't fund what comes next.
+
+Agent infrastructure is consolidating into a handful of clouds that own your state and your lock-in. Local-first is the alternative, and it needs to exist before that window closes.
+
+→ **[Ko-fi](https://ko-fi.com/cem888ai)** · [One-time](https://donate.stripe.com/cNi28q5WA3l4bVQaqnfbq02) · [Monthly](https://donate.stripe.com/6oU14m3Os3l47FA41Zfbq03)
+
+| Tier | Monthly | |
+|---|---|---|
+| **Supporter** | $5 | Name in SPONSORS.md — you keep the benchmarks running |
+| **Backer** | $25 | Build log: what shipped, what broke, what it cost |
+| **Believer** | $100 | Early access to releases |
+| **Company** | $500 | Logo here and on cem888.ai |
+
+Sponsorship pays for model API and compute on the benchmark suite, packaging and security review, and hours on the runtime instead of contract work.
+
+**Sponsorship is not a commercial license.** It purchases no license, no support agreement, and no equity. Commercial licensing is a separate conversation — [creator@cem888.ai](mailto:creator@cem888.ai).
+
+---
+
+<div align="center">
+
+**[cem888.ai](https://cem888.ai)** · [creator@cem888.ai](mailto:creator@cem888.ai) · [LinkedIn](https://linkedin.com/in/chandler-morone-a8010174)
+
+**⭐ Star this repo** — that's what gets CEM888 in front of the next person.
+
+</div>
