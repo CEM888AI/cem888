@@ -1,0 +1,21 @@
+# CEM888 funding configuration.
+#
+# CEM888 is free and open source (AGPL-3.0) and stays free whether or not
+# anyone funds it. Nothing here gates access to the software.
+#
+# The "Sponsor" button on github.com/CEM888AI/cem888 is generated from THIS
+# file, and this file must sit on the repository's DEFAULT BRANCH.
+#
+# GitHub Sponsors: NOT ENABLED. github.com/sponsors/CEM888AI 302-redirects to
+# the profile because the account has not completed Sponsors enrollment
+# (agreement + bank + tax onboarding). Uncomment ONLY after enrollment lands:
+# github: [CEM888AI]
+
+custom:
+  # Direct payment links. Click Sponsor -> money moves. These are Stripe
+  # Payment Links that are already live, so no enrollment is required and
+  # GitHub takes no cut of them.
+  - "https://donate.stripe.com/6oU14m3Os3l47FA41Zfbq03"   # sponsor monthly
+  - "https://donate.stripe.com/cNi28q5WA3l4bVQaqnfbq02"   # give once
+  # Funding hub: what the money is used for, plus the other optional lanes.
+  - "https://cem888.ai/support.html"
