@@ -22,32 +22,36 @@
 
 ## Get CEM888
 
-The runtime is free and open source. An account adds the dashboard, extra agents, and integrations on top of it.
+> **IMPORTANT: The supported CEM888 user installation flow starts at [cem888.ai](https://cem888.ai) — not by cloning this repository.**
 
-### 1. Install the runtime — free, open source
+CEM888 is open source, local-first, and free to use. The public GitHub repository exists so people can inspect, audit, contribute to, and develop the source. **It is not the supported end-user installer.**
 
-Requires **CPython 3.14**.
+### Supported user installation
 
-```bash
-git clone https://github.com/CEM888AI/cem888.git
-cd cem888
-pip install -e .
-```
+If you want to use CEM888 as a user:
 
-Point it at any provider — Claude, GPT, DeepSeek, Gemini, or a fully local model — using your own keys. Nothing phones home; no central server holds your state. No account required, ever.
+1. **Create a free account at [cem888.ai](https://cem888.ai/register.html).**
+2. Create/configure your agent in the CEM888 account flow.
+3. Generate the authenticated installer for your machine.
+4. Run that installer locally. Your agent state remains local to your machine.
 
-### 2. Create an account — dashboard, more agents, integrations
+**→ [Create your free CEM888 account](https://cem888.ai/register.html)**
 
-**→ [Create your account](https://cem888.ai/register.html)**
+This is the supported beta onboarding path and the path that should be used for installation testing and evaluation.
 
-The runtime above is yours to run without an account. An account adds the things that live around it:
+### What this GitHub repository is for
 
-- **Dashboard** — talk to your agents from a Matrix-based chat interface instead of a terminal
-- **More agents** — download additional agents beyond what ships in this repo
-- **Integrations and plugins** — connect the tools your agents actually work in
-- **Sign back in** — your setup is still there on a new machine, or after you've been away
+This repository is the **source repository** for CEM888. It is published for:
 
-Free to create. Your state still lives locally; the account is how you reach and manage it.
+- source inspection and auditing
+- security and architecture review
+- contributions and development
+- forking and self-directed source builds
+- reproducible engineering evidence
+
+**Cloning this repository or running `pip install -e .` is not the supported customer installation flow and does not replace the account-generated installer.**
+
+Developers may intentionally work from source, but source/development setup is a separate path from supported user onboarding. If you are evaluating the normal user experience, start at **[cem888.ai](https://cem888.ai)**.
 
 ---
 
