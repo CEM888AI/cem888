@@ -123,6 +123,8 @@ Durable state lets work survive fresh sessions, restarts, model changes, and hos
 
 Models propose actions. Runtime state and scope determine whether consequential execution is allowed.
 
+Explicit owner prohibitions constrain **both** sides of the loop: prohibited/superseded material must not be surfaced as current authoritative working state, and attempts to operationalize it through a CEM-controlled action boundary are blocked before execution. A connected model cannot restore permission merely through semantic similarity, stale memory, alternate wording, or a generic instruction to "finish it." Only explicit owner authorization can narrow or revoke the prohibition.
+
 ### Verification + receipts
 
 A model saying “done” is not the same thing as observable proof. CEM888 can evaluate outcomes against runtime-visible evidence and record structured result states / receipts.
