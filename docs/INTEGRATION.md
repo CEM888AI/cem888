@@ -62,6 +62,8 @@ For protected/consequential actions, inability to load or evaluate prohibition a
 
 External hosts such as Claude, ChatGPT, Codex, and future adapters consume the same CEM888 authority state. CEM888 can guarantee a hard block only where the proposed action crosses an enforceable CEM-controlled boundary. Hosts without such a boundary must be labeled PARTIAL or HOST-RESTRICTED for that capability.
 
+The same prohibition also governs **retrieval/current-state assembly**. Material that conflicts with an active owner prohibition may remain available as provenance or explicitly historical/superseded evidence, but it must not be promoted back into the model's current authoritative working packet merely because it is relevant, similar, old code, or convenient. Certification of a hard-NO capability therefore requires two falsifiers: the prohibited material is not presented as current truth, and an attempted prohibited action is refused before execution.
+
 ## What the partner keeps
 
 A partner can continue to own:
