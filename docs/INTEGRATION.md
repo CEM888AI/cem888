@@ -41,6 +41,27 @@ TURN START
   -> state transition / receipt
 ```
 
+
+## Owner prohibition authority
+
+CEM888 treats explicit owner prohibitions as runtime authority.
+
+OWNER: "do not / never / stop / block X"
+-> canonical customer-owned prohibition state
+-> same-turn activation
+-> proposed protected action
+-> deterministic prohibition check
+-> BLOCK before execution
+-> structured denial / ask-owner recovery
+
+A prohibition persists across turns, sessions, restarts, models, and supported hosts until the authenticated owner explicitly revokes it or grants a scoped exception. Generic task language, model reasoning, another agent, historical context, or tool output cannot silently widen authority.
+
+A one-use or task-scoped exception is narrower than the standing prohibition and expires with its scope.
+
+For protected/consequential actions, inability to load or evaluate prohibition authority is not permission: execution fails closed and the host may continue conversation or ask the owner.
+
+External hosts such as Claude, ChatGPT, Codex, and future adapters consume the same CEM888 authority state. CEM888 can guarantee a hard block only where the proposed action crosses an enforceable CEM-controlled boundary. Hosts without such a boundary must be labeled PARTIAL or HOST-RESTRICTED for that capability.
+
 ## What the partner keeps
 
 A partner can continue to own:
