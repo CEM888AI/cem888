@@ -43,6 +43,39 @@ CEM888 is designed to be additive:
 
 It does not require a company to replace its UI, planner, domain logic, model provider, or tool stack simply to gain continuity and control.
 
+## Use the AI you already pay for
+
+The planned host-adapter path is designed so a customer can keep using an existing AI product — for example Claude Code, Codex, GitHub Copilot / VS Code, Cursor, JetBrains-hosted agents, or another supported host — while CEM888 supplies the state, continuity, control, and verification layer underneath it.
+
+Where the host exposes enough lifecycle control, the target flow is:
+
+```text
+existing paid AI host
+        |
+        v
+CEM888 host adapter
+  - current-state inhale
+  - bounded context injection
+  - standing authority
+  - action verification
+  - exactly-once exhale
+        |
+        v
+customer project / tools / data
+```
+
+The commercial hypothesis is straightforward:
+
+> **If CEM888 can keep the host focused on the current objective and authoritative working state, the same AI subscription may spend less work re-reading, reconstructing context, repeating failed paths, or carrying stale conversation history.**
+
+That is a testable claim, not a published savings promise.
+
+For each supported host, the planned proof is **host alone vs. the same host + CEM888** on the same task and repository. Measurements include observable token/usage, prompt/context size, repeated reads/searches, tool calls, retries, wall-clock time, fresh-session recovery, drift from current state, stale-state mistakes, and verified completion.
+
+The first planned deep host adapters after the DeepSeek-first customer release are **Claude Code** and **Codex**. Broader targets include GitHub Copilot / VS Code, Cursor, JetBrains, OpenCode, and other hosts where lifecycle access is strong enough to support meaningful CEM behavior.
+
+See **[Native host adapters](./docs/HOST_ADAPTERS.md)** for the integration roadmap, lifecycle contract, certification levels, and benchmark plan.
+
 ## Status
 
 **The CEM888 runtime is built and operating.**
