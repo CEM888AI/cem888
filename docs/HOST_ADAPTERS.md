@@ -209,3 +209,51 @@ Current owner-directed sequence:
 4. **Later — existing AI hosts at install time.** Claude Code/Codex host attachment remains planned architecture and must not interrupt Phase 1.
 
 Do not describe install-time Claude Code/Codex attachment as shipped until it has been implemented and certified. The immediate product goal is a reliable, testable DeepSeek-first installer.
+
+
+## Integration priority map
+
+Build order is based on **customer adoption x architectural depth**, not popularity alone.
+
+### Phase 0 — current release
+**DeepSeek Flash standalone customer install.** Finish and certify this before host-adapter expansion. After internal PASS, Anna Rock and David test the exact DeepSeek customer path.
+
+### Tier 1 — first host adapters after DeepSeek
+1. **Claude Code** — strongest near-term combination of adoption and lifecycle-hook depth. Target automatic inhale, current-state injection, standing authority, post-tool verification, and exactly-once exhale.
+2. **Codex** — strong adoption, existing CEM MCP proof, and suitable plugin/MCP/lifecycle surfaces for a second reference implementation.
+
+### Tier 2 — high-demand developer surfaces
+3. **GitHub Copilot / VS Code** — broad installed base and enterprise reach. Build to the strongest lifecycle surface actually exposed; classify PARTIAL if MCP is the only reliable boundary.
+4. **Cursor** — major developer surface with MCP support and programmatic registration. Verify event/lifecycle interception depth before claiming FULL.
+
+### Tier 3 — architecture multipliers
+5. **JetBrains** — strategic because one IDE family can host Claude Agent, Codex, GitHub Copilot and ACP-connected agents. Treat it as a multiplier surface.
+6. **OpenCode** — smaller adoption but unusually deep plugin hooks around prompts, model context, tools, and MCP. Strong candidate for a FULL lifecycle reference if conformance passes.
+
+### Tier 4 — research/next expansion
+- Gemini CLI / Gemini Code Assist / Google Antigravity
+- Windsurf
+- Microsoft Copilot / Copilot Studio
+- ChatGPT Work
+- Claude app / desktop surfaces
+- other ACP/MCP-capable hosts
+
+Do not assume ordinary consumer chat surfaces expose enough lifecycle control for FULL CEM behavior.
+
+### Proof requirement
+
+For each Tier 1 host, compare **host alone vs the same host + CEM** on the same repo/task.
+
+Measure:
+- token/usage where observable;
+- prompt/context size;
+- repeated reads/searches;
+- tool calls;
+- retries;
+- wall-clock time;
+- fresh-session recovery;
+- drift from the current objective/state;
+- verified completion;
+- stale/superseded-state mistakes.
+
+No efficiency or savings claim until measured.
