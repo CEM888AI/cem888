@@ -1,0 +1,7 @@
+name: SearxNG
+version: "1.0.0"
+description: >-
+  Self-hosted metasearch routed through a SearxNG instance (SEARXNG_URL). No
+  API key required. Search only: this provider cannot extract page content.
+author: CEM888.AI
+kind: backend

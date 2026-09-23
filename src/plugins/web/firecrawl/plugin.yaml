@@ -1,0 +1,8 @@
+name: Firecrawl
+version: "1.0.0"
+description: >-
+  Web search and page extraction via Firecrawl. Requires FIRECRAWL_API_KEY, or
+  CEM888.AI-hosted gateway routing for subscribers. Supports both search and
+  extract.
+author: CEM888.AI
+kind: backend
