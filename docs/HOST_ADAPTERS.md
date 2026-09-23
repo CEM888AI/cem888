@@ -148,12 +148,45 @@ Linear: CEM-256.
 
 Installer integration is tracked by Linear CEM-258.
 
+## Standing authorization
+
+CEM888 must not create repetitive permission prompts for already-authorized work.
+
+Once a user grants an integration/capability and agreed scope to a selected CEM agent, normal operation inside that standing authority should proceed automatically.
+
+Ask again only when materially necessary, including:
+- new or expanded scope/capability;
+- different customer/account/agent binding;
+- credential expiry or revocation;
+- action outside the existing standing authority;
+- a host/provider/OS security boundary that itself requires renewed consent.
+
+Do not add CEM-specific approval prompts for routine continuity calls, inhale/exhale, normal tool use, or already-authorized host actions.
+
+**Connect once. Authorize once for the agreed scope. Then work quietly until the scope or credential state changes.**
+
+## Credential handling
+
+CEM888 agents may accept API keys, tokens, and other user-provided integration credentials when that is the selected connection path.
+
+Required behavior:
+- accept the credential from the authenticated user;
+- store/move it promptly into the approved local/customer secret store or broker;
+- persist only a secret reference/handle in normal runtime state;
+- do not unnecessarily echo the raw credential back;
+- do not persist raw credentials in durable conversational memory, receipts, normal logs, public artifacts, Linear, Airtable, or cross-agent context;
+- do not expose one customer's credential to another customer/agent;
+- use the stored credential automatically afterward.
+
+The security goal is secure custody and minimal exposure, not forbidding the agent from handling credentials.
+
 ## Security requirements
 
-- explicit user approval before vendor OAuth, executable hook installation, plugin installation, or host configuration changes
-- secrets never enter model-visible prompts, durable memory, receipts, or logs
+- explicit user approval for initial connection and any materially expanded scope where required
+- user-provided credentials may be securely ingested and stored by the authorized CEM agent
+- raw credentials should not persist in ordinary state, memory, receipts, logs, or cross-agent context
 - fail closed on ambiguous customer / agent binding
-- least privilege
+- standing authorization for already-approved capabilities
 - tenant isolation
 - deterministic uninstall / revoke
 - no provider-specific memory silo
