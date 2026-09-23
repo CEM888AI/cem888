@@ -203,6 +203,22 @@ Host adapters must consume this same provider-neutral authority. They must not m
 
 Hard enforcement can only be claimed for actions that actually cross an enforceable CEM boundary. If a host can perform an action entirely outside CEM and exposes no pre-action interception point, that capability must be classified honestly as PARTIAL or HOST-RESTRICTED rather than presented as FULL.
 
+### Dual enforcement: current truth + action
+
+A hard NO is not complete if CEM blocks execution but still gives the connected host the prohibited material as current working truth.
+
+For every active prohibition:
+
+- current-state compilation must exclude conflicting prohibited material from the authoritative working packet;
+- historical/provenance access may retain that material only with explicit non-current status;
+- semantic similarity, stale memory, old code, alternate wording, or another model/agent cannot promote it back to current authority;
+- if the host proposes using/restoring/reintroducing/deploying/certifying the prohibited material through a CEM-controlled action boundary, CEM blocks before execution;
+- only an authenticated owner allow-once, scoped exception, or unblock can change the constraint.
+
+Host certification must prove **both halves**: the prohibited item is not surfaced as current truth and the prohibited action is refused.
+
+This control model is part of CEM888's long-term direction toward high-consequence and data-sensitive environments such as legal, financial/banking, public-sector/government, security, and regulated enterprise systems. It is an architectural direction, not a claim of current sector certification.
+
 ## Security requirements
 
 - explicit user approval for initial connection and any materially expanded scope where required
