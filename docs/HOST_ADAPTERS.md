@@ -16,6 +16,32 @@ The native-host adapter layer adds automatic CEM888 lifecycle participation arou
 
 The existing provider-neutral CEM888 continuity runtime remains authoritative. Host adapters do not create provider-specific memory or state systems.
 
+## Installer architecture
+
+A standalone model/API provider is optional.
+
+CEM888 may be installed first as the customer's local state, continuity, authority, verification, and integration runtime. The installer can then connect supported AI hosts before any standalone reasoning provider is configured.
+
+Installer choices:
+
+1. **Recommended standalone driver — DeepSeek Flash**
+   - CEM888 is currently tuned and tested most heavily for DeepSeek Flash.
+2. **Bring your own provider**
+   - Choose a supported provider/model and configure credentials through the supported secret-entry path.
+3. **Use existing AI apps**
+   - No standalone model/API key is required.
+   - Detect supported local hosts such as Claude Code and Codex.
+   - Obtain explicit user approval before installing hooks/plugins or changing host configuration.
+   - Configure the canonical CEM MCP + host lifecycle adapter.
+   - Bind the host to the authenticated customer and selected CEM agent.
+   - Run the host breathing conformance test before reporting READY.
+
+The installer must perform this bootstrap deterministically. It must not require an already-reasoning CEM agent to connect the first host.
+
+If the customer chooses no standalone driver, the installation is not READY until at least one connected host passes the strongest honest breathing certification the host allows.
+
+A customer may add or change a standalone driver later without replacing CEM identity or state.
+
 ## Customer experience
 
 Target experience:
@@ -23,15 +49,17 @@ Target experience:
 ```text
 Install CEM888
   -> create/select CEM agent
-  -> choose Integrations
-  -> select Claude Code / Codex / other supported host
-  -> copy setup prompt or ask the CEM agent to connect it
-  -> CEM detects the host
+  -> choose reasoning mode:
+       DeepSeek Flash
+       another provider
+       existing AI apps only
+  -> detect Claude Code / Codex / other supported hosts
+  -> select hosts to connect
   -> CEM explains permissions
   -> user approves vendor login / hook / plugin / config changes
-  -> CEM configures supported integration surfaces
-  -> CEM runs conformance checks
-  -> integration reports connected / partial / host-restricted
+  -> installer configures supported integration surfaces
+  -> installer runs breathing conformance checks
+  -> integration reports FULL / PARTIAL / HOST-RESTRICTED
 ```
 
 After setup, the customer continues using the host normally.
@@ -86,6 +114,8 @@ Every native AI-host adapter must provide, where the host permits:
 
 MCP connectivity alone is not sufficient for FULL certification.
 
+A connected host cannot be treated as a substitute for the standalone CEM driver unless conformance proves the required inhale, identity binding, authority, verification, exactly-once exhale, retry/idempotency, and continuity behavior available on that host.
+
 ## First native AI-host adapters
 
 ### Claude Code
@@ -115,6 +145,8 @@ Target:
 - prove fresh-session and cross-host continuity
 
 Linear: CEM-256.
+
+Installer integration is tracked by Linear CEM-258.
 
 ## Security requirements
 
