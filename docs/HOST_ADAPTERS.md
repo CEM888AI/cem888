@@ -196,3 +196,16 @@ The security goal is secure custody and minimal exposure, not forbidding the age
 **Keep the agent. Add the reliability layer.**
 
 The host remains the user's normal working surface. CEM888 remains the authoritative continuity, state, control, and verification layer around it.
+
+## Release sequencing — DeepSeek first
+
+The architecture above describes the intended installer end state. It is **not** the current release sequence.
+
+Current owner-directed sequence:
+
+1. **Phase 1 — DeepSeek Flash customer install only.** Finish, stabilize, and certify the existing DeepSeek path on the real customer artifact.
+2. **External beta proof.** After internal PASS, Anna Rock and David test that exact DeepSeek customer path.
+3. **Later — alternate standalone providers.** Add only after Phase 1 is proven.
+4. **Later — existing AI hosts at install time.** Claude Code/Codex host attachment remains planned architecture and must not interrupt Phase 1.
+
+Do not describe install-time Claude Code/Codex attachment as shipped until it has been implemented and certified. The immediate product goal is a reliable, testable DeepSeek-first installer.
