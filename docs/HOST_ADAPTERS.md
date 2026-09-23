@@ -180,6 +180,29 @@ Required behavior:
 
 The security goal is secure custody and minimal exposure, not forbidding the agent from handling credentials.
 
+
+## Owner prohibition authority
+
+An explicit owner directive such as **no**, **do not**, **never use**, **stop**, or **block** is executable runtime authority, not advisory memory.
+
+For every customer install:
+
+- the prohibition is captured into the customer's canonical authoritative state with provenance;
+- it becomes effective in the same turn;
+- every protected action crossing a CEM-controlled boundary is checked before execution;
+- a matching action is hard-blocked and the host receives a structured denial;
+- the prohibition survives turns, sessions, restarts, model changes, and supported host changes;
+- only an authenticated explicit owner unblock or scoped exception may override it;
+- generic instructions such as "finish it", "go ahead", or "do what is necessary" do not revoke it;
+- a one-use or task-scoped exception does not erase the standing prohibition;
+- if prohibition authority cannot be loaded or evaluated, protected/consequential actions fail closed while conversation may continue and the agent may ask the owner.
+
+Host adapters must consume this same provider-neutral authority. They must not maintain provider-specific prohibition state.
+
+**The model can change. The app can change. The owner's NO does not.**
+
+Hard enforcement can only be claimed for actions that actually cross an enforceable CEM boundary. If a host can perform an action entirely outside CEM and exposes no pre-action interception point, that capability must be classified honestly as PARTIAL or HOST-RESTRICTED rather than presented as FULL.
+
 ## Security requirements
 
 - explicit user approval for initial connection and any materially expanded scope where required
