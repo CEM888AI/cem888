@@ -2,29 +2,31 @@
 
 CEM888 is intended to sit underneath or beside an existing agent without requiring the partner to rewrite the agent's business logic.
 
-## Lifecycle seams
+> **Status note:** this document defines the public lifecycle/control contract. Some mechanisms are implemented on the CEM engineering path; some controls are still being hardened; native third-party host adapters are planned after the current DeepSeek-first customer release gate. A documented contract is not automatically a customer-certified capability.
+
+## Canonical lifecycle seams
 
 ### 1. Turn start
 
 The host provides the principal / agent / task identity needed to resolve current runtime state.
 
-CEM888 returns the current authoritative working state and bounded context required for the turn.
+CEM888 supplies the current authoritative working state and bounded context required for the turn.
 
 ### 2. Before consequential action
 
-The proposed action and target enter the runtime authority boundary.
+The proposed action and target enter the CEM authority boundary **where the integration exposes an enforceable pre-action seam**.
 
 The runtime resolves scope and permission before execution.
 
 ### 3. After execution
 
-Observable execution evidence is returned to the runtime verification boundary.
+Observable execution evidence is returned to the verification boundary.
 
-The verifier evaluates what the runtime can actually assert from the observed postcondition.
+The verifier evaluates only what the available postcondition evidence supports.
 
 ### 4. Turn finish / checkpoint
 
-The resulting state transition, checkpoint, and receipt are committed to durable state.
+The resulting state transition, checkpoint and receipt are committed to durable state.
 
 ## Conceptual flow
 
@@ -34,53 +36,92 @@ TURN START
   -> load authoritative state
   -> compile bounded context
   -> model reasons / proposes
-  -> runtime authorizes
+  -> runtime authorizes where enforceable
   -> tool executes
   -> runtime observes evidence
-  -> runtime verifies
+  -> runtime verifies what evidence supports
   -> state transition / receipt
 ```
 
+## Enforcement boundary
+
+CEM888 can only claim a hard block for actions that actually cross a CEM-controlled or host-enforceable boundary.
+
+A host may expose:
+
+- a blocking pre-action hook;
+- only CEM/MCP-mediated actions;
+- context/retrieval integration without action interception;
+- no useful enforcement seam at all.
+
+Those are materially different integration classes.
+
+See **[ENFORCEMENT_MATRIX.md](./ENFORCEMENT_MATRIX.md)** for the public classification model.
 
 ## Owner prohibition authority
 
-CEM888 treats explicit owner prohibitions as runtime authority.
+### Specified control contract — customer certification pending
 
+The intended owner-prohibition contract is:
+
+```text
 OWNER: "do not / never / stop / block X"
--> canonical customer-owned prohibition state
--> same-turn activation
--> proposed protected action
--> deterministic prohibition check
--> BLOCK before execution
--> structured denial / ask-owner recovery
+  -> canonical customer-owned prohibition state
+  -> active current constraint
+  -> protected action proposed
+  -> prohibition check at an enforceable boundary
+  -> block before execution
+  -> structured denial / owner recovery path
+```
 
-A prohibition persists across turns, sessions, restarts, models, and supported hosts until the authenticated owner explicitly revokes it or grants a scoped exception. Generic task language, model reasoning, another agent, historical context, or tool output cannot silently widen authority.
+A standing prohibition is intended to survive turns, sessions, restarts, model changes and supported host changes until the authenticated owner explicitly revokes it or grants a narrower exception.
 
-A one-use or task-scoped exception is narrower than the standing prohibition and expires with its scope.
+Generic model reasoning, stale history, another agent, tool output or a broad instruction such as "finish it" must not silently widen that authority.
 
-For protected/consequential actions, inability to load or evaluate prohibition authority is not permission: execution fails closed and the host may continue conversation or ask the owner.
+### Dual proof requirement
 
-External hosts such as Claude, ChatGPT, Codex, and future adapters consume the same CEM888 authority state. CEM888 can guarantee a hard block only where the proposed action crosses an enforceable CEM-controlled boundary. Hosts without such a boundary must be labeled PARTIAL or HOST-RESTRICTED for that capability.
+A hard-NO claim is incomplete if CEM blocks execution but still promotes conflicting material back into the model's current authoritative packet.
 
-The same prohibition also governs **retrieval/current-state assembly**. Material that conflicts with an active owner prohibition may remain available as provenance or explicitly historical/superseded evidence, but it must not be promoted back into the model's current authoritative working packet merely because it is relevant, similar, old code, or convenient. Certification of a hard-NO capability therefore requires two falsifiers: the prohibited material is not presented as current truth, and an attempted prohibited action is refused before execution.
+Certification therefore requires **both**:
 
-## What the partner keeps
+1. **current-truth falsifier** — prohibited/conflicting material is not promoted as current authoritative working state; and
+2. **action falsifier** — a matching protected action is refused before execution at the claimed enforcement boundary.
+
+Historical/provenance access may retain superseded material with explicit non-current status.
+
+This dual prohibition control is **specified**, but it must not be represented as customer-certified end to end until both falsifiers pass on the exact installed artifact.
+
+## Partner responsibility split
 
 A partner can continue to own:
 
-- UI and user experience
-- planner
-- agent logic
-- model/provider selection
-- tool implementations
-- observability
-- domain workflow
-- proprietary business logic
+- UI and user experience;
+- planner;
+- agent logic;
+- model/provider selection;
+- tool implementations;
+- observability;
+- domain workflow;
+- proprietary business logic.
 
-CEM888 provides the reliability/control boundary around those systems.
+CEM888 provides the state/control lifecycle boundary around those systems.
 
 ## Integration principle
 
 The model is replaceable intelligence.
 
-Authoritative state, action scope, continuity, and verification remain runtime responsibilities.
+Authoritative state, action scope, continuity and verification are runtime responsibilities **to the extent the integration surface actually exposes those controls**.
+
+## First evaluation
+
+A useful technical pilot should answer:
+
+1. What system owns current authoritative state?
+2. What lifecycle boundary can CEM observe or block?
+3. Which host-native actions bypass CEM entirely?
+4. What postcondition evidence is observable?
+5. How are retries prevented from duplicating durable effects?
+6. What survives a fresh session or host restart?
+7. Which claims are ENFORCED, MEDIATED-ONLY or ADVISORY on this host?
+
+The goal is not to force a partner into a new agent architecture. It is to make the reliability boundary explicit and measurable.

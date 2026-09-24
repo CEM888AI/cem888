@@ -2,30 +2,37 @@
 
 # CEM888
 
-### Reliability, continuity, and control for AI agents
+### Local-first state & control runtime underneath AI agents
 
 **STATE decides what is true. MODELS decide what to do about it.**
 
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
-[![Public beta](https://img.shields.io/badge/public_beta-v1.0.3-orange?style=flat-square)](#status)
+[![Stage: Public beta](https://img.shields.io/badge/stage-public_beta-orange?style=flat-square)](#current-stage)
 
-**[cem888.ai](https://cem888.ai)** · **[Technical status](./docs/STATUS.md)** · **[Integration](./docs/INTEGRATION.md)** · **[Engineering evidence](https://github.com/CEM888AI/runtime-case-studies)**
+**[cem888.ai](https://cem888.ai)** · **[Technical status](./docs/STATUS.md)** · **[Engineering evidence](https://github.com/CEM888AI/runtime-case-studies)** · **[Benchmarks](https://github.com/CEM888AI/benchmarks)**
 
 </div>
 
 ---
 
-## What CEM888 is
+## The 60-second version
 
-CEM888 is a **reliability and control runtime that sits underneath AI agents**.
+AI models are becoming better reasoners, but an agent still needs a system outside the model to answer four operational questions reliably:
 
-It keeps operating truth outside the LLM so the model can reason and act without also being responsible for remembering what is current, what it is allowed to do, or whether a claimed result actually happened.
+1. **What is true now?**
+2. **What does this model need to know now?**
+3. **What is this agent allowed to do?**
+4. **What actually happened after it acted?**
+
+CEM888 is the runtime for that layer.
+
+It maintains authoritative working state outside the LLM, carries relevant state across sessions and model changes, compiles bounded context for the current task, applies action authority at enforceable boundaries, and evaluates observable outcomes instead of treating model prose as proof.
 
 ```text
 EXISTING AGENT / HOST
         |
         v
-CEM888 CONTROL LAYER
+CEM888 STATE + CONTROL RUNTIME
   - identity + scope
   - authoritative current state
   - continuity / recovery
@@ -37,225 +44,186 @@ CEM888 CONTROL LAYER
 EXISTING MODELS / TOOLS / DATA
 ```
 
-CEM888 is designed to be additive:
-
 > **Keep the agent. Add the reliability layer.**
 
-It does not require a company to replace its UI, planner, domain logic, model provider, or tool stack simply to gain continuity and control.
+## Current stage
 
-## Use the AI you already pay for
+CEM888 is in public beta. The current release lane is deliberately narrow: **finish and certify the DeepSeek Flash customer install first, then expand provider and native-host support from measured evidence.**
 
-The planned host-adapter path is designed so a customer can keep using an existing AI product — for example Claude Code, Codex, GitHub Copilot / VS Code, Cursor, JetBrains-hosted agents, or another supported host — while CEM888 supplies the state, continuity, control, and verification layer underneath it.
+| Surface | Current status |
+| --- | --- |
+| **CEM engineering runtime / ancestor** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
+| **Customer product artifact** | DeepSeek Flash-first install, parity, upgrade and conformance certification in progress. |
+| **Claude Code / Codex native adapters** | Planned after the DeepSeek customer path passes its release gate; not shipped or certified today. |
+| **High-consequence / regulated deployments** | Long-term product direction. No sector-specific certification claim is being made. |
 
-Where the host exposes enough lifecycle control, the target flow is:
+The customer artifact is a **promotion and certification target**, not assumed correct because a mechanism exists elsewhere. Every release claim should name the exact artifact or evidence behind it.
 
-```text
-existing paid AI host
-        |
-        v
-CEM888 host adapter
-  - current-state inhale
-  - bounded context injection
-  - standing authority
-  - action verification
-  - exactly-once exhale
-        |
-        v
-customer project / tools / data
-```
+See **[Technical Status](./docs/STATUS.md)** for the current capability table and published limitations.
 
-The commercial hypothesis is straightforward:
+## Why CEM888 exists
 
-> **If CEM888 can keep the host focused on the current objective and authoritative working state, the same AI subscription may spend less work re-reading, reconstructing context, repeating failed paths, or carrying stale conversation history.**
+LLMs are excellent at inference and synthesis. They are poor places to keep durable operational truth.
 
-That is a testable claim, not a published savings promise.
+Without an external state/control layer, long-running agents can:
 
-For each supported host, the planned proof is **host alone vs. the same host + CEM888** on the same task and repository. Measurements include observable token/usage, prompt/context size, repeated reads/searches, tool calls, retries, wall-clock time, fresh-session recovery, drift from current state, stale-state mistakes, and verified completion.
+- rebuild project state from stale conversation;
+- carry superseded decisions forward because they are semantically similar;
+- repeat expensive or consequential work after retries/restarts;
+- widen action scope from model reasoning;
+- report completion without an observable postcondition;
+- lose useful working state when the model, host or session changes.
 
-The first planned deep host adapters after the DeepSeek-first customer release are **Claude Code** and **Codex**. Broader targets include GitHub Copilot / VS Code, Cursor, JetBrains, OpenCode, and other hosts where lifecycle access is strong enough to support meaningful CEM behavior.
-
-See **[Native host adapters](./docs/HOST_ADAPTERS.md)** for the integration roadmap, lifecycle contract, certification levels, and benchmark plan.
-
-## Status
-
-**The CEM888 runtime is built and operating.**
-
-The current release work is focused on the **customer-install surface**: making the downloadable artifact faithfully carry the same runtime behavior, identify exactly what it is running, and pass clean-install / upgrade / conformance checks as one frozen release candidate.
-
-That distinction matters:
-
-```text
-CEM888 runtime
-  -> freeze the proven capability set
-  -> promote customer-safe changes together
-  -> build one customer artifact
-  -> freeze artifact + digests
-  -> certify the install
-  -> re-baseline that exact artifact
-  -> partner handoff
-```
-
-This avoids rebuilding the customer wheel after every runtime improvement and keeps the artifact a deterministic promotion target.
-
-See **[docs/STATUS.md](./docs/STATUS.md)** for the current release track.
-
-## Core architecture
+CEM888 separates those responsibilities.
 
 ### Authoritative state
 
-Current operational truth lives outside the model context. The model can reason over state; it does not get to redefine authority by wording something more confidently.
+Current operational truth lives outside model context. The model can reason over state; it does not get to redefine authority through wording.
 
 ### Supersession
 
-Newer authoritative state can replace older state without deleting history.
+Newer authoritative state can replace older state while preserving history.
 
 > **Relevance can help retrieve a candidate. Relevance does not increase its authority.**
 
 ### Bounded working context
 
-The runtime compiles the smallest useful current working packet rather than replaying an ever-growing transcript.
+The runtime compiles the minimum useful current packet instead of treating an ever-growing transcript as working memory.
 
 ### Continuity
 
-Durable state lets work survive fresh sessions, restarts, model changes, and host changes where the host exposes the required integration boundary.
+Structured state can survive fresh sessions, restarts and model changes without requiring the user to reconstruct the project from scratch.
 
 ### Action authority
 
-Models propose actions. Runtime state and scope determine whether consequential execution is allowed.
-
-Explicit owner prohibitions constrain **both** sides of the loop: prohibited/superseded material must not be surfaced as current authoritative working state, and attempts to operationalize it through a CEM-controlled action boundary are blocked before execution. A connected model cannot restore permission merely through semantic similarity, stale memory, alternate wording, or a generic instruction to "finish it." Only explicit owner authorization can narrow or revoke the prohibition.
+Models propose actions. Runtime state and scope determine what may cross a CEM-controlled execution boundary.
 
 ### Verification + receipts
 
-A model saying “done” is not the same thing as observable proof. CEM888 can evaluate outcomes against runtime-visible evidence and record structured result states / receipts.
+A model saying "done" is not the same as proof. Where the postcondition is mechanically observable, CEM888 evaluates runtime-visible evidence and records structured result state / receipts.
 
 ### Provider neutrality
 
-The state and control layer is independent of any single model provider. Model intelligence can change without making the model itself the durable ledger.
+The model is replaceable intelligence. The state/control contract is intended to remain stable as providers change.
 
-## For technical partners
+## Claim discipline
 
-If you are evaluating CEM888 for integration, diligence, or partnership, read these in order:
+CEM888 separates **implemented**, **customer-certified**, **specified**, and **planned** behavior.
 
-1. **[Technical status](./docs/STATUS.md)** — runtime versus customer-install release track.
-2. **[Partner technical brief](https://github.com/CEM888AI/runtime-case-studies/blob/main/partner-technical-brief.md)** — architecture, lifecycle, integration seams, authority, continuity, and verification.
-3. **[Integration contract](./docs/INTEGRATION.md)** — the lifecycle boundary an existing agent connects to.
-4. **[Capability promotion matrix](./docs/CAPABILITY_MATRIX.md)** — runtime capability → customer source → frozen artifact → install certification.
-5. **[Architecture](https://github.com/CEM888AI/runtime-case-studies/blob/main/architecture.md)** — conceptual turn flow.
-6. **[Engineering case studies](https://github.com/CEM888AI/runtime-case-studies)** — real failures, root causes, fixes, and measured evidence.
-7. **[Benchmarks](https://github.com/CEM888AI/benchmarks)** — benchmark archive and raw results.
+That distinction is intentional.
 
-The point of these documents is to let a CTO understand the system without requiring a founder walkthrough first.
+For example, the dual owner-prohibition model — preventing prohibited material from being promoted as current truth while also blocking matching protected actions at an enforceable boundary — is part of the public control contract, but it is **not represented as customer-certified end to end until both falsifiers pass on the exact installed artifact**.
+
+See:
+
+- **[Technical status](./docs/STATUS.md)**
+- **[Integration contract](./docs/INTEGRATION.md)**
+- **[Enforcement matrix](./docs/ENFORCEMENT_MATRIX.md)**
+- **[Native host adapters](./docs/HOST_ADAPTERS.md)**
+
+## Evidence
+
+CEM888 publishes engineering evidence separately from product certification.
+
+That evidence includes benchmark runs, failure case studies, context-bounding measurements, continuity tests, verification failures/fixes, tenant-isolation defects, install conformance results and other falsifiers.
+
+**[Engineering case studies →](https://github.com/CEM888AI/runtime-case-studies)**  
+**[Benchmark archive →](https://github.com/CEM888AI/benchmarks)**  
+**[Partner technical brief →](https://github.com/CEM888AI/runtime-case-studies/blob/main/partner-technical-brief.md)**
+
+Historical experiments remain useful engineering evidence, but a customer/partner build receives its own re-baseline after the exact artifact is frozen and install-certified.
+
+## For investors, partners and technical evaluators
+
+A fast diligence path:
+
+1. **[Technical status](./docs/STATUS.md)** — what is implemented, in progress, specified and not yet certified.
+2. **[Partner technical brief](https://github.com/CEM888AI/runtime-case-studies/blob/main/partner-technical-brief.md)** — the product boundary and integration model.
+3. **[Engineering case studies](https://github.com/CEM888AI/runtime-case-studies)** — real failures, diagnoses and measured repairs.
+4. **[Benchmarks](https://github.com/CEM888AI/benchmarks)** — public benchmark archive and methodology.
+5. **[Provenance](./PROVENANCE.md)** — what this source tree is and what is deliberately not included.
+
+The product thesis is simple: **model intelligence will keep changing; companies still need durable state, action authority, continuity and evidence outside the model.**
 
 ## Integration model
 
-CEM888 attaches at lifecycle seams rather than asking a partner to rewrite its agent:
+CEM888 is designed to attach at lifecycle seams rather than force a partner to replace its agent architecture:
 
 ```text
 TURN START
   -> resolve identity / task
-  -> load authoritative state
+  -> load authoritative current state
   -> compile bounded working context
 
 BEFORE CONSEQUENTIAL ACTION
   -> resolve target / scope
-  -> authorize or block
+  -> authorize or block where an enforceable boundary exists
 
 AFTER EXECUTION
   -> capture observable evidence
-  -> verify outcome
+  -> evaluate the postcondition
 
 TURN FINISH
   -> commit resulting state
-  -> record receipt / checkpoint
+  -> record checkpoint / receipt
 ```
 
-The partner can continue to own:
+A partner can continue to own its UI, planner, model choice, tools, domain workflow and observability stack.
 
-- UI
-- planner
-- agent logic
-- model selection
-- tool implementations
-- observability stack
-- domain workflows
+## Native-host direction
 
-CEM888 owns the reliability/control boundary around them.
+The longer-term host-adapter path is designed so a customer can keep using an existing AI product while CEM888 supplies the state/control layer underneath it.
 
-## Evidence
+MCP connectivity alone is not enough to claim full control. Each host must be classified from the lifecycle boundaries it actually exposes.
 
-CEM888 keeps **engineering evidence** separate from **customer-artifact certification**.
+The first planned deep adapters after the current DeepSeek-first release lane are **Claude Code** and **Codex**.
 
-Engineering evidence includes:
-
-- benchmark runs
-- context-bounding measurements
-- tool-surface reduction
-- continuity tests
-- verification case studies
-- exactly-once/idempotency tests
-- tenant-isolation failures and fixes
-- install/conformance failures that were used to improve the release path
-
-The benchmark repository preserves older runs because they remain useful evidence of engineering behavior over time. The frozen customer artifact receives its own current re-baseline after install certification.
-
-**[Engineering case studies →](https://github.com/CEM888AI/runtime-case-studies)**  
-**[Benchmark archive →](https://github.com/CEM888AI/benchmarks)**
+See **[Native Host Adapters](./docs/HOST_ADAPTERS.md)**.
 
 ## Local-first and customer control
 
-CEM888 is designed so authoritative runtime state remains on customer-controlled infrastructure.
+CEM888 is designed around customer-controlled runtime state.
 
-Account, update, provider, or connector services may participate in onboarding, transport, or model access; they are not the authority for the customer's runtime state.
+The website is the account/onboarding/download surface. Customer agents run on the customer's machine or customer-controlled infrastructure rather than on a shared CEM888 execution service.
 
-Customer installations must begin with clean identity, state, authority, configuration, and credentials rather than inheriting maintainer data.
+Clean customer installs must start with clean identity, state, authority, configuration and credentials.
 
-## Enterprise direction
+## Repository scope
 
-The long-term direction is to make CEM888 a **reliability, continuity, and control layer for AI in high-consequence and data-sensitive environments** — including legal, financial, public-sector, and regulated enterprise systems.
+This repository is the public/community CEM888 source lane and customer execution/package surface.
 
-That direction requires more than model quality:
+It is **not** the canonical production-development authority. Public GitHub exists for community access, evidence, documentation, evaluation and distribution.
 
-- customer-controlled/private deployment
-- tenant and identity isolation
-- provenance and auditability
-- explicit action authority
-- evidence-backed verification
-- restart/recovery continuity
-- duplicate-effect protection
-- clear data and trust boundaries
-- provider/model replaceability without losing authoritative state
+Private implementation details that are not necessary to integrate with or evaluate the product — including private prompts, proprietary scoring/routing policy, customer data, credentials and operational secrets — are not part of the public contract.
 
-This is a product direction, not a claim of certification under any specific legal, banking, government, or regulatory regime. Sector-specific compliance and certification are handled per deployment.
-
-## Repository and third-party notices
-
-This repository contains the public/community CEM888 source lane, customer execution/package code, public integration documentation, and release provenance.
-
-CEM888 uses open-source components. Required third-party license notices are preserved in **[third-party license notices](./licenses/third-party/MIT-NOTICE.txt)**.
-
-Private implementation details that are not required to integrate with or evaluate the product — such as internal scoring/weighting, private routing policy, private prompts, customer data, credentials, and operational secrets — are not part of the public contract.
+See **[PROVENANCE.md](./PROVENANCE.md)** and the preserved **[third-party license notices](./licenses/third-party/MIT-NOTICE.txt)**.
 
 ## Installation
 
-The supported end-user onboarding flow begins at **[cem888.ai](https://cem888.ai)** rather than by cloning this repository.
+The supported end-user onboarding flow begins at **[cem888.ai](https://cem888.ai)**.
 
 1. Create a free account.
 2. Create/configure the agent.
 3. Generate the installer for the target machine.
 4. Install locally.
 
-Source builds remain available for inspection and development. The supported customer-install path is the account-generated installer.
+The current customer release work is optimized and tested most heavily around **DeepSeek Flash**. Provider neutrality is an architectural goal; equivalent cost/performance optimization for every provider should not be assumed until measured.
+
+## Enterprise direction
+
+CEM888 is intended to mature into a reliability, continuity and control layer for AI in data-sensitive and high-consequence environments, including legal, financial, public-sector and regulated enterprise systems.
+
+That direction requires customer-controlled deployment, identity isolation, provenance, explicit authority, evidence-backed verification, restart/recovery continuity and clear trust boundaries.
+
+This is a product direction, **not a claim of certification or regulatory compliance today**.
 
 ## License
 
 **Community lane — AGPL-3.0.** CEM888-authored community work in this repository is distributed under AGPL-3.0, subject to preserved third-party notices and licenses.
 
-**Commercial lane — negotiated terms.** Commercial agreements can cover CEM888-authored rights, proprietary embedding, white-labeling, redistribution, custom integration, support, or private deployment. Third-party components retain their own license obligations.
+**Commercial lane — negotiated terms.** Separate commercial agreements can cover proprietary embedding, white-labeling, redistribution, custom integration, support and private deployment of CEM888-authored work.
 
-See **[third-party license notices](./licenses/third-party/MIT-NOTICE.txt)**.
-
-For commercial licensing, private/on-prem integration, or technical partnership:
+For commercial licensing, technical partnerships, design-partner discussions or investment conversations:
 
 **creator@cem888.ai**
 
@@ -263,4 +231,4 @@ For commercial licensing, private/on-prem integration, or technical partnership:
 
 Maintained by **Chandler Morone / CEM Unlimited LLC**.
 
-**[cem888.ai](https://cem888.ai)** · [Engineering evidence](https://github.com/CEM888AI/runtime-case-studies) · [Benchmarks](https://github.com/CEM888AI/benchmarks)
+**[cem888.ai](https://cem888.ai)** · **[Engineering evidence](https://github.com/CEM888AI/runtime-case-studies)** · **[Benchmarks](https://github.com/CEM888AI/benchmarks)**
