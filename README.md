@@ -61,6 +61,26 @@ The customer artifact is a **promotion and certification target**, not assumed c
 
 See **[Technical Status](./docs/STATUS.md)** for the current capability table and published limitations.
 
+## Reproducible public checks
+
+This repository now includes a small public falsifier suite for claims that are already implemented in the public engineering source tree.
+
+```bash
+python3.14 -m pip install pytest
+PYTHONPATH=src python3.14 -m pytest -q tests
+```
+
+The current public checks cover:
+
+- Tier-0 protected-path authority and manifest immutability;
+- rejection of literal shell mutations against denied protected roots;
+- exclusion of superseded typed-memory rows from current context candidates;
+- bounded-context receipt behavior, including hashed query provenance without copying raw query text into the receipt.
+
+See **[Public conformance checks](./docs/PUBLIC_CONFORMANCE.md)** for the exact scope and limitations.
+
+These are source-level falsifiers, **not a substitute for exact customer-artifact certification**. Customer release claims still require the frozen installed artifact to pass its own conformance gate.
+
 ## Why CEM888 exists
 
 LLMs are excellent at inference and synthesis. They are poor places to keep durable operational truth.
