@@ -109,6 +109,12 @@ def _init_durable_db() -> sqlite3.Connection:
     """)
     conn.execute("CREATE INDEX IF NOT EXISTS idx_typed_memory_active ON typed_memories(lifecycle_status, superseded_by, memory_type, project, task)")
     conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_typed_memory_dedupe ON typed_memories(content_sha256, memory_type, scope, agent)")
+    # Repair rows written before supersession also closed the lifecycle: a row
+    # that has been superseded is never active. Idempotent.
+    conn.execute(
+        "UPDATE typed_memories SET lifecycle_status='superseded' "
+        "WHERE superseded_by IS NOT NULL AND lifecycle_status='active'"
+    )
     conn.commit()
     return conn
 
@@ -155,7 +161,10 @@ def _write_durable_memory(
             conn.close()
             return {"success": True, "memory_id": existing[0], "duplicate": True}
         if supersedes:
-            conn.execute("UPDATE typed_memories SET superseded_by=?, updated_at=? WHERE id=?", (record_id, now, supersedes))
+            conn.execute(
+                "UPDATE typed_memories SET superseded_by=?, lifecycle_status='superseded', updated_at=? WHERE id=?",
+                (record_id, now, supersedes),
+            )
         conn.execute(
             "INSERT INTO typed_memories VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (record_id, content, digest, kind, (scope or "profile").strip(), resolved_agent,

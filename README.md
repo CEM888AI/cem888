@@ -24,7 +24,7 @@
 **Run the public checks (from source):**
 
 ```bash
-python3.14 -m pip install pytest
+python3.14 -m pip install pytest pyyaml
 PYTHONPATH=src python3.14 -m pytest -q tests
 ```
 
@@ -38,8 +38,8 @@ Every result below links to its source. Failures are published alongside passes.
 
 | Check | Result | Scope | Source |
 | --- | --- | --- | --- |
-| Public conformance suite (this repo, CI on every push) | **9 / 9 pass** | Tier-0 authority, superseded-state exclusion, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
-| Runtime evaluation (external run, 2026-09-18) | **9 / 9 pass**; authority-boundary mechanism partial; one defect found: supersession sets `superseded_by` but leaves the old row `active` (retrieval still resolves correctly) | Durable state, kill-and-recover, model swap, verified execution, authority, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
+| Public conformance suite (this repo, CI on every push) | **12 / 12 pass** | Tier-0 authority, superseded-state exclusion, supersession lifecycle, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
+| Runtime evaluation (external run, 2026-09-18) | **9 / 9 pass**; authority-boundary mechanism partial; one defect found: supersession set `superseded_by` but left the old row `active` (retrieval still resolved correctly). **Fixed:** superseding now closes the old row's lifecycle, existing stores are repaired on open, regression tests in [`tests/test_supersession_lifecycle_public.py`](./tests/test_supersession_lifecycle_public.py) | Durable state, kill-and-recover, model swap, verified execution, authority, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
 | Earlier installed customer artifact | **2 PASS / 9 FAIL — non-conformant** | Install conformance; published deliberately, artifact withdrawn as a candidate | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
 | Engineering runtime falsifiers | 8 authority · 53 verification · 17 hook-sync · 4 fabricated-evidence · 4 store-locking — all pass | CEM engineering runtime, not yet the customer artifact | [current-engineering-status.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md) |
 | Verification coverage | **Partial** | Covered/unsupported action classes still being published | [STATUS.md](./docs/STATUS.md#capability-status) |

@@ -20,7 +20,7 @@ Thanks for looking. CEM888 is a public beta maintained by one person, so the pro
 - A test under `tests/` for any behavior change. The suite must pass:
 
   ```bash
-  python3.14 -m pip install pytest
+  python3.14 -m pip install pytest pyyaml
   PYTHONPATH=src python3.14 -m pytest -q tests
   ```
 
