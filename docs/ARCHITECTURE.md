@@ -22,7 +22,7 @@ Each record carries:
 | `id`, `content`, `content_sha256` | Identity and content hash |
 | `memory_type`, `scope`, `agent`, `project`, `task` | What kind of fact, and whose |
 | `authority`, `source`, `provenance` | Who asserted it and where it came from |
-| `lifecycle_status` | `active`, or a terminal state such as `archived` / `failed` |
+| `lifecycle_status` | `active`, or a terminal state: `superseded`, `archived`, `failed` |
 | `verification_status` | `verified`, `unverified` or `failed` |
 | `supersedes`, `superseded_by` | Explicit replacement chain |
 | `created_at`, `updated_at` | Timestamps (ordering only, never identity) |
@@ -30,7 +30,7 @@ Each record carries:
 **Write rules**
 
 - **Idempotent.** A write whose `(content_sha256, memory_type, scope, agent)` already exists returns the existing id with `duplicate: true` instead of inserting a second row. A retried write does not create a second fact.
-- **Supersession is explicit.** A new record that names `supersedes=<id>` sets `superseded_by` on the old row in the same transaction. The old row stays for history; it stops being current.
+- **Supersession is explicit.** A new record that names `supersedes=<id>` sets `superseded_by` on the old row and moves its `lifecycle_status` to `superseded`, in the same transaction. The old row stays for history; it stops being current. Invariant: no row is both `active` and superseded; stores written before this rule are repaired when opened.
 - Defaults are conservative: new rows are `active` and `unverified` unless the caller states otherwise.
 
 **Read rule (current truth).** The context compiler reads the store read-only and considers only:
@@ -106,8 +106,8 @@ A receipt answers "why did the model see this and not that" for a given turn. It
 ## How to check this yourself
 
 ```bash
-python3.14 -m pip install pytest
+python3.14 -m pip install pytest pyyaml
 PYTHONPATH=src python3.14 -m pytest -v tests
 ```
 
-The suite exercises manifest immutability, forbidden/allowed roots, shell-mutation denial, superseded-row exclusion and receipt query hashing. Scope and limits: [PUBLIC_CONFORMANCE.md](./PUBLIC_CONFORMANCE.md).
+The suite exercises manifest immutability, forbidden/allowed roots, shell-mutation denial, superseded-row exclusion, the supersession lifecycle invariant and receipt query hashing. Scope and limits: [PUBLIC_CONFORMANCE.md](./PUBLIC_CONFORMANCE.md).

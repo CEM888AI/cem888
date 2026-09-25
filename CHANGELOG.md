@@ -4,6 +4,14 @@ All notable changes to the public CEM888 source are recorded here. Each `## vX.Y
 
 Status labels follow [docs/STATUS.md](./docs/STATUS.md): a mechanism listed here is **implemented in this source tree**; it is not customer-certified until it passes on the exact installed customer artifact.
 
+## Unreleased
+
+**Fixed**
+- Supersession now closes the prior record's lifecycle (`lifecycle_status='superseded'`) in the same transaction that sets `superseded_by`. Previously the old row stayed `active`; retrieval was unaffected because the current-state read also filters on `superseded_by`. Existing stores are repaired when opened. Reported by the September 18, 2026 external runtime evaluation. Regression tests: `tests/test_supersession_lifecycle_public.py`.
+
+**Changed**
+- Public conformance suite: 12 checks (was 9). Test dependencies: `pytest`, `pyyaml`.
+
 ## v1.0.3 — first public beta
 
 First public source release of the CEM888 runtime under AGPL-3.0 (community lane) with a separate negotiated commercial license.
@@ -15,7 +23,7 @@ First public source release of the CEM888 runtime under AGPL-3.0 (community lane
 - Typed durable memory with lifecycle and supersession (`src/tools/memory_tool.py`).
 
 **Evidence**
-- Public conformance suite (`tests/`, 9 checks) with CI on every push.
+- Public conformance suite (`tests/`, 9 checks at release) with CI on every push.
 - Published technical status, including a non-conformant earlier customer artifact (2 PASS / 9 FAIL): [docs/STATUS.md](./docs/STATUS.md).
 - Integration contract, enforcement matrix, native host adapter contract and architecture note under [docs/](./docs).
 

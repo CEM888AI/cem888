@@ -3,7 +3,7 @@
 These tests are a **small public falsifier suite for claims already implemented in this repository**.
 They are not a claim that the customer artifact is fully certified.
 
-The suite currently checks three public invariants:
+The suite currently checks four public invariants:
 
 1. **Tier-0 authority**
    - the authority manifest cannot be mutated by the running agent;
@@ -20,10 +20,17 @@ The suite currently checks three public invariants:
    - raw query text is not copied into the receipt;
    - irrelevant non-identity candidates can be excluded for lack of task relevance.
 
+4. **Supersession lifecycle**
+   - superseding a record moves the old row to `lifecycle_status='superseded'`, not only `superseded_by`;
+   - across a chain of supersessions, exactly one row is active and none is both active and superseded;
+   - stores written before this rule are repaired when opened.
+
+   Regression for the defect reported by the September 18, 2026 external runtime evaluation.
+
 Run locally:
 
 ```bash
-python3.14 -m pip install pytest
+python3.14 -m pip install pytest pyyaml
 PYTHONPATH=src python3.14 -m pytest -q tests
 ```
 
