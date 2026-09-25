@@ -1,0 +1,63 @@
+name: Release
+
+# Publishes a tagged GitHub release when the version in setup.py has no tag yet.
+# Release notes are taken from the matching "## vX.Y.Z" section of CHANGELOG.md.
+
+on:
+  push:
+    branches: [main]
+    paths: ["setup.py", "CHANGELOG.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          allow-prereleases: true
+      - name: Run public conformance suite before tagging
+        env:
+          PYTHONPATH: src
+        run: |
+          python -m pip install --upgrade pip pytest
+          python -m pytest -q tests
+      - name: Read version
+        id: v
+        run: |
+          VERSION=$(python - <<'PY'
+          import re, pathlib
+          text = pathlib.Path("setup.py").read_text()
+          print(re.search(r'version="([^"]+)"', text).group(1))
+          PY
+          )
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Extract release notes
+        run: |
+          python - "${{ steps.v.outputs.tag }}" <<'PY'
+          import pathlib, re, sys
+          tag = sys.argv[1]
+          text = pathlib.Path("CHANGELOG.md").read_text()
+          m = re.search(rf"^## {re.escape(tag)}\b.*?$(.*?)(?=^## v|\Z)", text, re.M | re.S)
+          if not m:
+              sys.exit(f"CHANGELOG.md has no section for {tag}")
+          pathlib.Path("release-notes.md").write_text(m.group(1).strip() + "\n")
+          PY
+      - name: Create tag and release if missing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.v.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; nothing to do."
+            exit 0
+          fi
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "CEM888 $TAG (public beta)" \
+            --notes-file release-notes.md --prerelease
