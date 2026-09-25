@@ -15,6 +15,8 @@
 
 **What it is.** CEM888 is a runtime that keeps an AI agent's current state, action permissions and completion evidence outside the model, so the agent stays correct across sessions, restarts and model changes.
 
+**How it works.** Every turn runs one loop: it tests, validates and investigates against the current objective, grounds every action towards truth, and keeps going until it has answers or better questions.
+
 **Who it is for.** Teams running long-lived or multi-session agents that need to know what is true now, what the agent is allowed to do, and whether "done" actually happened.
 
 **What this repository is.** The public source and audit record for the CEM888 runtime. It is not the installer. The supported install path is the account flow at **[cem888.ai](https://cem888.ai/register.html)**: create a free account, configure the agent, download the installer for your machine.
