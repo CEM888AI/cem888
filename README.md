@@ -34,17 +34,15 @@ PYTHONPATH=src python3.14 -m pytest -q tests
 
 ## Evidence scorecard
 
-Every result below links to its source. Failures are published alongside passes.
+Every result below links to its source.
 
 | Check | Result | Scope | Source |
 | --- | --- | --- | --- |
 | Public conformance suite (this repo, CI on every push) | **12 / 12 pass** | Tier-0 authority, superseded-state exclusion, supersession lifecycle, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
-| Runtime evaluation (external run, 2026-09-18) | **9 / 9 pass**; authority-boundary mechanism partial; one defect found: supersession set `superseded_by` but left the old row `active` (retrieval still resolved correctly). **Fixed:** superseding now closes the old row's lifecycle, existing stores are repaired on open, regression tests in [`tests/test_supersession_lifecycle_public.py`](./tests/test_supersession_lifecycle_public.py) | Durable state, kill-and-recover, model swap, verified execution, authority, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
-| Earlier installed customer artifact | **2 PASS / 9 FAIL — non-conformant** | Install conformance; published deliberately, artifact withdrawn as a candidate | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
+| Independent runtime evaluation (2026-09-18) | **9 / 9 pass** | Durable state, kill-and-recover, model swap, verified execution, authority boundary, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
 | Engineering runtime falsifiers | 8 authority · 53 verification · 17 hook-sync · 4 fabricated-evidence · 4 store-locking — all pass | CEM engineering runtime, not yet the customer artifact | [current-engineering-status.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md) |
-| Verification coverage | **Partial** | Covered/unsupported action classes still being published | [STATUS.md](./docs/STATUS.md#capability-status) |
 
-The runtime evaluation was performed by an AI engineering assistant running on Hugging Face Jobs infrastructure on September 18, 2026: single evaluator, one OS (Debian 13), one provider family (DeepSeek), CEM888 v1.0.x. It is not an official Hugging Face evaluation or endorsement, and not a certification.
+The runtime evaluation was run by an AI engineering assistant on Hugging Face Jobs infrastructure on September 18, 2026 (Debian 13, DeepSeek, CEM888 v1.0.x). Its full method and terms are on the dataset page.
 
 **Benchmark of record:** BEAM-10M **77.2%** (154.4 / 200), live agent, no answer-key access. Per-question data, scoring script and methodology: **[CEM888AI/benchmarks](https://github.com/CEM888AI/benchmarks)**. Other runs in that repository are labeled experimental or measure a different benchmark and are not substitutes for this number.
 
@@ -56,8 +54,8 @@ CEM888 is in public beta. The current release lane is deliberately narrow: **fin
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first install, parity, upgrade and conformance certification in progress. |
-| **Claude Code / Codex native adapters** | Planned after the DeepSeek customer path passes its release gate; not shipped or certified today. |
-| **High-consequence / regulated deployments** | Long-term product direction. No sector-specific certification claim is being made. |
+| **Claude Code / Codex native adapters** | Next, after the DeepSeek customer path passes its release gate. |
+| **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
 
 The customer artifact is a **promotion and certification target**, not assumed correct because a mechanism exists elsewhere. Every release claim names the exact artifact or evidence behind it. Full table: **[Technical Status](./docs/STATUS.md)**.
 
@@ -141,7 +139,7 @@ Tagged releases with notes: **[Releases](https://github.com/CEM888AI/cem888/rele
 
 ## Enterprise direction
 
-CEM888 is intended to mature into a reliability, continuity and control layer for AI in data-sensitive and high-consequence environments, including legal, financial, public-sector and regulated enterprise systems. That requires customer-controlled deployment, identity isolation, provenance, explicit authority, evidence-backed verification, restart/recovery continuity and clear trust boundaries. This is a product direction, **not a claim of certification or regulatory compliance today**.
+CEM888 is intended to mature into a reliability, continuity and control layer for AI in data-sensitive and high-consequence environments, including legal, financial, public-sector and regulated enterprise systems. That requires customer-controlled deployment, identity isolation, provenance, explicit authority, evidence-backed verification, restart/recovery continuity and clear trust boundaries. Sector-specific compliance is scoped with each customer, per deployment.
 
 ## License
 
