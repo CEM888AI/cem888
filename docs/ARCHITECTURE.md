@@ -18,7 +18,7 @@ This document separates three surfaces deliberately:
 - **CEM engineering runtime** — the live ancestor/runtime on which product mechanisms are exercised, falsified and hardened.
 - **Customer artifact** — the exact wheel and platform bundles delivered to a customer; these are promoted and re-proven as release artifacts rather than assumed equivalent to the engineering runtime.
 
-That separation is a release discipline, not an architectural caveat. The architecture is already operating on the engineering runtime. Customer release proof is the final artifact-specific step.
+That separation is a release discipline, not an architectural caveat. The architecture is already operating on the engineering runtime. Customer release proof is the final artifact-specific step. **[STATUS.md](./STATUS.md) is the public claim/status authority when architecture evidence and release maturity differ.**
 
 ### Current evidence snapshot
 
@@ -31,7 +31,7 @@ That separation is a release discipline, not an architectural caveat. The archit
 | Hook/source synchronization falsifiers | **17 / 17 pass** |
 | Fabricated-evidence falsifier | **4 / 4 pass** |
 | Cross-process store locking | **4 / 4 pass** |
-| Current release train | **12 / 12 release gates green** |
+| Current release packaging/build train | **12 / 12 packaging/build release gates green** — artifact construction and release-integrity gates, not a claim that every runtime capability gate is complete |
 
 The deliberately preserved **2 PASS / 9 FAIL** result belongs to an earlier non-conformant customer artifact. It is retained as a falsification artifact — proof that the harness can reject a build — and is not the status of the current CEM engineering runtime.
 
@@ -234,6 +234,8 @@ The architectural boundary is intentional:
 
 Those are complementary layers, not competing implementations.
 
+**Security boundary:** the shell authority check is an **in-process semantic boundary, not an OS security boundary**. It is not represented as protection against hostile shell expansion, symlink manipulation or an already-compromised process. Deployments that require those guarantees add OS-level controls such as service-user separation, filesystem permissions or containers.
+
 ---
 
 # 5. Owner prohibitions become executable authority
@@ -305,10 +307,12 @@ A consequential action creates a verification obligation. Where the postconditio
 
 The current CEM engineering path includes:
 
-- **53 / 53 structured-verification checks passing**;
+- **53 / 53 structured-verification regression checks passing on the covered engineering-runtime paths**;
 - **4 / 4 fabricated-evidence falsifiers passing**;
 - explicit rejection of caller/model-supplied output as self-proving evidence;
 - receipt tracking for what was checked and what observation supported the result.
+
+That number is **test depth, not universal action-class coverage**. Verification coverage remains action-class-specific and is publicly classified as **partial** in [STATUS.md](./STATUS.md) until the exact supported/unsupported classes and customer-artifact proofs are complete.
 
 This is one of the core separations in the architecture:
 
