@@ -30,9 +30,8 @@ These are targets for a single-maintainer project, not a contractual SLA.
 | Step | Target |
 | --- | --- |
 | Acknowledge your report | within 5 business days |
-| Initial assessment (valid / not valid, severity) | within 10 business days |
-| Fix or mitigation for confirmed high-severity issues | as fast as possible; status updates at least every 14 days |
-| Public disclosure | coordinated with you after a fix ships, normally within 90 days of the report |
+| Keep you updated | every reply says when you will next hear back, and no gap is longer than 14 days |
+| Public disclosure | coordinated with you after a fix ships |
 
 You will be credited in the release notes unless you ask not to be.
 

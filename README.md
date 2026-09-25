@@ -28,7 +28,7 @@ python3.14 -m pip install pytest
 PYTHONPATH=src python3.14 -m pytest -q tests
 ```
 
-**Evidence:** **[Technical status + published test results](./docs/STATUS.md)** · **[Public conformance suite](./docs/PUBLIC_CONFORMANCE.md)** · **[Architecture note](./docs/ARCHITECTURE.md)** · **[Engineering case studies](https://github.com/CEM888AI/runtime-case-studies)** · **[Benchmarks](https://github.com/CEM888AI/benchmarks)**
+**Evidence:** **[Technical status + published test results](./docs/STATUS.md)** · **[Public conformance suite](./docs/PUBLIC_CONFORMANCE.md)** · **[Runtime evaluation](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation)** · **[Architecture note](./docs/ARCHITECTURE.md)** · **[Engineering case studies](https://github.com/CEM888AI/runtime-case-studies)** · **[Benchmarks](https://github.com/CEM888AI/benchmarks)**
 
 ---
 
@@ -39,9 +39,12 @@ Every result below links to its source. Failures are published alongside passes.
 | Check | Result | Scope | Source |
 | --- | --- | --- | --- |
 | Public conformance suite (this repo, CI on every push) | **9 / 9 pass** | Tier-0 authority, superseded-state exclusion, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
+| Runtime evaluation (external run, 2026-09-18) | **9 / 9 pass**; authority-boundary mechanism partial; one defect found: supersession sets `superseded_by` but leaves the old row `active` (retrieval still resolves correctly) | Durable state, kill-and-recover, model swap, verified execution, authority, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
 | Earlier installed customer artifact | **2 PASS / 9 FAIL — non-conformant** | Install conformance; published deliberately, artifact withdrawn as a candidate | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
 | Engineering runtime falsifiers | 8 authority · 53 verification · 17 hook-sync · 4 fabricated-evidence · 4 store-locking — all pass | CEM engineering runtime, not yet the customer artifact | [current-engineering-status.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md) |
 | Verification coverage | **Partial** | Covered/unsupported action classes still being published | [STATUS.md](./docs/STATUS.md#capability-status) |
+
+The runtime evaluation was performed by an AI engineering assistant running on Hugging Face Jobs infrastructure on September 18, 2026: single evaluator, one OS (Debian 13), one provider family (DeepSeek), CEM888 v1.0.x. It is not an official Hugging Face evaluation or endorsement, and not a certification.
 
 **Benchmark of record:** BEAM-10M **77.2%** (154.4 / 200), live agent, no answer-key access. Per-question data, scoring script and methodology: **[CEM888AI/benchmarks](https://github.com/CEM888AI/benchmarks)**. Other runs in that repository are labeled experimental or measure a different benchmark and are not substitutes for this number.
 
