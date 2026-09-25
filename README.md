@@ -34,12 +34,13 @@ PYTHONPATH=src python3.14 -m pytest -q tests
 
 ## Evidence scorecard
 
-Every result below links to its source.
+Every result below links to its source. **Failures are published alongside passes** so the scorecard shows what the evidence can falsify, not only what passed.
 
 | Check | Result | Scope | Source |
 | --- | --- | --- | --- |
 | Public conformance suite (this repo, CI on every push) | **12 / 12 pass** | Tier-0 authority, superseded-state exclusion, supersession lifecycle, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
 | Independent runtime evaluation (2026-09-18) | **9 / 9 pass** | Durable state, kill-and-recover, model swap, verified execution, authority boundary, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
+| Earlier installed customer artifact | **2 PASS / 9 FAIL — NON-CONFORMANT** | Historical install-conformance baseline; retained deliberately to show the harness can reject a build | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
 | Engineering runtime falsifiers | 8 authority · 53 verification · 17 hook-sync · 4 fabricated-evidence · 4 store-locking — all pass | CEM engineering runtime, not yet the customer artifact | [current-engineering-status.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md) |
 
 The runtime evaluation was run by an AI engineering assistant on Hugging Face Jobs infrastructure on September 18, 2026 (Debian 13, DeepSeek, CEM888 v1.0.x). Its full method and terms are on the dataset page.
