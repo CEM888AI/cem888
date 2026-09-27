@@ -26,8 +26,9 @@ That separation is a release discipline, not an architectural caveat. The archit
 | --- | --- |
 | Public conformance | **12 tests across 4 invariants — 12 / 12 pass** |
 | Independent runtime evaluation | **9 / 9 pass** |
-| CEM owner-prohibition / authority path | **8 / 8 pass** |
-| CEM structured verification | **53 / 53 pass** |
+| Owner-prohibition organ | **8 / 8 pass** on the live CEM engineering runtime |
+| Prohibition-gate | **Available guard; repo/live parity established; intentionally not wired into active CEM configuration** |
+| Structured-verification organ | **53 / 53 pass** on its covered live engineering-runtime paths |
 | Hook/source synchronization falsifiers | **17 / 17 pass** |
 | Fabricated-evidence falsifier | **4 / 4 pass** |
 | Cross-process store locking | **4 / 4 pass** |
@@ -234,24 +235,76 @@ The architectural boundary is intentional:
 
 Those are complementary layers, not competing implementations.
 
-**Security boundary:** the shell authority check is an **in-process semantic boundary, not an OS security boundary**. It is not represented as protection against hostile shell expansion, symlink manipulation or an already-compromised process. Deployments that require those guarantees add OS-level controls such as service-user separation, filesystem permissions or containers.
+**Security boundary:** the shell authority check is an **in-process semantic boundary, not an OS security boundary**. It is not represented as protection against hostile shell expansion, # 5. Owner authority is implemented as runtime control organs
 
----
+CEM888 does not rely on the model to remember, interpret or voluntarily obey critical owner constraints.
 
-# 5. Owner prohibitions become executable authority
+Three deterministic runtime organs separate owner authority, action enforcement and evidence:
 
-The engineering runtime extends ordinary write-root authority with a stronger rule:
+| Runtime organ | Responsibility | Current engineering status |
+| --- | --- | --- |
+| `owner-prohibition` | Turns authenticated owner prohibitions into durable, machine-readable enforcement state and normalizes equivalent action forms before execution | Active on CEM; **8 / 8 live acceptance checks passing** |
+| `prohibition-gate` | Provides a modular action-boundary guard that can refuse an operation before the tool executes | Present and tracked; retained as an available guard, **not currently wired into active CEM configuration** |
+| `structured-verification` | Persists structured evidence about consequential actions so completion state can be derived from observations rather than model narration | Active on CEM; **53 / 53 covered regression checks passing** |
+
+They solve different problems and are deliberately separate.
+
+```text
+AUTHENTICATED OWNER STEERING
+            |
+            v
+    owner-prohibition
+ durable prohibition / authority
+            |
+            v
+NORMALIZE OPERATION + TARGET
+            |
+            v
+   prohibition boundary
+            |
+       BLOCK / ALLOW
+            |
+            v
+       TOOL EXECUTES
+            |
+            v
+ structured-verification
+            |
+            v
+ OBSERVED EVIDENCE + RECEIPT
+            |
+            v
+ AUTHORITATIVE STATE UPDATE
+```
+
+The architectural point is that **authority, enforcement and proof are different responsibilities**.
+
+An owner instruction establishes what is allowed or forbidden.
+
+An execution gate decides whether a proposed action may cross the runtime boundary.
+
+A verifier determines what actually happened afterward.
+
+The model performs none of those promotions by assertion alone.
+
+## Owner prohibitions survive model and tool changes
 
 > **The model can change. The app can change. The owner's NO does not.**
 
-An explicit owner prohibition is not intended to survive merely as prose in memory.
+An explicit owner prohibition is not stored merely as prose.
 
-The runtime model separates two representations:
+The runtime maintains two representations:
 
-1. **Owner-stated record** — the owner's original words and provenance.
-2. **Compiled enforcement entry** — normalized operation, target, effect and scope used by the gate.
+1. **Owner-stated record** — the authenticated owner's original instruction, wording and provenance.
+2. **Compiled enforcement entry** — the normalized operation, target, effect and scope used by deterministic enforcement.
 
-This matters because the same prohibited intent can arrive through a shell command, API call, script or renamed tool. The enforcement key is the normalized operation and target, not a particular tool name.
+This separation matters because owner authority does not depend on magic marker language, and enforcement cannot depend on a particular tool name.
+
+"Do not modify this file," "never touch this path," and equivalent owner rulings must resolve from authenticated owner origin and semantic intent into enforceable state. A shell command, API call, script or renamed tool does not get to evade that state by changing surface form.
+
+`prohibition-gate` is intentionally documented separately from `owner-prohibition`: it is a reusable blocking organ available for runtime seams that require it, but availability is not represented as active enforcement until the host/runtime configuration actually wires it into the consequential-action path.
+
+rs because the same prohibited intent can arrive through a shell command, API call, script or renamed tool. The enforcement key is the normalized operation and target, not a particular tool name.
 
 The owner-prohibition path is currently exercised on the CEM engineering runtime with **8 / 8 passing falsifiers**.
 
@@ -299,11 +352,17 @@ This preserves a clean invariant:
 
 ---
 
-# 7. Verification is evidence-backed, not prose-backed
+# 7. Structured verification is evidence-backed, not prose-backed
 
-CEM888 does not treat “done” as proof.
+**Engineering organ:** `structured-verification`
 
-A consequential action creates a verification obligation. Where the postcondition is observable, completion is established from runtime-observed evidence rather than from the model's narration of success.
+CEM888 does not treat "done" as proof.
+
+`structured-verification` exists to keep the model's completion claim separate from the runtime's evidence about the result.
+
+A consequential action can create a verification obligation. Where the postcondition is observable, completion is established from runtime-observed evidence rather than from the model's narration of success.
+
+The organ persists structured verification state and raw evidence references so downstream state does not need to reconstruct truth from conversational prose.
 
 The current CEM engineering path includes:
 
