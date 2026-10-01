@@ -1,6 +1,6 @@
 # CEM888 Technical Status
 
-**Updated: 2026-09-24**
+**Updated: 2026-10-01**
 
 This page is the public status boundary for CEM888. It distinguishes the **CEM engineering runtime / ancestor**, the **customer product artifact**, and **planned host integrations** so an evaluator does not have to infer readiness from version labels, source files or architecture diagrams.
 
@@ -14,16 +14,16 @@ The CEM engineering runtime is the ancestor. It is **not** the website customer 
 
 | Capability | Current public status | Customer-release requirement |
 | --- | --- | --- |
-| Authoritative current state + supersession | **Implemented on the CEM engineering path** | Re-prove on frozen customer artifact |
+| Authoritative current state + supersession | **Customer first-boot path exercised; explicit supersession worked, but duplicate-current defect remains** | Fix uniqueness defect and re-run on new frozen artifact |
 | Bounded working-state compilation | **Implemented on the CEM engineering path** | Re-prove on frozen customer artifact |
-| Typed active-work lifecycle | **Implemented on the CEM engineering path** | Re-prove on customer install |
-| Multi-session write safety | **Implemented on the CEM engineering path** | Customer-install concurrency proof |
+| Typed active-work lifecycle | **Customer first-boot path exercised** | Greeting/open-work hygiene defect must be fixed and re-run |
+| Multi-session write safety | **Restart continuity + duplicate/retry dedup observed on customer install** | Concurrent-writer contention still needs hostile proof |
 | Deterministic action authority | **In progress / hardening** | Bypass audit + measurable deny/effect proof |
 | Verification evidence integrity | **In progress / hardening** | Runtime-captured evidence; no trust in caller/model prose |
 | Verification coverage | **Partial** | Publish exact covered/unsupported action classes |
 | Gate liveness | **Not complete** | Prove gates produce a real deny/withhold/effect |
 | Mutation provenance | **Not complete** | Mechanically reconstruct why current state changed |
-| Authority-aware deep memory search | **In progress** | Retrieval must not promote stale information into current authority |
+| Authority-aware deep memory search | **Partially exercised on customer install** | Fix path-sensitive silent-zero retrieval and re-run stale-state falsifier |
 | Dual owner-prohibition contract | **Specified; not customer-certified end to end** | Pass retrieval + action falsifiers on exact artifact |
 | Native Claude Code / Codex adapters | **Planned** | Implement only after current DeepSeek install gate |
 | Regulated-sector certification | **Not claimed** | Deployment-specific future work |
@@ -44,6 +44,17 @@ finish CEM engineering capability set
 ```
 
 Only after this lane passes does the roadmap expand to alternate standalone providers and native existing-host adapters.
+
+
+## Fresh-install acceptance — 2026-10-01
+
+A newly installed customer agent was exercised through first boot, durable typed-state writes, automatic exhale, two genuine fresh-process restarts, explicit supersession, BM25/vector/FTS/vault retrieval, one evidence-verified file action, duplicate/retry replay, and second-restart lifecycle recovery.
+
+**Result: core first-boot / continuity path passed with defects.** The run is **not** represented as full customer certification.
+
+Observed defects included duplicate current decision state, one path-sensitive hybrid-retrieval empty result, shared-root residue, MCP stdio noise, an empty duplicate Chroma lane, memory-typing/open-work hygiene issues, and a doctor false negative.
+
+Full artifact details, evidence boundary, and non-claims: **[Fresh-install acceptance — 2026-10-01](./FRESH_INSTALL_ACCEPTANCE_2026-10-01.md)**.
 
 ## Published non-conformant baseline
 
@@ -121,4 +132,4 @@ CEM888 has a coherent operating architecture and meaningful engineering proof, b
 
 The next milestone is simple to state:
 
-> **One frozen DeepSeek-first customer artifact that can name itself and pass its own conformance tests.**
+> **Fix the defects found in the October 1 fresh-install run, freeze a new DeepSeek-first customer artifact, and rerun the same acceptance test unchanged before promoting it to customer-certified.**
