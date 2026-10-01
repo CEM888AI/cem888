@@ -10,6 +10,7 @@ Status labels follow [docs/STATUS.md](./docs/STATUS.md): a mechanism listed here
 - Supersession now closes the prior record's lifecycle (`lifecycle_status='superseded'`) in the same transaction that sets `superseded_by`. Previously the old row stayed `active`; retrieval was unaffected because the current-state read also filters on `superseded_by`. Existing stores are repaired when opened. Reported by the September 18, 2026 external runtime evaluation. Regression tests: `tests/test_supersession_lifecycle_public.py`.
 
 **Changed**
+- Licensing for versions first released after v1.0.3 changed from AGPL-3.0 to Business Source License 1.1. Non-production use and personal non-commercial production use remain available without a commercial license; business production use requires a separate commercial license from CEM Unlimited LLC. v1.0.3 remains AGPL-3.0.
 - Public conformance suite: 12 checks (was 9). Test dependencies: `pytest`, `pyyaml`.
 
 ## v1.0.3 — first public beta
