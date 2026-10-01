@@ -1,6 +1,6 @@
 # CEM888 Contributor License Agreement
 
-**Version 1.0**
+**Version 1.1**
 
 This agreement is between you ("You") and CEM Unlimited LLC ("CEM888"), the maintainer of the CEM888 project. It applies to every Contribution You submit to any CEM888 repository. You accept it by including the line below in the description of your pull request:
 
@@ -16,7 +16,7 @@ You keep ownership of Your Contribution. You grant CEM888 and recipients of soft
 
 ## 3. Right to relicense
 
-You agree that CEM888 may distribute Your Contribution under the GNU Affero General Public License v3.0 **and** under other license terms, including proprietary commercial licenses. This is what allows the project to keep both its community (AGPL-3.0) lane and its commercial lane.
+You agree that CEM888 may distribute Your Contribution under the Business Source License 1.1 **and** under other license terms, including proprietary commercial licenses and future open-source licenses. This is what allows the project to keep both its source-available lane and its commercial licensing lane. This clause also preserves CEM888's right to continue distributing prior versions under the license terms that already applied to those versions.
 
 ## 4. Patent license
 
