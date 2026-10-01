@@ -8,7 +8,7 @@
 
 [![Tests](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml)
 [![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&label=release)](https://github.com/CEM888AI/cem888/releases)
-[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)](#license)
+[![License: BSL 1.1](https://img.shields.io/badge/license-BSL--1.1-blue?style=flat-square)](#license)
 [![Stage: Public beta](https://img.shields.io/badge/stage-public_beta-orange?style=flat-square)](./docs/STATUS.md)
 
 </div>
@@ -112,23 +112,25 @@ The website is the account, onboarding and download surface. Customer agents run
 
 This repository is the public source and audit record for the CEM888 runtime. It is not the production-development authority and it is not the installer. Private prompts, proprietary scoring/routing policy, customer data, credentials and operational secrets are not part of the public contract. See **[PROVENANCE.md](./PROVENANCE.md)** and the preserved **[third-party license notices](./licenses/third-party/MIT-NOTICE.txt)**.
 
-## Using CEM888 at work: what AGPL-3.0 means
+## Using CEM888: what BSL 1.1 means
 
 This is a plain-language summary, not legal advice. The **[LICENSE](./LICENSE)** file governs.
 
-| You want to… | Community license (AGPL-3.0) | Need a commercial license? |
+| You want to… | BSL 1.1 grant | Need a commercial license? |
 | --- | --- | --- |
-| Run it internally on your own machines or infrastructure | Yes | No |
-| Modify it for internal use | Yes | No |
-| Offer a modified version to users over a network | Yes, if you publish your modified source to those users under AGPL-3.0 | No, if you comply |
-| Embed it in a closed-source product you sell or distribute | Not without releasing your combined source under AGPL-3.0 | **Yes** |
-| White-label, resell, or run it as a closed hosted service | Not without meeting AGPL-3.0 obligations | **Yes** |
+| Learn, evaluate, test, or develop with CEM888 outside production | Yes | No |
+| Use it in production solely for your own personal, non-commercial purposes | Yes | No |
+| Run it in production for a company, employer, organization, or internal business operation | No | **Yes** |
+| Use it in paid freelance, consulting, or client work | No | **Yes** |
+| Embed, resell, white-label, host, or offer it as part of a commercial product or service | No | **Yes — custom terms** |
 
-The trigger for a commercial license is **proprietary use or distribution that does not comply with AGPL-3.0**, not company size. Commercial terms (proprietary embedding, white-labeling, redistribution, custom integration, support, private deployment) are negotiated per deal: **creator@cem888.ai**.
+Business production use requires a separate commercial license from **CEM Unlimited LLC**. Contact **creator@cem888.ai**.
+
+**Version boundary:** CEM888 v1.0.3 remains under the AGPL-3.0 terms that accompanied that release. Versions first released under BSL 1.1 use the current **[LICENSE](./LICENSE)** terms.
 
 ## Contributing
 
-Outside contributions require agreement to the **[Contributor License Agreement](./CLA.md)** before they can be merged. This keeps the community (AGPL-3.0) and commercial lanes both possible. See **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
+Outside contributions require agreement to the **[Contributor License Agreement](./CLA.md)** before they can be merged. This keeps the source-available BSL 1.1 lane and separate commercial licensing lane both possible. See **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
 
 ## Security
 
@@ -144,9 +146,11 @@ CEM888 is intended to mature into a reliability, continuity and control layer fo
 
 ## License
 
-**Community lane — AGPL-3.0.** CEM888-authored work in this repository is distributed under AGPL-3.0, subject to preserved third-party notices and licenses.
+**Source-available lane — Business Source License 1.1.** CEM888-authored work first released after v1.0.3 is distributed under BSL 1.1, subject to preserved third-party notices and licenses.
 
-**Commercial lane — negotiated terms.** For commercial licensing, technical partnerships, design-partner discussions or investment conversations: **creator@cem888.ai**.
+**Commercial lane — required for business production use.** Production use by a company, employer, organization, paid client, commercial product, hosted service, reseller, embedder, or white-label deployment requires a separate commercial license from CEM Unlimited LLC. Contact **creator@cem888.ai**.
+
+**Earlier release:** v1.0.3 remains under AGPL-3.0 as originally released.
 
 ---
 
