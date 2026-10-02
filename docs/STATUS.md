@@ -1,6 +1,6 @@
 # CEM888 Technical Status
 
-**Updated: 2026-10-01**
+**Updated: 2026-10-02**
 
 This page is the public status boundary for CEM888. It distinguishes the **CEM engineering runtime / ancestor**, the **customer product artifact**, and **planned host integrations** so an evaluator does not have to infer readiness from version labels, source files or architecture diagrams.
 
@@ -30,17 +30,25 @@ The CEM engineering runtime is the ancestor. It is **not** the website customer 
 
 ## Current customer-release lane
 
-The immediate release sequence is:
+The lane has produced a frozen candidate artifact:
+
+| | |
+|---|---|
+| Artifact | `cem888_agent-1.0.41-py3-none-any.whl` |
+| Size | 3,963,252 bytes |
+| SHA-256 | `0d090610d74ebaa56edaf5ebb7a0efc568f26b859f2cd23e26b30f43350f9d5a` |
+| Release commit | `5342bac3` |
+| Deployed | 2026-10-01, health-checked at that revision |
 
 ```text
-finish CEM engineering capability set
-  -> promote customer-relevant changes together
-  -> build one DeepSeek-first candidate artifact
-  -> freeze artifact + digests
-  -> run install conformance
-  -> run clean-install / upgrade / retry tests
-  -> re-baseline the exact installed artifact
-  -> external beta / partner handoff
+promote customer-relevant changes together         [done]
+  -> rebuild wheel (1.0.40 -> 1.0.41)              [done]
+  -> rebuild platform bundles                      [done]
+  -> freeze artifact + digests                     [done — hash above]
+  -> publish + verify shipped bundle               [done — health-checked]
+  -> run install conformance                       [IN PROGRESS]
+  -> run clean-install / upgrade / retry tests     [IN PROGRESS]
+  -> external beta / partner handoff               [gated on the above]
 ```
 
 Only after this lane passes does the roadmap expand to alternate standalone providers and native existing-host adapters.
@@ -132,4 +140,6 @@ CEM888 has a coherent operating architecture and meaningful engineering proof, b
 
 The next milestone is simple to state:
 
-> **Fix the defects found in the October 1 fresh-install run, freeze a new DeepSeek-first customer artifact, and rerun the same acceptance test unchanged before promoting it to customer-certified.**
+> **Run the same acceptance test unchanged against 1.0.41, close the items it still fails, and only then promote the artifact to customer-certified.**
+
+1.0.41 is cut, frozen and digest-named (above); the earlier locale-codec class is repaired with a release guard that fails loudly if its own detector stops detecting. The defects still open against the customer artifact are the ones the October 1 run found and the re-exercise re-confirmed — they are tracked, not closed, and the artifact is not represented as conformant until the unchanged test passes on it.
