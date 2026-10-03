@@ -41,6 +41,7 @@ Every result below links to its source. **Failures are published alongside passe
 | Public conformance suite (this repo, CI on every push) | **12 / 12 pass** | Tier-0 authority, superseded-state exclusion, supersession lifecycle, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) · [CI](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml) |
 | Independent runtime evaluation (2026-09-18) | **9 / 9 pass** | Durable state, kill-and-recover, model swap, verified execution, authority boundary, unknown state, provenance, contradiction/freshness, failure recovery | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
 | Fresh-install acceptance (2026-10-01) | **Core first-boot / continuity path passed with defects** | Durable state, automatic exhale, two fresh-process restarts, explicit supersession, live retrieval/index surfaces, evidence-verified file action, retry deduplication | [FRESH_INSTALL_ACCEPTANCE_2026-10-01.md](./docs/FRESH_INSTALL_ACCEPTANCE_2026-10-01.md) |
+| Claude Code host observation (2026-10-03) | **Turn-level continuity changed live engineering behavior** | Project state + repo/deploy/install constraints arrived automatically; owner prohibition blocked a protected edit; Claude used injected context while diagnosing a Codex connector profile conflict | [case study](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-claude-code-turn-level-continuity.md) |
 | Earlier installed customer artifact | **2 PASS / 9 FAIL — NON-CONFORMANT** | Historical install-conformance baseline; retained deliberately to show the harness can reject a build | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
 | Engineering runtime falsifiers | 8 authority · 53 verification · 17 hook-sync · 4 fabricated-evidence · 4 store-locking — all pass | CEM engineering runtime, not yet the customer artifact | [current-engineering-status.md](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md) |
 
@@ -56,7 +57,8 @@ CEM888 is in public beta. The current release lane is deliberately narrow: **fin
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on October 1 with documented defects; fixes + frozen-artifact rerun still required before full certification. |
-| **Claude Code / Codex native adapters** | Next, after the DeepSeek customer path passes its release gate. |
+| **Claude Code native adapter** | Live turn-level continuity exercised on 2026-10-03; host observation published. Packaging/certification still separate from the frozen DeepSeek customer artifact. |
+| **Codex native adapter** | Connector exists; live diagnosis found contradictory profile guards preventing successful turns. Fix/certification still required. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
 
 The customer artifact is a **promotion and certification target**, not assumed correct because a mechanism exists elsewhere. Every release claim names the exact artifact or evidence behind it. Full table: **[Technical Status](./docs/STATUS.md)**.
@@ -100,6 +102,8 @@ TURN FINISH                commit resulting state -> record checkpoint / receipt
 ```
 
 A partner keeps its UI, planner, model choice, tools, domain workflow and observability stack. MCP connectivity alone is not a claim of full control; each host is classified by the lifecycle boundaries it actually exposes. See **[Integration contract](./docs/INTEGRATION.md)**, **[Enforcement matrix](./docs/ENFORCEMENT_MATRIX.md)** and **[Native host adapters](./docs/HOST_ADAPTERS.md)**.
+
+**Live host evidence:** on October 3, 2026, Claude Code reported that CEM888's injected turn context materially changed its engineering behavior by carrying current project decisions, repo/deployment/install boundaries and owner prohibitions into the session automatically. The same session observed a protected edit being blocked before tool execution and used the injected context while tracing a Codex connector profile conflict. This is published as a host observation, not a universal competitive claim: **[Claude Code turn-level continuity case study](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-claude-code-turn-level-continuity.md)**.
 
 ## Claim discipline
 
