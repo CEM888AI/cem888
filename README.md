@@ -117,28 +117,28 @@ The website is the account, onboarding and download surface. Customer agents run
 
 This repository is the public source and audit record for the CEM888 runtime. It is not the production-development authority and it is not the installer. Private prompts, proprietary scoring/routing policy, customer data, credentials and operational secrets are not part of the public contract. See **[PROVENANCE.md](./PROVENANCE.md)** and the preserved **[third-party license notices](./licenses/third-party/MIT-NOTICE.txt)**.
 
-## Using CEM888: what the Elastic License 2.0 means
+## Using CEM888: what the licence means
 
-Current and future releases are **source-available under the [Elastic License 2.0](./LICENSE) (ELv2)** — broad rights to read, modify and redistribute, and it **never converts** into an open-source licence.
+Current and future releases are **source-available under the [CEM888 Source-Available Commercial License](./LICENSE)** — broad rights to read, audit, modify and redistribute, **free for personal, non-commercial use**, and it **never converts** into an open-source licence.
 
 This is a plain-language summary, not legal advice. The **[LICENSE](./LICENSE)** file governs.
 
-| You want to… | What ELv2 itself permits | CEM888 licensing position |
+| You want to… | Without a paid licence | CEM888 licensing position |
 | --- | --- | --- |
 | Learn, evaluate, test, or develop with CEM888 | Yes | No licence needed |
-| Run CEM888 in production for yourself | Yes | No licence needed |
-| Use it in business production, or in paid client/consulting work | Yes | Requires a valid CEM888 license key for the applicable tier, or a commercial license |
-| Embed, resell, white-label, or OEM-distribute it | Yes | Requires a separate commercial license |
-| Provide it to third parties as a hosted or managed service | **No** | Prohibited by ELv2 |
-| Move, change, disable, or circumvent the license-key functionality | **No** | Prohibited by ELv2 |
+| Run CEM888 in production for yourself, personally | Yes | No licence needed — Free tier is personal and non-commercial only |
+| Use it in business production, or in paid client/consulting work | **No** | Requires a valid CEM888 license key for the applicable tier, or a commercial license |
+| Embed, resell, white-label, or OEM-distribute it | **No** | Requires a separate commercial license |
+| Provide it to third parties as a hosted or managed service | **No** | Prohibited |
+| Move, change, disable, or circumvent the license-key functionality | **No** | Prohibited |
 
 **Pro and Business features are gated by a CEM888 license key.** Business production use, paid client work, embedding, resale, white-labeling and OEM distribution require a valid license key for the applicable tier or a separate commercial license from **CEM Unlimited LLC**. Contact **creator@cem888.ai**.
 
-**Release history — licensing changes are prospective and are not applied retroactively.** CEM888 v1.0.3 remains under the **AGPL-3.0** terms that accompanied that release, and versions first released under **Business Source License 1.1** remain under those BSL terms. Current and future versions use the **[Elastic License 2.0](./LICENSE)**.
+**Release history — licensing changes are prospective and are not applied retroactively.** CEM888 v1.0.3 remains under the **AGPL-3.0** terms that accompanied that release, and versions first released under **Business Source License 1.1** remain under those BSL terms, and versions released under the Elastic License 2.0 remain under those terms. Current and future versions use the **[CEM888 Source-Available Commercial License](./LICENSE)**.
 
 ## Contributing
 
-Outside contributions require agreement to the **[Contributor License Agreement](./CLA.md)** before they can be merged. This keeps the source-available ELv2 lane and separate commercial licensing lane both possible. See **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
+Outside contributions require agreement to the **[Contributor License Agreement](./CLA.md)** before they can be merged. This keeps the source-available lane and the separate commercial licensing lane both possible. See **[CONTRIBUTING.md](./CONTRIBUTING.md)**.
 
 ## Security
 
@@ -154,11 +154,11 @@ CEM888 is intended to mature into a reliability, continuity and control layer fo
 
 ## License
 
-**Source-available lane — Elastic License 2.0 (ELv2).** CEM888-authored work first released after v1.0.3 is distributed under ELv2, which **never converts to an open-source licence**, subject to preserved third-party notices and licenses.
+**Source-available lane — CEM888 Source-Available Commercial License.** CEM888-authored work first released on or after 2026-10-05 is distributed under it **free for personal, non-commercial use**; nothing that makes money, or builds a business, is free. It **never converts to an open-source licence**, subject to preserved third-party notices and licenses.
 
 **Commercial lane — license key or commercial license required for business use.** Business production use, paid client work, embedding, resale, white-labeling, hosted service and OEM distribution require a valid CEM888 license key for the applicable tier or a separate commercial license from CEM Unlimited LLC. Contact **creator@cem888.ai**.
 
-**Release history:** v1.0.3 remains under AGPL-3.0 as originally released; versions first released under Business Source License 1.1 remain under those BSL terms.
+**Release history:** v1.0.3 remains under AGPL-3.0 as originally released; versions first released under Business Source License 1.1 or the Elastic License 2.0 remain under those terms.
 
 ---
 
