@@ -16,7 +16,7 @@ You keep ownership of Your Contribution. You grant CEM888 and recipients of soft
 
 ## 3. Right to relicense
 
-You agree that CEM888 may distribute Your Contribution under the Elastic License 2.0 (ELv2) **and** under other license terms, including proprietary commercial licenses and future open-source licenses. This is what allows the project to keep both its source-available lane and its commercial licensing lane. This clause also preserves CEM888's right to continue distributing prior versions under the license terms that already applied to those versions.
+You agree that CEM888 may distribute Your Contribution under the CEM888 Source-Available Commercial License **and** under other license terms, including proprietary commercial licenses and future open-source licenses. This is what allows the project to keep both its source-available lane and its commercial licensing lane. This clause also preserves CEM888's right to continue distributing prior versions under the license terms that already applied to those versions.
 
 ## 4. Patent license
 
