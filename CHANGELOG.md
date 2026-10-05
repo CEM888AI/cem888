@@ -10,7 +10,7 @@ Status labels follow [docs/STATUS.md](./docs/STATUS.md): a mechanism listed here
 - Supersession now closes the prior record's lifecycle (`lifecycle_status='superseded'`) in the same transaction that sets `superseded_by`. Previously the old row stayed `active`; retrieval was unaffected because the current-state read also filters on `superseded_by`. Existing stores are repaired when opened. Reported by the September 18, 2026 external runtime evaluation. Regression tests: `tests/test_supersession_lifecycle_public.py`.
 
 **Changed**
-- Licensing for versions first released after v1.0.3 changed from AGPL-3.0 to Business Source License 1.1. Non-production use and personal non-commercial production use remain available without a commercial license; business production use requires a separate commercial license from CEM Unlimited LLC. v1.0.3 remains AGPL-3.0.
+- Licensing: the unreleased change to Business Source License 1.1 is superseded by the **Elastic License 2.0 (ELv2)** — source-available, and it never converts to an open-source license (owner decision, Plane CEM-297). ELv2 grants broad use, including commercial internal use, with two limitations: you may not offer CEM888 to third parties as a hosted or managed service, and you may not move, change, disable or circumvent the license-key functionality. Business production use, paid client work, embedding, resale, white-labeling and OEM distribution require a valid CEM888 license key for the applicable tier or a separate commercial license from CEM Unlimited LLC. v1.0.3 remains AGPL-3.0; any version first released under BSL 1.1 remains under those BSL terms.
 - Public conformance suite: 12 checks (was 9). Test dependencies: `pytest`, `pyyaml`.
 
 ## v1.0.3 — first public beta
