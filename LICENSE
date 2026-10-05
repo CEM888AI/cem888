@@ -137,3 +137,14 @@ exclusive jurisdiction. (Source: `CEM888AI/legal` §7.)
 ---
 © 2026 CEM Unlimited LLC. All rights reserved.
 "CEM888" and related marks are trademarks of CEM Unlimited LLC.
+
+## 13. Prior versions — no retroactive effect
+This License applies to versions of the Software released on or after 2026-10-05.
+Licensing changes are not retroactive, and nothing in this document relicenses a
+version that shipped under different terms:
+
+- **v1.0.3 and earlier** remain under the license terms that accompanied those
+  releases, including AGPL-3.0 for v1.0.3.
+- **Versions released under Business Source License 1.1** remain under BSL 1.1
+  (Change License: Apache 2.0; Change Date: 2030-10-01).
+- **Versions released under the Elastic License 2.0** remain under ELv2.
