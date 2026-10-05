@@ -8,7 +8,7 @@
 
 [![Tests](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/CEM888AI/cem888/actions/workflows/tests.yml)
 [![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&label=release)](https://github.com/CEM888AI/cem888/releases)
-[![License: Elastic 2.0](https://img.shields.io/badge/license-Elastic--2.0-blue?style=flat-square)](#license)
+[![License: CEM888 Source-Available Commercial](https://img.shields.io/badge/license-source--available_commercial-blue?style=flat-square)](#license)
 [![Stage: Public beta](https://img.shields.io/badge/stage-public_beta-orange?style=flat-square)](./docs/STATUS.md)
 
 </div>
