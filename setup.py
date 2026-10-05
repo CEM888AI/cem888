@@ -20,6 +20,15 @@ setup(
     name="cem888-agent",
     version="1.0.3",
     description="CEM888 — local-first, model-agnostic agent runtime (public beta)",
+    # The licence this package ships under. Declared here so a build from this
+    # repository cannot produce a wheel that names no licence at all — the exact
+    # failure that shipped AGPL inside the customer wheel.
+    license="LicenseRef-CEM888-Source-Available-Commercial",
+    license_files=["LICENSE"],
+    classifiers=[
+        "License :: Other/Proprietary License",
+        "Programming Language :: Python :: 3",
+    ],
     author="CEM888",
     author_email="creator@cem888.ai",
     url="https://cem888.ai",
