@@ -8,7 +8,7 @@ Thanks for looking. CEM888 is a public beta maintained by one person, so the pro
 
    `I have read and agree to the CEM888 Contributor License Agreement (CLA.md).`
 
-   Pull requests without it are not reviewed or merged. The CLA is what lets CEM888 offer contributions under BSL 1.1 and under separate commercial license terms. See [CLA.md](./CLA.md).
+   Pull requests without it are not reviewed or merged. The CLA is what lets CEM888 offer contributions under ELv2 and under separate commercial license terms. See [CLA.md](./CLA.md).
 
 2. **Open an issue first for anything larger than a small fix**, so scope can be agreed before you spend time.
 
@@ -34,4 +34,4 @@ This repository is the public source and audit record. The customer installer, p
 
 ## License of contributions
 
-Contributions are accepted for distribution under BSL 1.1 and the terms of [CLA.md](./CLA.md).
+Contributions are accepted for distribution under the Elastic License 2.0 (ELv2) and the terms of [CLA.md](./CLA.md).
