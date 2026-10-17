@@ -5,15 +5,15 @@
 <br/>
 
 <a href="#install-the-free-agent">
-  <img src="./assets/btn-download.svg?v=2" alt="Download the free agent" width="380" height="60" />
+  <img src="./assets/readme-btn-download.svg" alt="Download the free agent" width="380" height="60" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
-  <img src="./assets/btn-website.svg?v=2" alt="cem888.ai" width="176" height="60" />
+  <img src="./assets/readme-btn-website.svg" alt="cem888.ai" width="176" height="60" />
 </a>
 &nbsp;
 <a href="#documentation-map">
-  <img src="./assets/btn-docs.svg?v=2" alt="Documentation" width="144" height="60" />
+  <img src="./assets/readme-btn-docs.svg" alt="Documentation" width="144" height="60" />
 </a>
 
 <br/>
@@ -26,7 +26,7 @@
 
 <br/>
 
-<img src="./assets/divider.svg?v=2" width="100%" alt="" />
+<img src="./assets/readme-divider.svg" width="100%" alt="" />
 
 </div>
 
@@ -83,7 +83,7 @@ wheels is worse than saying so.
 </table>
 
 <div align="center">
-  <img src="./assets/divider.svg?v=2" width="100%" alt="" />
+  <img src="./assets/readme-divider.svg" width="100%" alt="" />
 </div>
 
 ## The failure this exists for
