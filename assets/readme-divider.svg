@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='26' viewBox='0 0 1200 26' role='presentation'>
+  <defs>
+    <linearGradient id='l' x1='0' y1='0' x2='1200' y2='0' gradientUnits='userSpaceOnUse'>
+      <stop offset='0' stop-color='#3ADBE8' stop-opacity='0'/>
+      <stop offset='.5' stop-color='#3ADBE8' stop-opacity='.55'/>
+      <stop offset='1' stop-color='#3ADBE8' stop-opacity='0'/>
+    </linearGradient>
+    <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='17'/><feColorMatrix type='saturate' values='0'/></filter>
+  </defs>
+  <rect x='0' y='12' width='1200' height='1' fill='url(#l)'/>
+  <rect x='0' y='12' width='1200' height='1' filter='url(#n)' opacity='.25'/>
+  <rect x='596' y='8' width='8' height='8' fill='#B8943A' transform='rotate(45 600 12)'/>
+</svg>
