@@ -1,19 +1,19 @@
 <div align="center">
 
-<img src="./assets/readme-banner.png" alt="CEM888 — STATE decides what is true" width="100%" />
+<img src="./assets/readme-banner.png?v=2" alt="CEM888 — STATE decides what is true" width="100%" />
 
 <br/>
 
 <a href="#install-the-free-agent">
-  <img src="./assets/btn-download.svg" alt="Download the free agent" width="380" height="60" />
+  <img src="./assets/btn-download.svg?v=2" alt="Download the free agent" width="380" height="60" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
-  <img src="./assets/btn-website.svg" alt="cem888.ai" width="176" height="60" />
+  <img src="./assets/btn-website.svg?v=2" alt="cem888.ai" width="176" height="60" />
 </a>
 &nbsp;
 <a href="#documentation-map">
-  <img src="./assets/btn-docs.svg" alt="Documentation" width="144" height="60" />
+  <img src="./assets/btn-docs.svg?v=2" alt="Documentation" width="144" height="60" />
 </a>
 
 <br/>
@@ -26,7 +26,7 @@
 
 <br/>
 
-<img src="./assets/divider.svg" width="100%" alt="" />
+<img src="./assets/divider.svg?v=2" width="100%" alt="" />
 
 </div>
 
@@ -38,7 +38,7 @@ One command. No account, no signup. The free lane is the **agent itself** — te
 connect it to Telegram. There is no desktop app in it.
 
 <p align="center">
-  <img src="./assets/readme-install.png" width="78%" alt="The installer asking for agent name, your name, the agent's job, a provider and a key" />
+  <img src="./assets/readme-install.png?v=2" width="78%" alt="The installer asking for agent name, your name, the agent's job, a provider and a key" />
 </p>
 
 **macOS and Linux**
@@ -83,7 +83,7 @@ wheels is worse than saying so.
 </table>
 
 <div align="center">
-  <img src="./assets/divider.svg" width="100%" alt="" />
+  <img src="./assets/divider.svg?v=2" width="100%" alt="" />
 </div>
 
 ## The failure this exists for
