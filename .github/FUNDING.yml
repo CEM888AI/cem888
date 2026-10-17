@@ -1,0 +1,17 @@
+# CEM888 funding configuration for this repository.
+#
+# The "Sponsor" button is generated from this file. GitHub requires a
+# FUNDING.yml to live in the .github folder, so this path is correct.
+#
+# GitHub Sponsors is NOT enabled yet: github.com/sponsors/CEM888AI
+# 302-redirects to the profile until the account completes Sponsors enrollment
+# (agreement + Stripe payout account + bank + tax + 2FA, then "Request
+# approval"). Uncomment only after that lands:
+# github: [CEM888AI]
+
+ko_fi: cem888ai
+
+custom:
+  - "https://donate.stripe.com/6oU14m3Os3l47FA41Zfbq03"   # sponsor monthly
+  - "https://donate.stripe.com/cNi28q5WA3l4bVQaqnfbq02"   # give once
+  - "https://cem888.ai/support.html"                      # funding hub
