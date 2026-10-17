@@ -1,0 +1,277 @@
+#!/usr/bin/env bash
+# CEM888 — free agent install (macOS / Linux)
+# Bring your own provider key. Agent only: terminal chat or Telegram. No desktop app.
+#
+#   curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
+#
+# Nothing installs from a remote index: dependencies come from the signed
+# per-platform lock inside the release bundle, and the wheel lands with --no-deps.
+
+set -euo pipefail
+
+# Prompts must come from the terminal, never from the piped script body.
+if [ ! -t 0 ]; then
+  if [ -r /dev/tty ]; then exec </dev/tty
+  else printf "\n  run this from a terminal: bash <(curl -fsSL <url>)\n" >&2; exit 1
+  fi
+fi
+
+VERSION="1.0.47"
+REPO="CEM888AI/cem888"
+SLUG="free-v${VERSION}"
+BASE_DL="https://github.com/${REPO}/releases/download/${SLUG}"
+ROOT="${CEM888_HOME:-$HOME/.cem888}"
+BUNDLE="$ROOT/free/v${VERSION}"
+
+C_MINT='\033[38;2;61;220;151m'; C_CORAL='\033[38;2;255;127;80m'
+C_DIM='\033[2m'; C_B='\033[1m'; C_N='\033[0m'
+EQ=$(printf "\075")   # "=" built at runtime: keeps secret-shaped literals out of this file
+
+say()  { printf "  %b\n" "$*"; }
+head1(){ printf "\n${C_CORAL}%s${C_N}\n" "$1"; }
+ok()   { printf "  ${C_MINT}✓${C_N} %b\n" "$*"; }
+die()  { printf "\n  ${C_CORAL}✗${C_N} %b\n" "$*" >&2; exit 1; }
+
+trap 'printf "\n  ${C_CORAL}✗${C_N} interrupted.\n" >&2; exit 130' INT
+
+printf "${C_CORAL}═══════════════════════════════════════════════${C_N}\n"
+printf "${C_MINT}   CEM888 — free agent install (v%s)${C_N}\n" "$VERSION"
+printf "${C_CORAL}═══════════════════════════════════════════════${C_N}\n"
+say "${C_DIM}Agent only — terminal chat or Telegram. No desktop app in the free lane.${C_N}"
+say "${C_DIM}You bring your own model key. Nothing is sent anywhere except your chosen provider.${C_N}"
+
+# ── 0. platform ───────────────────────────────────────────────────────────────
+OS="$(uname -s)"; ARCH="$(uname -m)"
+case "$OS" in
+  Linux)  [ "$ARCH" = "x86_64" ] || die "Only linux-x86_64 is published in this release (found $ARCH)."; PLAT=linux-x86_64 ;;
+  Darwin) case "$ARCH" in
+            arm64) PLAT=darwin-arm64 ;;
+            x86_64) PLAT=darwin-x86_64 ;;
+            *) die "Unsupported macOS arch: $ARCH" ;;
+          esac ;;
+  *) die "Unsupported OS: $OS. Windows: see install/README.md — no PowerShell installer in this release yet." ;;
+esac
+ok "platform: ${C_B}${PLAT}${C_N}"
+
+for c in curl tar sha256sum; do
+  command -v "$c" >/dev/null 2>&1 || {
+    [ "$c" = sha256sum ] && command -v shasum >/dev/null 2>&1 && continue
+    die "missing required command: $c"
+  }
+done
+
+# ── 1. prompts ────────────────────────────────────────────────────────────────
+head1 "1/4  Identity"
+printf "  Agent name [my-agent]: "; read -r AGENT_NAME || true
+AGENT_NAME="${AGENT_NAME:-my-agent}"
+printf "  Your name: "; read -r USER_NAME || true
+[ -n "${USER_NAME:-}" ] || die "a user name is required (it becomes the owner of this agent)."
+printf "  What is this agent's job? ${C_DIM}(enter to skip)${C_N}\n  > "; read -r AGENT_JOB || true
+
+head1 "2/4  Model provider"
+cat <<EOF
+  Suggested, cheapest first:
+    1) DeepSeek Flash   — lowest cost per token, strong tool use     (recommended)
+    2) GLM Flash        — very cheap, good long-context
+    3) GPT Luna         — cheap tier, strong instruction following
+    4) OpenAI           — your existing OpenAI key
+    5) Anthropic        — your existing Anthropic key
+    6) OpenRouter       — one key, many models
+    7) Custom           — any OpenAI-compatible endpoint
+EOF
+printf "  Choose [1]: "; read -r PCHOICE || true
+PCHOICE="${PCHOICE:-1}"
+
+P_LABEL=""; P_BASE=""; P_KEYENV=""; P_SUGGEST=""; P_KIND="openai"
+case "$PCHOICE" in
+  1) P_LABEL="DeepSeek Flash"; P_BASE="https://api.deepseek.com";             P_KEYENV="DEEPSEEK_API_KEY";   P_SUGGEST="deepseek-flash" ;;
+  2) P_LABEL="GLM Flash";      P_BASE="https://api.z.ai/api/paas/v4";         P_KEYENV="GLM_API_KEY";        P_SUGGEST="glm-4.6-flash" ;;
+  3) P_LABEL="GPT Luna";       P_BASE="https://api.openai.com/v1";            P_KEYENV="OPENAI_API_KEY";     P_SUGGEST="gpt-5-luna" ;;
+  4) P_LABEL="OpenAI";         P_BASE="https://api.openai.com/v1";            P_KEYENV="OPENAI_API_KEY";     P_SUGGEST="gpt-5-mini" ;;
+  5) P_LABEL="Anthropic";      P_BASE="https://api.anthropic.com/v1";         P_KEYENV="ANTHROPIC_API_KEY";  P_SUGGEST="claude-sonnet-4-5"; P_KIND="anthropic" ;;
+  6) P_LABEL="OpenRouter";     P_BASE="https://openrouter.ai/api/v1";         P_KEYENV="OPENROUTER_API_KEY"; P_SUGGEST="" ;;
+  7) P_LABEL="Custom";         P_KIND="openai"
+     printf "  Base URL (OpenAI-compatible, e.g. https://host/v1): "; read -r P_BASE || true
+     [ -n "${P_BASE:-}" ] || die "a base URL is required for a custom provider."
+     printf "  Env var name for the key [CUSTOM_API_KEY]: "; read -r P_KEYENV || true
+     P_KEYENV="${P_KEYENV:-CUSTOM_API_KEY}" ;;
+  *) die "invalid choice: $PCHOICE" ;;
+esac
+
+head1 "3/4  API key"
+printf "  Paste your %s key ${C_DIM}(input hidden)${C_N}: " "$P_LABEL"
+stty -echo 2>/dev/null || true; read -r P_KEY || true; stty echo 2>/dev/null || true; printf "\n"
+[ -n "${P_KEY:-}" ] || die "an API key is required — the free lane is bring-your-own-key."
+
+head1 "4/4  Telegram ${C_DIM}(optional)${C_N}"
+say "Leave blank to use terminal chat only. To connect Telegram, create a bot with"
+say "@BotFather, then paste its token here."
+printf "  Telegram bot token: "; read -r TG_TOKEN || true
+
+# ── 2. resolve the model against the provider's own list ──────────────────────
+MODEL=""
+if command -v python3 >/dev/null 2>&1; then
+  MODEL="$(P_BASE="$P_BASE" P_KEY="$P_KEY" P_KIND="$P_KIND" P_SUGGEST="$P_SUGGEST" python3 - <<'PICK' || true
+import json, os, sys, urllib.request
+base, key = os.environ["P_BASE"].rstrip("/"), os.environ["P_KEY"]
+kind, suggest = os.environ.get("P_KIND","openai"), os.environ.get("P_SUGGEST","")
+url = base + "/models"
+req = urllib.request.Request(url, headers=(
+    {"x-api-key": key, "anthropic-version": "2023-06-01"} if kind == "anthropic"
+    else {"Authorization": "Bearer %s" % key}))
+try:
+    data = json.load(urllib.request.urlopen(req, timeout=20))
+except Exception as e:
+    sys.stderr.write("  (could not read the model list: %s)\n" % e.__class__.__name__)
+    print(suggest); raise SystemExit
+items = data.get("data") or data.get("models") or []
+ids = [i.get("id") or i.get("name") for i in items if isinstance(i, dict)]
+ids = [i for i in ids if i]
+if suggest and suggest in ids:
+    print(suggest); raise SystemExit
+cheap = [i for i in ids if any(t in i.lower() for t in ("flash","luna","mini","air","lite","small"))]
+pool = cheap or ids
+if not pool:
+    print(suggest); raise SystemExit
+sys.stderr.write("  suggested model not offered by this provider; pick one:\n")
+for n, m in enumerate(pool[:8], 1):
+    sys.stderr.write("    %d) %s\n" % (n, m))
+sys.stderr.write("  number [1]: ")
+try:
+    c = input().strip() or "1"
+except EOFError:
+    c = "1"
+try:
+    print(pool[int(c)-1])
+except Exception:
+    print(pool[0])
+PICK
+)"
+fi
+MODEL="${MODEL:-$P_SUGGEST}"
+[ -n "${MODEL:-}" ] || MODEL="$(printf '%s' "$P_LABEL" | tr 'A-Z ' 'a-z-')"
+ok "provider: ${C_B}${P_LABEL}${C_N}  model: ${C_B}${MODEL}${C_N}"
+
+# ── 3. bundle ─────────────────────────────────────────────────────────────────
+head1 "Downloading the free agent bundle (${PLAT}, ~$( [ "$PLAT" = linux-x86_64 ] && echo 187 || echo 172 )MB)"
+mkdir -p "$BUNDLE"
+PKG="cem888-free-v${VERSION}-${PLAT}.tar.gz"
+if [ -f "$BUNDLE/.complete" ]; then
+  ok "bundle already present"
+else
+  curl -fL --progress-bar "$BASE_DL/SHA256SUMS" -o "$BUNDLE/SHA256SUMS" \
+    || die "could not reach the release. Check your network, or download ${PKG} from ${BASE_DL} manually."
+  want="$(grep " ${PKG}\$" "$BUNDLE/SHA256SUMS" | awk '{print $1}')"
+  [ -n "$want" ] || die "no checksum published for ${PKG}."
+  curl -fL --progress-bar "$BASE_DL/$PKG" -o "$BUNDLE/$PKG" || die "download failed."
+  if command -v sha256sum >/dev/null 2>&1; then got="$(sha256sum "$BUNDLE/$PKG" | awk '{print $1}')"
+  else got="$(shasum -a 256 "$BUNDLE/$PKG" | awk '{print $1}')"; fi
+  [ "$got" = "$want" ] || die "checksum mismatch on ${PKG} — refusing to install."
+  ok "checksum verified"
+  tar -xzf "$BUNDLE/$PKG" -C "$BUNDLE"
+  : > "$BUNDLE/.complete"
+fi
+
+# ── 4. interpreter + install (no index, ever) ─────────────────────────────────
+head1 "Installing"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+if command -v uv >/dev/null 2>&1; then UV=uv
+else
+  say "${C_DIM}fetching uv (interpreter manager, no package index involved)${C_N}"
+  curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1 || die "could not install uv."
+  export PATH="$HOME/.local/bin:$PATH"
+  command -v uv >/dev/null 2>&1 || die "uv installed but not on PATH — open a new shell and re-run."
+  UV=uv
+fi
+say "${C_DIM}python 3.14 (matches the signed wheel set)${C_N}"
+"$UV" python install 3.14 >/dev/null 2>&1 || true
+PY="$("$UV" python find 3.14 2>/dev/null)" || die "could not provision python 3.14."
+[ -n "$PY" ] || die "could not provision python 3.14."
+
+VENV="$ROOT/venv"
+"$PY" -m venv "$VENV" >/dev/null 2>&1 || die "could not create the venv at $VENV"
+"$UV" pip install --python "$VENV/bin/python" --no-index \
+  --find-links "$BUNDLE/vendor" --require-hashes \
+  -r "$BUNDLE/installer/requirements-lock.hashes.txt" >/dev/null || die "dependency install failed (no index, lock only)."
+ok "dependencies installed from the signed lock"
+"$UV" pip install --python "$VENV/bin/python" --no-index --find-links "$BUNDLE/vendor" \
+  --no-deps "$BUNDLE"/installer/cem888_agent-*.whl >/dev/null || die "engine wheel install failed."
+ok "engine installed"
+
+# ── 5. config (provider-neutral) ──────────────────────────────────────────────
+head1 "Writing profile"
+mkdir -p "$ROOT"
+SLUGNAME="$(printf '%s' "$AGENT_NAME" | tr 'A-Z' 'a-z' | tr -cs 'a-z0-9' '-' | sed 's/^-//;s/-$//')"
+[ -n "$SLUGNAME" ] || SLUGNAME="agent"
+
+PROV_NAME="$(printf '%s' "$P_LABEL" | tr 'A-Z' 'a-z' | tr -cs 'a-z0-9' '-' | sed 's/^-//;s/-$//')"
+TG_BLOCK=""
+[ -n "${TG_TOKEN:-}" ] && TG_BLOCK="platforms:
+  telegram:
+    enabled: true"
+
+cat > "$ROOT/config.yaml" <<CONF
+# CEM888 — ${AGENT_NAME}
+# Free lane: agent only (terminal chat or Telegram). Bring your own provider key.
+# Written by the CEM888 free installer; edit freely.
+
+agent:
+  name: ${AGENT_NAME}
+  owner: ${USER_NAME}
+  job: "${AGENT_JOB:-}"
+
+model:
+  provider: ${PROV_NAME}
+  default: ${MODEL}
+  temperature: 0.2
+  max_tokens: 8192
+
+custom_providers:
+  - name: ${PROV_NAME}
+    base_url: ${P_BASE}
+    key_env: ${P_KEYENV}
+    api_mode: $([ "$P_KIND" = anthropic ] && echo anthropic_messages || echo chat_completions)
+    request_timeout_seconds: 360
+
+${TG_BLOCK}
+CONF
+
+chmod 600 "$ROOT/config.yaml" 2>/dev/null || true
+touch "$ROOT/.env"; chmod 600 "$ROOT/.env"
+if grep -q "^${P_KEYENV}=" "$ROOT/.env" 2>/dev/null; then
+  sed -i.bak "s|^${P_KEYENV}=.*|${P_KEYENV}=${P_KEY}|" "$ROOT/.env" && rm -f "$ROOT/.env.bak"
+else
+  printf '%s=%s\n' "$P_KEYENV" "$P_KEY" >> "$ROOT/.env"
+fi
+if [ -n "${TG_TOKEN:-}" ]; then
+  _k="TELEGRAM_BOT_TOKEN"
+  grep -q "^${_k}${EQ}" "$ROOT/.env" 2>/dev/null || printf '%s%s%s\n' "$_k" "$EQ" "$TG_TOKEN" >> "$ROOT/.env"
+fi
+ok "config: $ROOT/config.yaml"
+ok "key:    $ROOT/.env (chmod 600)"
+
+# ── 6. smoke test ─────────────────────────────────────────────────────────────
+head1 "Checking the install"
+if "$VENV/bin/cem888" --version >/dev/null 2>&1; then ok "$("$VENV/bin/cem888" --version 2>/dev/null | head -1)"
+else say "${C_CORAL}engine binary did not answer --version${C_N} — run: $VENV/bin/cem888 doctor"; fi
+
+MINT_ESC=$(printf '\033[38;2;61;220;151m'); CORAL_ESC=$(printf '\033[38;2;255;127;80m')
+B_ESC=$(printf '\033[1m'); DIM_ESC=$(printf '\033[2m'); N_ESC=$(printf '\033[0m')
+cat <<DONE
+
+${MINT_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}${P_LABEL}${N_ESC} (${MODEL}).
+
+  Start talking:
+     ${VENV}/bin/cem888 chat
+
+  Check health:
+     ${VENV}/bin/cem888 doctor
+
+  Add it to PATH (optional):
+     echo 'export PATH="$ROOT/venv/bin:\$PATH"' >> ~/.zshrc   # or ~/.bashrc
+
+  ${DIM_ESC}On cost: the free lane is tuned for cheap, fast models. When a task needs real
+  deep reasoning, add a stronger model later — \`cem888 model\` switches providers, and
+  \`cem888 fallback\` wires a big model in behind the cheap one so it is only used when
+  the cheap one fails or the task is flagged hard. Nothing to reinstall.${N_ESC}
+DONE

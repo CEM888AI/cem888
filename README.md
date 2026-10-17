@@ -19,6 +19,31 @@ stays correct across sessions, restarts and model swaps.
 
 ---
 
+## Install — the free agent
+
+One command. No account, no signup. The free lane is the **agent itself**: terminal chat, or connect it to Telegram. There is no desktop app in it.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
+```
+
+It asks for an agent name, your name, the agent's job (or enter to skip), a provider and a key — then installs and tells you how to start it.
+
+**Cheapest first, on purpose:** DeepSeek Flash · GLM Flash · GPT Luna — plus OpenAI · Anthropic · OpenRouter · any OpenAI-compatible endpoint. Bring your own key; nothing is proxied through us.
+
+Deep reasoning later, without reinstalling:
+
+```bash
+cem888 model        # switch the default provider/model
+cem888 fallback     # a strong model behind the cheap one, only reached when needed
+```
+
+macOS (Apple silicon and Intel) and Linux x86_64. There is **no Windows PowerShell installer in this release** — the bundle exists, the tested script does not, and shipping an untested one is worse than shipping none.
+
+**[What the installer does, what it downloads, and why the checks are shaped that way](./install/README.md)**
+
+---
+
 ## The failure this exists for
 
 Every agent framework optimizes **what the agent does next**. Almost nothing decides **what is actually true**. Those are different problems, and the second one is where agents fail in production:
