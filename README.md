@@ -5,15 +5,15 @@
 <br/>
 
 <a href="#install-the-free-agent">
-  <img src="https://img.shields.io/badge/DOWNLOAD_THE_FREE_AGENT-3ADBE8?style=for-the-badge&labelColor=050A0F&logo=gnubash&logoColor=050A0F" alt="Download the free agent" height="40" />
+  <img src="https://img.shields.io/badge/DOWNLOAD_THE_FREE_AGENT-16A9BF?style=for-the-badge&labelColor=16A9BF" alt="Download the free agent" height="40" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
-  <img src="https://img.shields.io/badge/WEBSITE-0B1A20?style=for-the-badge&labelColor=050A0F&color=0B1A20" alt="cem888.ai" height="40" />
+  <img src="https://img.shields.io/badge/WEBSITE-0B1A20?style=for-the-badge&labelColor=0B1A20" alt="cem888.ai" height="40" />
 </a>
 &nbsp;
 <a href="#documentation-map">
-  <img src="https://img.shields.io/badge/DOCS-0B1A20?style=for-the-badge&labelColor=050A0F&color=0B1A20" alt="Documentation" height="40" />
+  <img src="https://img.shields.io/badge/DOCS-0B1A20?style=for-the-badge&labelColor=0B1A20" alt="Documentation" height="40" />
 </a>
 
 <br/><br/>
