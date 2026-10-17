@@ -1,35 +1,51 @@
 <div align="center">
 
-# CEM888
+<img src="./assets/readme-banner.png" alt="CEM888 — STATE decides what is true" width="100%" />
 
-### STATE decides what is true. MODELS decide what to do about it.
+<br/>
 
-A local-first **state & control runtime** that sits underneath an AI agent — so the agent
-stays correct across sessions, restarts and model swaps.
+<a href="#install-the-free-agent">
+  <img src="https://img.shields.io/badge/DOWNLOAD_THE_FREE_AGENT-3ADBE8?style=for-the-badge&labelColor=050A0F&logo=gnubash&logoColor=050A0F" alt="Download the free agent" height="40" />
+</a>
+&nbsp;
+<a href="https://cem888.ai">
+  <img src="https://img.shields.io/badge/WEBSITE-0B1A20?style=for-the-badge&labelColor=050A0F&color=0B1A20" alt="cem888.ai" height="40" />
+</a>
+&nbsp;
+<a href="#documentation-map">
+  <img src="https://img.shields.io/badge/DOCS-0B1A20?style=for-the-badge&labelColor=050A0F&color=0B1A20" alt="Documentation" height="40" />
+</a>
 
-[![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&label=release)](https://github.com/CEM888AI/cem888/releases)
-[![License](https://img.shields.io/badge/license-source--available_commercial-blue?style=flat-square)](#license)
-[![Stage](https://img.shields.io/badge/stage-public_beta-orange?style=flat-square)](./docs/STATUS.md)
-[![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-brightgreen?style=flat-square)](./docs/PUBLIC_CONFORMANCE.md)
-[![Benchmark](https://img.shields.io/badge/BEAM--10M-77.2%25-blueviolet?style=flat-square)](https://github.com/CEM888AI/benchmarks)
+<br/><br/>
 
-**[Read the architecture](./docs/ARCHITECTURE.md)** · **[See real artifacts](./examples)** · **[Honest status](./docs/STATUS.md)** · **[Website](https://cem888.ai)**
+[![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&labelColor=050A0F&label=release)](https://github.com/CEM888AI/cem888/releases)
+[![License](https://img.shields.io/badge/license-source--available_commercial-3ADBE8?style=flat-square&labelColor=050A0F)](./LICENSE)
+[![Stage](https://img.shields.io/badge/stage-public_beta-B8943A?style=flat-square&labelColor=050A0F)](./docs/STATUS.md)
+[![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-3DDA97?style=flat-square&labelColor=050A0F)](./docs/PUBLIC_CONFORMANCE.md)
+[![Benchmark](https://img.shields.io/badge/BEAM--10M-77.2%25-93A3B4?style=flat-square&labelColor=050A0F)](https://github.com/CEM888AI/benchmarks)
 
 </div>
 
 ---
 
-## Install — the free agent
+## Install the free agent
 
-One command. No account, no signup. The free lane is the **agent itself**: terminal chat, or connect it to Telegram. There is no desktop app in it.
+One command. No account, no signup. The free lane is the **agent itself** — terminal chat, or
+connect it to Telegram. There is no desktop app in it.
+
+<p align="center">
+  <img src="./assets/readme-install.png" width="78%" alt="The installer asking for agent name, your name, the agent's job, a provider and a key" />
+</p>
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
 ```
 
-It asks for an agent name, your name, the agent's job (or enter to skip), a provider and a key — then installs and tells you how to start it.
+It asks five things — **agent name**, **your name**, the **agent's job** (or enter to skip), a
+**provider**, and your **API key**. Then it installs and tells you how to start it.
 
-**Cheapest first, on purpose:** DeepSeek Flash · GLM Flash · GPT Luna — plus OpenAI · Anthropic · OpenRouter · any OpenAI-compatible endpoint. Bring your own key; nothing is proxied through us.
+**Cheapest first, on purpose:** DeepSeek Flash · GLM Flash · GPT Luna — plus OpenAI · Anthropic ·
+OpenRouter · any OpenAI-compatible endpoint. Bring your own key; nothing is proxied through us.
 
 Deep reasoning later, without reinstalling:
 
@@ -38,9 +54,21 @@ cem888 model        # switch the default provider/model
 cem888 fallback     # a strong model behind the cheap one, only reached when needed
 ```
 
-macOS (Apple silicon and Intel) and Linux x86_64. There is **no Windows PowerShell installer in this release** — the bundle exists, the tested script does not, and shipping an untested one is worse than shipping none.
+macOS (Apple silicon and Intel) and Linux x86_64. There is **no Windows PowerShell installer in this
+release** — the bundle exists, the tested script does not, and shipping an untested one is worse
+than shipping none.
 
 **[What the installer does, what it downloads, and why the checks are shaped that way](./install/README.md)**
+
+---
+
+<table>
+<tr>
+<td align="center" width="33%"><b>Agent, not a chat box</b><br/><sub>Terminal chat, or your own Telegram bot. The free lane has no desktop app.</sub></td>
+<td align="center" width="33%"><b>Your key, your machine</b><br/><sub>Bring your own model access. State stays on your machine, not on a shared service.</sub></td>
+<td align="center" width="33%"><b>Nothing to sign up for</b><br/><sub>One command, five questions, no account. Switch models later without reinstalling.</sub></td>
+</tr>
+</table>
 
 ---
 
@@ -137,7 +165,7 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 **Does my data leave my machine?** No. Customer agents run on the customer's machine or customer-controlled infrastructure, not on a shared CEM888 execution service. Model access is bring-your-own-key.
 
-**Can I install from this repository?** No — the engine source is not published here. The supported path is the account flow at **[cem888.ai](https://cem888.ai/register.html)**: create a free account, configure the agent, download the installer for your machine.
+**Can I install from this repository?** The **free agent** installs from this repository with the one command above — that is the whole point of it. The **engine source** is not published here. Paid tiers, native-host adapters and the desktop app go through **[cem888.ai](https://cem888.ai)**: create an account, configure the agent, download the installer for your machine.
 
 **Why isn't the source here?** Publishing the engine hands over the business without handing over a customer. The published record — architecture, enforcement limits, acceptance runs including the failures, and reproducible benchmark data — is the proof. It is not a substitute for reading the code, and this README does not pretend it is.
 
@@ -147,12 +175,14 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 ## Current stage
 
-Public beta. The release lane is deliberately narrow: **finish and certify the DeepSeek Flash customer install first, then expand provider and native-host support from measured evidence.**
+Public beta. The release lane is deliberately narrow: **finish and certify the free first-boot path, then expand provider and native-host support from measured evidence.**
 
 | Surface | Current status |
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on 2026-10-01 with documented defects; fixes and a frozen-artifact rerun are still required before full certification. |
+| **Free agent installer (macOS / Linux)** | Shipped and live: provider-neutral, five prompts, bring-your-own-key. |
+| **Free agent installer (Windows)** | Bundle published for x86_64; the tested PowerShell script is not shipped yet. |
 | **Claude Code native adapter** | Live turn-level continuity exercised 2026-10-03; host observation published. Packaging and certification remain separate from the frozen DeepSeek customer artifact. |
 | **Codex native adapter** | Connector exists; live diagnosis found contradictory profile guards preventing successful turns. Fix and certification still required. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
@@ -169,7 +199,7 @@ The website is the account, onboarding and download surface. Customer agents run
 
 ## Repository scope
 
-This repository is the **public engineering record** for the CEM888 runtime: architecture, honest status, and the evidence behind every claim. It is not the production-development authority and it is not the installer.
+This repository is the **public engineering record** for the CEM888 runtime — architecture, honest status, the free agent installer, and the evidence behind every claim. It is not the production-development authority.
 
 **What is deliberately not here:** the runtime source, the agent system prompt and prompt stack, the action-authority implementation, the memory and indexing implementation, provider routing, the context/breathing cycle, credentials and auth internals, customer data and state, and per-file provenance. Those are proprietary; publishing them would hand over the engine without handing over the business. Third-party notices are preserved in **[licenses/third-party/MIT-NOTICE.txt](./licenses/third-party/MIT-NOTICE.txt)**.
 
@@ -185,6 +215,7 @@ This repository is the **public engineering record** for the CEM888 runtime: arc
 | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) | The 15-check suite and how to read it |
 | [STATUS.md](./docs/STATUS.md) | What is certified right now, including known defects |
 | [FRESH_INSTALL_ACCEPTANCE_2026-10-01.md](./docs/FRESH_INSTALL_ACCEPTANCE_2026-10-01.md) | A full acceptance run, written up as it happened |
+| [install/README.md](./install/README.md) | What the free installer does, and why it is shaped that way |
 
 ## License
 
