@@ -5,24 +5,28 @@
 <br/>
 
 <a href="#install-the-free-agent">
-  <img src="https://img.shields.io/badge/DOWNLOAD_THE_FREE_AGENT-16A9BF?style=for-the-badge&labelColor=16A9BF" alt="Download the free agent" height="40" />
+  <img src="./assets/btn-download.svg" alt="Download the free agent" width="340" height="60" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
-  <img src="https://img.shields.io/badge/WEBSITE-0B1A20?style=for-the-badge&labelColor=0B1A20" alt="cem888.ai" height="40" />
+  <img src="./assets/btn-website.svg" alt="cem888.ai" width="168" height="60" />
 </a>
 &nbsp;
 <a href="#documentation-map">
-  <img src="https://img.shields.io/badge/DOCS-0B1A20?style=for-the-badge&labelColor=0B1A20" alt="Documentation" height="40" />
+  <img src="./assets/btn-docs.svg" alt="Documentation" width="136" height="60" />
 </a>
 
-<br/><br/>
+<br/>
 
 [![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&labelColor=050A0F&label=release)](https://github.com/CEM888AI/cem888/releases)
 [![License](https://img.shields.io/badge/license-source--available_commercial-3ADBE8?style=flat-square&labelColor=050A0F)](./LICENSE)
 [![Stage](https://img.shields.io/badge/stage-public_beta-B8943A?style=flat-square&labelColor=050A0F)](./docs/STATUS.md)
 [![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-3DDA97?style=flat-square&labelColor=050A0F)](./docs/PUBLIC_CONFORMANCE.md)
 [![Benchmark](https://img.shields.io/badge/BEAM--10M-77.2%25-93A3B4?style=flat-square&labelColor=050A0F)](https://github.com/CEM888AI/benchmarks)
+
+<br/>
+
+<img src="./assets/divider.svg" width="100%" alt="" />
 
 </div>
 
@@ -37,8 +41,16 @@ connect it to Telegram. There is no desktop app in it.
   <img src="./assets/readme-install.png" width="78%" alt="The installer asking for agent name, your name, the agent's job, a provider and a key" />
 </p>
 
+**macOS and Linux**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
+```
+
+**Windows** — PowerShell, Windows 10 1803 or newer (x86_64)
+
+```powershell
+irm https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.ps1 | iex
 ```
 
 It asks five things — **agent name**, **your name**, the **agent's job** (or enter to skip), a
@@ -54,9 +66,9 @@ cem888 model        # switch the default provider/model
 cem888 fallback     # a strong model behind the cheap one, only reached when needed
 ```
 
-macOS (Apple silicon and Intel) and Linux x86_64. There is **no Windows PowerShell installer in this
-release** — the bundle exists, the tested script does not, and shipping an untested one is worse
-than shipping none.
+macOS (Apple silicon and Intel), Linux x86_64 and Windows x86_64. Windows **arm64** is not in this
+release: the published wheel set is `windows-amd64`, and shipping a script that cannot find its own
+wheels is worse than saying so.
 
 **[What the installer does, what it downloads, and why the checks are shaped that way](./install/README.md)**
 
@@ -70,7 +82,9 @@ than shipping none.
 </tr>
 </table>
 
----
+<div align="center">
+  <img src="./assets/divider.svg" width="100%" alt="" />
+</div>
 
 ## The failure this exists for
 
@@ -182,7 +196,7 @@ Public beta. The release lane is deliberately narrow: **finish and certify the f
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on 2026-10-01 with documented defects; fixes and a frozen-artifact rerun are still required before full certification. |
 | **Free agent installer (macOS / Linux)** | Shipped and live: provider-neutral, five prompts, bring-your-own-key. |
-| **Free agent installer (Windows)** | Bundle published for x86_64; the tested PowerShell script is not shipped yet. |
+| **Free agent installer (Windows)** | Shipped as `install/free.ps1` for x86_64 with the same five prompts. Not yet accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
 | **Claude Code native adapter** | Live turn-level continuity exercised 2026-10-03; host observation published. Packaging and certification remain separate from the frozen DeepSeek customer artifact. |
 | **Codex native adapter** | Connector exists; live diagnosis found contradictory profile guards preventing successful turns. Fix and certification still required. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
