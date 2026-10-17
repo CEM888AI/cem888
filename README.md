@@ -5,15 +5,15 @@
 <br/>
 
 <a href="#install-the-free-agent">
-  <img src="./assets/btn-download.svg" alt="Download the free agent" width="340" height="60" />
+  <img src="./assets/btn-download.svg" alt="Download the free agent" width="380" height="60" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
-  <img src="./assets/btn-website.svg" alt="cem888.ai" width="168" height="60" />
+  <img src="./assets/btn-website.svg" alt="cem888.ai" width="176" height="60" />
 </a>
 &nbsp;
 <a href="#documentation-map">
-  <img src="./assets/btn-docs.svg" alt="Documentation" width="136" height="60" />
+  <img src="./assets/btn-docs.svg" alt="Documentation" width="144" height="60" />
 </a>
 
 <br/>
