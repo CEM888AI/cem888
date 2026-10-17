@@ -1,0 +1,20 @@
+{
+  "_note": "Sanitized sample of a denial at the boundary. Values redacted.",
+  "receipt_id": "rcpt_<redacted>",
+  "at": "<iso-8601>",
+  "proposed": {
+    "actor": "<agent-id>",
+    "intent": "<consequential action>",
+    "tool": "<tool>",
+    "target": "<path>"
+  },
+  "decision": "deny",
+  "boundary": "<enforceable boundary>",
+  "rule": {
+    "id": "prohibition:<redacted>",
+    "kind": "owner_prohibition",
+    "text": "<redacted>"
+  },
+  "executed": false,
+  "note": "the denial is recorded before execution, not logged after it — and an unreadable policy is never permission"
+}

@@ -1,0 +1,59 @@
+{
+  "_note": "Sanitized sample. Field names and structure are what the runtime emits on a turn; all values are redacted. No implementation detail is disclosed.",
+  "schema_version": 1,
+  "packet_id": "ctx_<redacted>",
+  "generated_at": "<iso-8601>",
+  "identity_block": {
+    "id": "<agent-id>",
+    "owner": "<owner-name>",
+    "host": "<host>",
+    "_rule": "identity is a fixed block: always present, never scored against the query, never split at headings"
+  },
+  "profile_rules": [
+    {
+      "id": "SOUL.md",
+      "authority": 95,
+      "injected": "every_turn",
+      "read": "whole",
+      "scored": false
+    },
+    {
+      "id": "USER.md",
+      "authority": 95,
+      "injected": "every_turn",
+      "read": "whole",
+      "scored": false
+    }
+  ],
+  "owner_rulings": [
+    {
+      "id": "ruling:<redacted>",
+      "authority": 100,
+      "effect": "NEVER",
+      "pulled_because": "deploy / repo_work"
+    },
+    {
+      "id": "ruling:<redacted>",
+      "authority": 100,
+      "effect": "REQUIRED",
+      "pulled_because": "architecture_advice"
+    }
+  ],
+  "current": [
+    {
+      "id": "<redacted>",
+      "tier": "verified_fact",
+      "authority": 90,
+      "status": "current",
+      "at": "<iso-8601>"
+    }
+  ],
+  "superseded_excluded": true,
+  "agreement": {
+    "world_state_present": true,
+    "structured_verification_passing_receipts": 1,
+    "checked_at": "<iso-8601>",
+    "_note": "cheap agreement probes: state a claim and a cheap way to falsify it, on every turn"
+  },
+  "selection_rule": "relevance decides what enters the packet; nothing is truncated to fit. If required current state does not fit, the packet fails visibly rather than trimming."
+}

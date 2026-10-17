@@ -1,0 +1,41 @@
+{
+  "_note": "Sanitized sample of a verified-action receipt. Values redacted; shape and verdict semantics are real.",
+  "receipt_id": "rcpt_<redacted>",
+  "turn_id": "<redacted>",
+  "at": "<iso-8601>",
+  "proposed": {
+    "actor": "<agent-id>",
+    "intent": "write file",
+    "tool": "<tool>",
+    "target": "<path>"
+  },
+  "authority": {
+    "scope_resolved": "<scope>",
+    "decision": "allow",
+    "rule_refs": [
+      "ruling:<redacted>",
+      "prohibition:<redacted>"
+    ]
+  },
+  "execution": {
+    "status": "succeeded",
+    "exit_code": 0
+  },
+  "postcondition": {
+    "checked": true,
+    "claim": "<observable condition>",
+    "evidence": [
+      {
+        "kind": "file_sha256",
+        "value": "<redacted>"
+      },
+      {
+        "kind": "readback",
+        "value": "<redacted>"
+      }
+    ],
+    "verdict": "pass"
+  },
+  "result": "verified",
+  "_why": "the model's prose is not evidence; the receipt records what was observed"
+}
