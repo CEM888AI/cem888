@@ -1,12 +1,12 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='340' height='60' viewBox='0 0 340 60' role='img' aria-label='Download The Free Agent'>
+<svg xmlns='http://www.w3.org/2000/svg' width='380' height='60' viewBox='0 0 380 60' role='img' aria-label='Download The Free Agent'>
 <defs>
 <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='17'/><feColorMatrix type='saturate' values='0'/></filter>
-<linearGradient id='g' x1='0' y1='0' x2='340' y2='60' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='#3ADBE8'/><stop offset='1' stop-color='#16A9BF'/></linearGradient>
+<linearGradient id='g' x1='0' y1='0' x2='380' y2='60' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='#3ADBE8'/><stop offset='1' stop-color='#16A9BF'/></linearGradient>
 <linearGradient id='s' x1='0' y1='0' x2='0' y2='60' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='#ffffff' stop-opacity='.20'/><stop offset='.55' stop-color='#ffffff' stop-opacity='0'/></linearGradient>
 </defs>
-<rect x='1' y='1' width='338' height='58' rx='30' fill='url(#g)'/>
-<rect x='1' y='1' width='338' height='58' rx='30' filter='url(#n)' opacity='.05'/>
-<rect x='1' y='1' width='338' height='58' rx='30' fill='url(#s)'/>
-<rect x='1.5' y='1.5' width='337' height='57' rx='28' fill='none' stroke='#ffffff' stroke-opacity='.28'/>
-<text x='170.0' y='36.0' text-anchor='middle' font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size='17' font-weight='700' letter-spacing='1.4' fill='#04222A' textLength='284' lengthAdjust='spacingAndGlyphs'>DOWNLOAD THE FREE AGENT</text>
+<rect x='1' y='1' width='378' height='58' rx='30' fill='url(#g)'/>
+<rect x='1' y='1' width='378' height='58' rx='30' filter='url(#n)' opacity='.05'/>
+<rect x='1' y='1' width='378' height='58' rx='30' fill='url(#s)'/>
+<rect x='1.5' y='1.5' width='377' height='57' rx='28' fill='none' stroke='#ffffff' stroke-opacity='.28'/>
+<text x='190.0' y='36.0' text-anchor='middle' font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif" font-size='17' font-weight='700' letter-spacing='1.4' fill='#04222A' textLength='292' lengthAdjust='spacingAndGlyphs'>DOWNLOAD THE FREE AGENT</text>
 </svg>
