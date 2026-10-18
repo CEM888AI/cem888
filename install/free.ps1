@@ -302,8 +302,21 @@ Write-Host ""
 Write-Host "  Check health:"
 Write-Host "     `"$Cem`" doctor"
 Write-Host ""
-Write-Host "  Shortcut (add to PATH for a plain 'cem888'):"
-Write-Host "     $Root"
+Write-Host "  Shortcut for a plain 'cem888':"
+$ScriptsDir = Join-Path $Venv 'Scripts'
+$UserPath = [Environment]::GetEnvironmentVariable('Path','User')
+if (-not $UserPath) { $UserPath = '' }
+$PathParts = @($UserPath -split ';' | Where-Object { $_ -ne '' })
+if ($PathParts -notcontains $ScriptsDir) {
+    [Environment]::SetEnvironmentVariable('Path', (@($PathParts + $ScriptsDir) -join ';'), 'User')
+    Write-Host "  $C_CYAN[ok] added to your PATH:$C_N $ScriptsDir"
+    Write-Host "       open a NEW PowerShell window, then type:  cem888 chat"
+} else {
+    Write-Host "  $C_CYAN[ok] already on your PATH:$C_N $ScriptsDir"
+}
+$env:Path = "$env:Path;$ScriptsDir"
+Write-Host "  or right now, in this window:"
+Write-Host "     `"$Cem`" chat"
 Write-Host ""
 Write-Host "  $C_DIM On cost: the free lane is tuned for cheap, fast models. When a task needs real$C_N"
 Write-Host "  $C_DIM deep reasoning, add a stronger model later - 'cem888 model' switches providers, and$C_N"
