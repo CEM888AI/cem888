@@ -34,17 +34,29 @@ $BaseDl  = "https://github.com/$Repo/releases/download/$Slug"
 # inside it, and the runtime then disagreed with the installer about where the
 # profile lived. Reject a malformed value out loud and use the default.
 $DefaultRoot = Join-Path $env:USERPROFILE '.cem888'
-$Root = $DefaultRoot
+$Anchor = $DefaultRoot
 if ($env:CEM888_HOME) {
   $candidate = $env:CEM888_HOME.Trim().TrimEnd('\')
-  if ([IO.Path]::IsPathRooted($candidate) -and (Split-Path $candidate -Leaf) -eq '.cem888') {
-    $Root = $candidate
+  # A valid home is either the .cem888 root itself or an EXISTING profile dir
+  # (<root>\profiles\<key>) -- both are accepted so an explicit override wins.
+  if ([IO.Path]::IsPathRooted($candidate) -and `
+      ((Split-Path $candidate -Leaf) -eq '.cem888' -or (Split-Path (Split-Path $candidate -Parent) -Leaf) -eq 'profiles')) {
+    $Anchor = $candidate
   } else {
     Write-Host "  ! ignoring CEM888_HOME=$($env:CEM888_HOME) - not a .cem888 home; using $DefaultRoot"
   }
 }
-$env:CEM888_HOME = $Root
-$Bundle  = Join-Path $Root "free\v$Version"
+# ⛔ OLD SHAPE INSTALLED EVERY AGENT INTO THE DEFAULT PROFILE (2026-10-18).
+# It wrote config.yaml/.env/venv straight into ~\.cem888 -- which IS the
+# "default" profile -- so a SECOND free install wrote on top of the first, and
+# `--profile <agent>` could never resolve because no profiles\<key> dir existed.
+# Measured against the runtime: cem888_cli/profiles.py anchors named profiles at
+# <root>\profiles\<key>, and cem888_cli/main.py::_apply_profile_override reads
+# <root>\active_profile when no -p is given. So: one PROFILE PER AGENT, the
+# engine/bundle shared once at the anchor, and active_profile naming the last one
+# installed. Re-running with the same agent name updates that agent in place.
+$Root = $Anchor
+$Bundle  = Join-Path $Anchor "free\v$Version"
 $Pkg     = "cem888-free-v$Version-windows-amd64.tar.gz"
 
 $ESC = [char]27
@@ -95,6 +107,31 @@ if (-not $UserName) { Die "a user name is required (it becomes the owner of this
 if (-not $AgentJob) {
   Write-Host "  What is this agent's job? (enter to skip)"
   $AgentJob = Read-Host "  >"
+}
+
+# -- 1b. which PROFILE this agent lives in ----------------------------------
+# Same slug rule the profile registry uses: lower-case, non-alphanumerics
+# collapsed to '-', max 64 chars, must start with a letter/digit.
+$SlugName = ($AgentName.ToLower() -replace '[^a-z0-9]+', '-').Trim('-')
+if (-not $SlugName) { $SlugName = 'agent' }
+if ($SlugName.Length -gt 64) { $SlugName = $SlugName.Substring(0, 64).Trim('-') }
+if ($SlugName -eq 'default') { Die "'default' is reserved - pick a different agent name." }
+
+$ProfilesRoot = Join-Path $Anchor 'profiles'
+if ((Split-Path (Split-Path $Anchor -Parent) -Leaf) -eq 'profiles') {
+  # CEM888_HOME already names a profile dir: install exactly there.
+  $Root = $Anchor
+  $SlugName = Split-Path $Anchor -Leaf
+  $ProfilesRoot = Split-Path $Anchor -Parent
+} else {
+  $Root = Join-Path $ProfilesRoot $SlugName
+}
+New-Item -ItemType Directory -Force -Path $Root | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $Root 'state') | Out-Null
+$env:CEM888_HOME = $Root
+Say "profile: $SlugName  ->  $Root"
+if (Test-Path (Join-Path $Root 'config.yaml')) {
+  Say "existing profile found - updating $SlugName in place (its files are kept)"
 }
 
 Head1 "2/4  Model provider"
@@ -223,7 +260,10 @@ Say "python 3.14 (matches the signed wheel set)"
 $Py = (& $Uv python find 3.14 2>$null | Select-Object -First 1)
 if (-not $Py) { Die "could not provision python 3.14." }
 
-$Venv = Join-Path $Root 'venv'
+# ONE engine venv for the whole machine, stored at the anchor -- profiles only
+# hold data. A second agent reuses it instead of downloading python + 300MB of
+# wheels again, and an existing root-layout install keeps the venv it already has.
+$Venv = Join-Path $Anchor 'venv'
 $VenvPy = Join-Path $Venv 'Scripts\python.exe'
 if (-not (Test-Path $VenvPy)) {
   & $Py -m venv $Venv 2>&1 | Out-Null
@@ -525,11 +565,12 @@ if (Test-Path $SkillsSrc) {
 $Cem = Join-Path $Venv 'Scripts\cem888.exe'
 
 # Put the engine's own command on PATH for this user. The console script lands in
-# the PRIVATE profile venv's Scripts dir, which nothing has on PATH, so the
-# documented `cem888 ...` invocations answered CommandNotFoundException
+# the SHARED venv's Scripts dir (~\.cem888\venv\Scripts), which nothing has on PATH,
+# so the documented `cem888 ...` invocations answered CommandNotFoundException
 # (reported 2026-10-18). A .cmd shim in ~\.local\bin fixes it -- that is the dir
 # the uv installer already puts on PATH, and the same remedy the site installer
-# uses.
+# uses. ONE shim serves every profile: it runs the shared engine, and the engine
+# picks the profile from active_profile or -p.
 $ShimDir = Join-Path $env:USERPROFILE '.local\bin'
 $Shim = Join-Path $ShimDir 'cem888.cmd'
 $ShimOk = $false
@@ -544,19 +585,42 @@ try {
         [Environment]::SetEnvironmentVariable('Path', (@($PathParts + $ShimDir) -join ';'), 'User')
     }
     $env:Path = "$ShimDir;$env:Path"
-# A stale user-level CEM888_HOME sends every later shell to a profile this
-# installer never wrote. Point it at the home this install actually produced.
+# ⛔ A USER-LEVEL CEM888_HOME PINNED TO ONE PROFILE BREAKS MULTI-AGENT (2026-10-18):
+# cem888_cli/main.py::_apply_profile_override trusts a CEM888_HOME whose parent is
+# 'profiles' and returns early, so once it names ...\profiles\<a> every later shell
+# opens agent <a> and -p is the only way to reach <b>. Clear that pin -- the sticky
+# choice belongs in active_profile, which any profile can be switched from. A
+# CEM888_HOME pointing at the .cem888 root pins nothing and is left untouched.
 try {
   $uHome = [Environment]::GetEnvironmentVariable('CEM888_HOME','User')
-  if ($uHome -and $uHome.Trim().TrimEnd('\') -ne $Root) {
-    [Environment]::SetEnvironmentVariable('CEM888_HOME', $Root, 'User')
-    Write-Host "  $C_CYAN[ok] repaired CEM888_HOME:$C_N $Root (was $uHome)"
+  if ($uHome) {
+    $uTrim = $uHome.Trim().TrimEnd('\')
+    if ((Split-Path (Split-Path $uTrim -Parent) -Leaf) -eq 'profiles') {
+      [Environment]::SetEnvironmentVariable('CEM888_HOME', $null, 'User')
+      Write-Host "  $C_CYAN[ok] cleared CEM888_HOME=$uHome$C_N"
+      Write-Host "       (it pinned every shell to that one profile; profiles are chosen by active_profile now)"
+    }
   }
 } catch {
-  Write-Host "  $C_CORAL[x] could not repair CEM888_HOME: $($_.Exception.Message)$C_N"
+  Write-Host "  $C_CORAL[x] could not clear the user-level CEM888_HOME: $($_.Exception.Message)$C_N"
 }
+
 } catch {
     Write-Host "  $C_CORAL[x] could not install the cem888 command: $($_.Exception.Message)$C_N"
+}
+
+# STICKY DEFAULT: plain `cem888 chat` opens the profile installed last.
+# DELIBERATELY OUTSIDE the shim try/catch above: a shim failure must never also
+# cost the sticky profile. The runtime reads active_profile from the .cem888 ROOT
+# (cem888_constants.get_default_cem888_root collapses <root>\profiles\<key> back
+# to <root>), so it is written there, never inside a profile.
+$NativeHome = Join-Path $env:USERPROFILE '.cem888'
+$StickyRoot = if ($Anchor.StartsWith($NativeHome, [StringComparison]::OrdinalIgnoreCase)) { $NativeHome } else { $Anchor }
+try {
+  [IO.File]::WriteAllText((Join-Path $StickyRoot 'active_profile'), "$SlugName`r`n", $utf8NoBom)
+  Ok "active profile: $SlugName"
+} catch {
+  Write-Host "  $C_CORAL[x] could not write active_profile: $($_.Exception.Message)$C_N"
 }
 
 Head1 "Checking the install"
@@ -622,16 +686,26 @@ Write-Host ""
 Write-Host "  $C_CYAN Done. " -NoNewline
 Write-Host "$AgentName is installed on $PLabel ($Model).$C_N"
 Write-Host ""
-# ⛔ THE BANNER CAUSED A SUPPORT TICKET THE FIRST TIME A CUSTOMER READ IT (2026-10-18).
-# It said "Distro is installed", so the next thing typed was
+# ⛔ THE OLD BANNER CAUSED A SUPPORT TICKET THE FIRST TIME A CUSTOMER READ IT (2026-10-18).
+# It said "Distro is installed", the customer typed
 #   cem888 chat --profile distro   ->   Error: Profile 'distro' does not exist
-# Nothing was uninstalled: the install put the agent in the DEFAULT profile and the
-# NAME she chose is the agent's name, not a profile name. Name the profile, and say
-# out loud that the agent name is not one.
-Write-Host "  Profile:  default  ->  $Root"
-Write-Host "            This is your agent. $AgentName is the agent NAME, not a profile"
-Write-Host "            name, so '--profile $AgentName' does not exist - plain"
-Write-Host "            'cem888 chat' opens this profile."
+# because the install had put the agent in the DEFAULT profile. The installer now
+# creates a real profile directory per agent, so the key below EXISTS and the two
+# commands that were once wrong both work.
+Write-Host "  Profile:  $SlugName  ->  $Root"
+Write-Host "            This is a real profile. Plain 'cem888 chat' opens it;"
+Write-Host "            '$AgentName' is the agent NAME (same word here, but the flag wants"
+Write-Host "            the profile key). Other agents on this machine stay separate."
+Write-Host ""
+Write-Host "  Switch or add agents:"
+if ($ShimOk) {
+  Write-Host "     cem888 profile list           (every agent installed here)"
+  Write-Host "     cem888 profile use <key>      (make another one the default)"
+  Write-Host "     cem888 -p <key> chat          (open one directly)"
+} else {
+  Write-Host "     `"$Cem`" profile list"
+  Write-Host "     `"$Cem`" -p <key> chat"
+}
 Write-Host ""
 Write-Host "  Start talking:"
 if ($ShimOk) { Write-Host "     cem888 chat" } else { Write-Host "     `"$Cem`" chat" }
