@@ -250,6 +250,30 @@ fi
 ok "config: $ROOT/config.yaml"
 ok "key:    $ROOT/.env (chmod 600)"
 
+# ── 5b. starter skills ────────────────────────────────────────────────────────
+# ⛔ A FREE INSTALL SHIPPED ZERO SKILLS (measured 2026-10-18). The bundle carries
+# starter-skills/ and the site installers lay them down, but this installer never
+# mentioned the directory -- so a free agent booted with an empty skills/ and
+# answered "zero skills installed" when asked to look one up.
+SKILLS_SRC="$BUNDLE/starter-skills"
+SKILLS_DEST="$ROOT/skills"
+if [ -d "$SKILLS_SRC" ]; then
+  mkdir -p "$SKILLS_DEST"
+  s_new=0; s_kept=0
+  while IFS= read -r f; do
+    rel="${f#"$SKILLS_SRC"/}"; rel="${rel%/SKILL.md}"
+    [ -n "$rel" ] || continue
+    # An existing skill is LEFT ALONE: re-running must never overwrite edits.
+    if [ -f "$SKILLS_DEST/$rel/SKILL.md" ]; then s_kept=$((s_kept+1)); continue; fi
+    mkdir -p "$SKILLS_DEST/$rel"
+    cp -R "$(dirname "$f")/." "$SKILLS_DEST/$rel/" 2>/dev/null || true
+    s_new=$((s_new+1))
+  done < <(find "$SKILLS_SRC" -name SKILL.md -type f 2>/dev/null)
+  ok "skills: $s_new installed, $s_kept already present"
+else
+  say "${C_DIM}starter-skills/ not in this bundle - skills/ left as-is${C_N}"
+fi
+
 # ── 6. smoke test ─────────────────────────────────────────────────────────────
 head1 "Checking the install"
 if "$VENV/bin/cem888" --version >/dev/null 2>&1; then ok "$("$VENV/bin/cem888" --version 2>/dev/null | head -1)"
