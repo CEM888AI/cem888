@@ -366,6 +366,34 @@ if [ "$BOOT_CODE" -ne 0 ]; then
 fi
 ok "agent boots against $ROOT"
 
+# ⛔ THE BANNER NAMED NO SECOND AGENT (owner, 2026-10-18: "it didnt show how to
+# message second agent ... type cem888 chat --profile 'agentname'"). A placeholder
+# <key> makes the customer go read `profile list` first, so enumerate the real
+# profiles on this machine and print the literal command for each.
+OTHER_AGENTS=""
+if [ -d "$ANCHOR/profiles" ]; then
+  for d in "$ANCHOR"/profiles/*/; do
+    [ -d "$d" ] || continue
+    n="$(basename "$d")"
+    if [ "$n" = "$SLUGNAME" ]; then continue; fi
+    if [ ! -f "$d/config.yaml" ]; then continue; fi
+    OTHER_AGENTS="${OTHER_AGENTS}     cem888 chat --profile \"${n}\"
+"
+  done
+fi
+# An install made by an OLDER free installer lives at the .cem888 ROOT itself --
+# that is the built-in "default" profile and it still opens with --profile default.
+if [ "$ROOT" != "$ANCHOR" ] && [ -f "$ANCHOR/config.yaml" ]; then
+  OTHER_AGENTS="     cem888 chat --profile \"default\"
+${OTHER_AGENTS}"
+fi
+if [ -n "$OTHER_AGENTS" ]; then
+  OTHER_HEAD="  Your other agents on this machine — talk to any of them:"
+else
+  OTHER_HEAD="  Install another agent and it gets its own profile — talk to it with:
+     cem888 chat --profile \"<the-name-you-gave-it>\""
+fi
+
 CYAN_ESC=$(printf '\033[38;2;58;219;232m'); CORAL_ESC=$(printf '\033[38;2;255;138;107m')
 B_ESC=$(printf '\033[1m'); DIM_ESC=$(printf '\033[2m'); N_ESC=$(printf '\033[0m')
 cat <<DONE
@@ -373,11 +401,18 @@ cat <<DONE
 ${CYAN_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}${P_LABEL}${N_ESC} (${MODEL}).
 
   Profile:  ${SLUGNAME}  ->  ${ROOT}
-  This is a real profile. Plain \`cem888 chat\` opens it, and other agents on
-  this machine stay separate:
-     cem888 profile list            (every agent installed here)
-     cem888 profile use <key>       (make another one the default)
-     cem888 -p <key> chat           (open one directly)
+  This is a real profile. Plain \`cem888 chat\` opens it, and the name below is
+  what the --profile flag expects.
+
+  Talk to this agent by name:
+     cem888 chat --profile "${SLUGNAME}"
+
+${OTHER_HEAD}
+${OTHER_AGENTS}
+  Manage agents:
+     cem888 profile list               (every agent installed here)
+     cem888 profile use <profile>      (make another one the default)
+     cem888 -p <profile> chat          (shorter form of --profile)
 
   Start talking:
      ${VENV}/bin/cem888 chat
