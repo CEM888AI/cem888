@@ -8,6 +8,16 @@ Bring your own model key. Nothing is proxied through CEM888 — the agent talks 
 curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
 ```
 
+### Windows (PowerShell, x86_64)
+
+```powershell
+irm https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.ps1 | iex
+```
+
+Same five prompts as the shell installer. Windows 10 1803 or newer. **Not yet accepted on real
+Windows hardware** — the first acceptance run is pending, and this line changes when it passes or
+fails. Windows arm64 is not in this release: the published wheel set is `windows-amd64`.
+
 ## What it asks you
 
 Five prompts, in this order:
@@ -68,7 +78,16 @@ rm -rf ~/.cem888
 
 ## Windows
 
-The Windows vendor bundle is published, but **the PowerShell installer is not in this release yet** — it is not tested end to end, and shipping an untested installer is worse than shipping none. Windows support lands when that script has actually been run on a Windows box.
+The PowerShell installer **is** published: `install/free.ps1`, the same five-prompt flow as the shell
+installer. It mints the Tier-0 authority manifest, refuses a malformed `CEM888_HOME` instead of
+installing into a junk folder, installs a `cem888` shim so `cem888 chat` works in a new PowerShell
+window, and runs the agent's own boot line (`load_agent_authority(required=True)`) before it reports
+success — so a broken install fails with the reason instead of handing over a terminal that says
+"Failed to initialize agent".
+
+**It has not yet passed an end-to-end run on real Windows hardware.** The first acceptance run is
+pending, and this section changes when it passes or fails. Shipping the script is honest; claiming
+it is verified is not.
 
 ## Licence
 
