@@ -21,7 +21,7 @@
 [![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&labelColor=050A0F&label=release)](https://github.com/CEM888AI/cem888/releases)
 [![License](https://img.shields.io/badge/license-source--available_commercial-3ADBE8?style=flat-square&labelColor=050A0F)](./LICENSE)
 [![Stage](https://img.shields.io/badge/stage-public_beta-B8943A?style=flat-square&labelColor=050A0F)](./docs/STATUS.md)
-[![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-3DDA97?style=flat-square&labelColor=050A0F)](./docs/PUBLIC_CONFORMANCE.md)
+[![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-3ADBE8?style=flat-square&labelColor=050A0F)](./docs/PUBLIC_CONFORMANCE.md)
 [![Benchmark](https://img.shields.io/badge/BEAM--10M-77.2%25-93A3B4?style=flat-square&labelColor=050A0F)](https://github.com/CEM888AI/benchmarks)
 
 <br/>
