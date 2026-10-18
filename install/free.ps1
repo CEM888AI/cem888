@@ -385,6 +385,35 @@ if ($TelegramToken) {
 Ok "config: $(Join-Path $Root 'config.yaml')"
 Ok "key:    $envFile (current user only)"
 
+# -- 5b. STARTER SKILLS ------------------------------------------------------
+# ⛔ A FREE INSTALL SHIPPED ZERO SKILLS (measured 2026-10-18). The bundle carries
+# starter-skills/ and the site installer lays it down, but this installer never
+# mentioned the directory -- so a free agent booted with an empty skills/ and
+# answered "zero skills installed" when asked to look one up. The bundle ships
+# them; the installer dropped them on the floor.
+$SkillsSrc = Join-Path $Bundle 'starter-skills'
+$SkillsDest = Join-Path $Root 'skills'
+if (Test-Path $SkillsSrc) {
+  New-Item -ItemType Directory -Force -Path $SkillsDest | Out-Null
+  $sNew = 0
+  $sKept = 0
+  Get-ChildItem -Path $SkillsSrc -Recurse -Filter 'SKILL.md' -File | ForEach-Object {
+    $rel = $_.Directory.FullName.Substring($SkillsSrc.Length).TrimStart('\')
+    if (-not $rel) { return }
+    $dest = Join-Path $SkillsDest $rel
+    # An existing skill is LEFT ALONE: re-running the installer must never
+    # overwrite the customer's own edits.
+    if (Test-Path (Join-Path $dest 'SKILL.md')) { $sKept++; return }
+    New-Item -ItemType Directory -Force -Path $dest | Out-Null
+    Copy-Item -Path (Join-Path $_.Directory.FullName '*') -Destination $dest -Force -ErrorAction SilentlyContinue
+    $sNew++
+  }
+  Ok "skills: $sNew installed, $sKept already present"
+  if (($sNew + $sKept) -eq 0) { Say "starter-skills present but no SKILL.md found - bundle layout changed?" }
+} else {
+  Say "starter-skills/ not in this bundle - skills/ left as-is"
+}
+
 # -- 6. launcher + smoke test ----------------------------------------------
 $Cem = Join-Path $Venv 'Scripts\cem888.exe'
 
