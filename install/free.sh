@@ -279,6 +279,57 @@ head1 "Checking the install"
 if "$VENV/bin/cem888" --version >/dev/null 2>&1; then ok "$("$VENV/bin/cem888" --version 2>/dev/null | head -1)"
 else say "${C_CORAL}engine binary did not answer --version${C_N} — run: $VENV/bin/cem888 doctor"; fi
 
+# ── 6b. Tier-0 authority manifest ─────────────────────────────────────────────
+# ⛔ THE AGENT REFUSES EVERY TURN WITHOUT THIS. agent_init and system_prompt both
+# load it with required=True. The site installers mint it through
+# installer/scripts/cem-authority-manifest.py; this installer never did — a clean
+# free install answered "required Tier-0 authority manifest is missing" to the
+# first message it ever received (reported 2026-10-18), and the Windows free
+# installer needed the same fix.
+# MINTED BY THE ONE PRODUCER, not by `cem888 authority init`. Measured
+# 2026-10-18 on a clean free install: the CLI derives profile_name from the
+# directory's basename, so a profile at .../.cem888 minted "profile_name":
+# ".cem888" while the runtime's path-based resolver says "default" -- and every
+# boot died with
+#   AuthorityError: profile authority mismatch: path implies 'default',
+#   manifest declares '.cem888'
+# i.e. the install said "Done" and the agent refused every turn. The shipped
+# installer/scripts/cem-authority-manifest.py carries profile_name_for(), which
+# mirrors the runtime resolver, and re-reads the file to prove it loads.
+AUTH_SCRIPT="$BUNDLE/installer/scripts/cem-authority-manifest.py"
+if [ -f "$AUTH_SCRIPT" ] && [ -x "$VENV/bin/python" ]; then
+  "$VENV/bin/python" "$AUTH_SCRIPT" --profile-dir "$ROOT" --home-dir "$ROOT" \
+    --agent-name "$AGENT_NAME" --wheel-version "$VERSION" \
+    --from-install-state --if-missing 2>&1 | sed 's/^/  /'
+fi
+if [ ! -f "$ROOT/authority.json" ] && [ -x "$VENV/bin/cem888" ]; then
+  "$VENV/bin/cem888" authority init --profile-dir "$ROOT" --agent-name "$AGENT_NAME" 2>&1 | sed 's/^/  /'
+fi
+if [ -f "$ROOT/authority.json" ]; then
+  ok "Tier-0 authority: $ROOT/authority.json"
+else
+  die "Tier-0 authority manifest was not created at $ROOT/authority.json — the agent cannot answer a single turn without it."
+fi
+
+# ── 6c. boot gate ─────────────────────────────────────────────────────────────
+# Every step above can be green while the agent still refuses to start: the line
+# a turn actually dies on is agent_init.py's
+#   agent.authority = load_agent_authority(required=True)
+# and it only runs when a message is sent — i.e. AFTER the installer said "Done".
+# Run that exact call headless here, so the install either PROVES the agent boots
+# or names the reason BEFORE reporting success.
+# `|| BOOT_CODE=$?` is not decoration: under `set -e` a bare assignment from a
+# failing command substitution kills the script AT THIS LINE, so the reason
+# would never be printed and the installer would just vanish. Measured
+# 2026-10-18 — that is exactly how the first version of this gate behaved.
+BOOT_CODE=0
+BOOT_OUT="$("$VENV/bin/python" -c "from agent.authority import load_agent_authority; a = load_agent_authority(required=True); print('profile:', a.profile_root)" 2>&1)" || BOOT_CODE=$?
+if [ "$BOOT_CODE" -ne 0 ]; then
+  printf '%s\n' "$BOOT_OUT" | sed 's/^/  /'
+  die "the agent cannot boot — Tier-0 authority did not load (the reason is printed above)"
+fi
+ok "agent boots against $ROOT"
+
 CYAN_ESC=$(printf '\033[38;2;58;219;232m'); CORAL_ESC=$(printf '\033[38;2;255;138;107m')
 B_ESC=$(printf '\033[1m'); DIM_ESC=$(printf '\033[2m'); N_ESC=$(printf '\033[0m')
 cat <<DONE
