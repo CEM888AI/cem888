@@ -466,7 +466,23 @@ if ($verOut) { Ok "$verOut" } else { Write-Host "  $C_CORAL[x] engine binary did
 # engine's own command so the producer and the consumer can never disagree about
 # the path.
 $Manifest = Join-Path $Root 'authority.json'
-if (Test-Path $Cem) {
+# MINTED BY THE ONE PRODUCER, not by `cem888 authority init`. Measured
+# 2026-10-18 on a clean free install: the CLI derives profile_name from the
+# directory's basename, so a profile at ...\.cem888 minted "profile_name":
+# ".cem888" while the runtime's path-based resolver says "default" -- and every
+# boot died with
+#   AuthorityError: profile authority mismatch: path implies 'default',
+#   manifest declares '.cem888'
+# i.e. the installer said "Done" and the agent then refused every single turn.
+# The shipped installer/scripts/cem-authority-manifest.py carries
+# profile_name_for(), which mirrors the runtime resolver, and re-reads the file
+# it just wrote to prove it loads.
+$AuthScript = Join-Path $Bundle 'installer\scripts\cem-authority-manifest.py'
+if ((Test-Path $AuthScript) -and (Test-Path $VenvPy)) {
+  & $VenvPy $AuthScript --profile-dir $Root --home-dir $Root --agent-name $AgentName --wheel-version $Version --from-install-state --if-missing 2>&1 | ForEach-Object { Write-Host "  $_" }
+  if ($LASTEXITCODE -ne 0) { Write-Host "  $C_CORAL[x] authority mint exited $LASTEXITCODE$C_N" }
+} elseif (Test-Path $Cem) {
+  # Fallback only when the bundle somehow ships no minting script.
   & $Cem authority init --profile-dir $Root --agent-name $AgentName 2>&1 | ForEach-Object { Write-Host "  $_" }
   if ($LASTEXITCODE -ne 0) { Write-Host "  $C_CORAL[x] authority init exited $LASTEXITCODE$C_N" }
 }
