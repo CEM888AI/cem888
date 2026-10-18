@@ -303,20 +303,32 @@ Write-Host "  Check health:"
 Write-Host "     `"$Cem`" doctor"
 Write-Host ""
 Write-Host "  Shortcut for a plain 'cem888':"
-$ScriptsDir = Join-Path $Venv 'Scripts'
-$UserPath = [Environment]::GetEnvironmentVariable('Path','User')
-if (-not $UserPath) { $UserPath = '' }
-$PathParts = @($UserPath -split ';' | Where-Object { $_ -ne '' })
-if ($PathParts -notcontains $ScriptsDir) {
-    [Environment]::SetEnvironmentVariable('Path', (@($PathParts + $ScriptsDir) -join ';'), 'User')
-    Write-Host "  $C_CYAN[ok] added to your PATH:$C_N $ScriptsDir"
-    Write-Host "       open a NEW PowerShell window, then type:  cem888 chat"
-} else {
-    Write-Host "  $C_CYAN[ok] already on your PATH:$C_N $ScriptsDir"
+# The console script lands in the PRIVATE venv's Scripts dir, which nothing has on
+# PATH, so `cem888 chat` answered CommandNotFoundException (reported 2026-10-18).
+# Same remedy as the site installer: a .cmd shim in ~\.local\bin, which the uv
+# installer already puts on PATH.
+$ShimDir = Join-Path $env:USERPROFILE '.local\bin'
+New-Item -ItemType Directory -Force -Path $ShimDir | Out-Null
+$Shim = Join-Path $ShimDir 'cem888.cmd'
+Set-Content -Path $Shim -Encoding ASCII -Value @('@echo off', "`"$Cem`" %*")
+try {
+    $UserPath = [Environment]::GetEnvironmentVariable('Path','User')
+    if (-not $UserPath) { $UserPath = '' }
+    $PathParts = @($UserPath -split ';' | Where-Object { $_ -ne '' })
+    if ($PathParts -notcontains $ShimDir) {
+        [Environment]::SetEnvironmentVariable('Path', (@($PathParts + $ShimDir) -join ';'), 'User')
+        Write-Host "  $C_CYAN[ok] added to your PATH:$C_N $ShimDir"
+    } else {
+        Write-Host "  $C_CYAN[ok] already on your PATH:$C_N $ShimDir"
+    }
+} catch {
+    Write-Host "  $C_CORAL[x] could not update the user PATH: $($_.Exception.Message)$C_N"
 }
-$env:Path = "$env:Path;$ScriptsDir"
+$env:Path = "$ShimDir;$env:Path"
+Write-Host "  $C_CYAN[ok] command installed:$C_N $Shim"
+Write-Host "       open a NEW PowerShell window, then just type:  cem888 chat"
 Write-Host "  or right now, in this window:"
-Write-Host "     `"$Cem`" chat"
+Write-Host "     cem888 chat"
 Write-Host ""
 Write-Host "  $C_DIM On cost: the free lane is tuned for cheap, fast models. When a task needs real$C_N"
 Write-Host "  $C_DIM deep reasoning, add a stronger model later - 'cem888 model' switches providers, and$C_N"
