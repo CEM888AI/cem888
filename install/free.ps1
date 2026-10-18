@@ -242,6 +242,93 @@ if (-not $wheel) { Die "engine wheel not found in the bundle." }
 if ($LASTEXITCODE -ne 0) { Die "engine wheel install failed." }
 Ok "engine installed"
 
+# -- 4b. GIT FOR WINDOWS (required, not optional) ---------------------------
+# ⛔ WITHOUT THIS THE AGENT HAS NO TERMINAL AND NO FILE ACCESS. Every shell and
+# file operation runs through Git Bash:
+# customer-runtime/src/tools/environments/local.py::_find_bash raises
+#   "Git Bash not found. CEM888 Agent requires Git for Windows on Windows."
+# and searches OUR portable install FIRST --
+#   %LOCALAPPDATA%\cem888\git\bin\bash.exe      (MinGit/PortableGit)
+#   %LOCALAPPDATA%\cem888\git\usr\bin\bash.exe  (MinGit usr layout)
+# -- under the comment "The install.ps1 installer always drops portable Git here
+# when the user didn't already have a working system Git". This installer never
+# did. Measured 2026-10-18: a fresh FREE install on Windows answered every
+# terminal call with that exact error, so the agent could not read one file and
+# reported, honestly, that it could verify nothing. The site installer got this
+# block (install/windows.ps1 section 2b-pre); the free lane never did.
+function Get-Cem888GitBash {
+  $c = @()
+  if ($env:CEM888_GIT_BASH_PATH) { $c += $env:CEM888_GIT_BASH_PATH }
+  if ($env:LOCALAPPDATA) {
+    $c += "$env:LOCALAPPDATA\cem888\git\bin\bash.exe"
+    $c += "$env:LOCALAPPDATA\cem888\git\usr\bin\bash.exe"
+  }
+  $onPath = Get-Command bash.exe -ErrorAction SilentlyContinue
+  if ($onPath) { $c += $onPath.Source }
+  $c += "${env:ProgramFiles}\Git\bin\bash.exe"
+  $c += "${env:ProgramFiles(x86)}\Git\bin\bash.exe"
+  if ($env:LOCALAPPDATA) { $c += "$env:LOCALAPPDATA\Programs\Git\bin\bash.exe" }
+  foreach ($p in $c) {
+    if ($p -and (Test-Path -LiteralPath $p -PathType Leaf)) { return $p }
+  }
+  return $null
+}
+
+Head1 "Git for Windows (the terminal runs through it)"
+$GitBash = Get-Cem888GitBash
+if ($GitBash) {
+  Ok "Git Bash found: $GitBash"
+} else {
+  Say "not installed - fetching it now (the agent cannot run a command without it)"
+  $winget = Get-Command winget.exe -ErrorAction SilentlyContinue
+  if ($winget) {
+    # A native program: a non-zero exit does NOT throw, so the result is judged
+    # on disk below, never on the exit code.
+    try { & winget.exe install --id Git.Git --silent --accept-package-agreements --accept-source-agreements 2>&1 | Out-Null } catch { }
+    for ($g = 0; $g -lt 20; $g++) {
+      $GitBash = Get-Cem888GitBash
+      if ($GitBash) { break }
+      Start-Sleep -Seconds 3
+    }
+  }
+  if (-not $GitBash) {
+    # Pinned portable drop into the exact path the runtime searches FIRST: a plain
+    # zip, no elevation, no installer to run. Git for Windows is not a Python
+    # dependency -- the --no-index rule governs the wheel set, not this -- but the
+    # pin does: an explicit tag, never /latest/.
+    $gitTag = 'v2.56.0.windows.1'
+    $gitUrl = "https://github.com/git-for-windows/git/releases/download/$gitTag/MinGit-2.56.0-64-bit.zip"
+    $gitDest = Join-Path $env:LOCALAPPDATA 'cem888\git'
+    $gitZip = Join-Path $env:TEMP 'cem888-mingit.zip'
+    Say "downloading portable Git ($gitTag)"
+    if (Get-RemoteFile $gitUrl $gitZip) {
+      try {
+        if (-not (Test-Path $gitDest)) { New-Item -ItemType Directory -Force -Path $gitDest | Out-Null }
+        Expand-Archive -LiteralPath $gitZip -DestinationPath $gitDest -Force
+        Remove-Item -LiteralPath $gitZip -Force -ErrorAction SilentlyContinue
+      } catch { Say "could not unpack portable Git: $($_.Exception.Message)" }
+    } else {
+      Say "could not download portable Git"
+    }
+    $GitBash = Get-Cem888GitBash
+  }
+  if (-not $GitBash) {
+    Die "Git for Windows could not be installed, so this agent would have NO terminal. Install it from https://git-scm.com/download/win and re-run this installer."
+  }
+  try { [Environment]::SetEnvironmentVariable('CEM888_GIT_BASH_PATH', $GitBash, 'User') } catch { }
+  Ok "Git Bash installed: $GitBash"
+}
+$env:CEM888_GIT_BASH_PATH = $GitBash
+
+# Prove it RUNS, not just that the file exists: a half-unpacked MinGit passes
+# Test-Path and then fails every single command. Same class of check as the boot
+# gate below -- the installer either proves the tool works or names the reason.
+$bashProbe = @(& $GitBash -c 'echo cem888-bash-ok' 2>&1)
+if (($bashProbe -join ' ') -notmatch 'cem888-bash-ok') {
+  Die "Git Bash exists at $GitBash but did not run (output: $($bashProbe -join ' ')). The agent has no terminal until this works."
+}
+Ok "terminal backend verified"
+
 # -- 5. config (provider-neutral) -------------------------------------------
 Head1 "Writing profile"
 if (-not (Test-Path $Root)) { New-Item -ItemType Directory -Force -Path $Root | Out-Null }
