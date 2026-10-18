@@ -23,7 +23,7 @@ param(
 $ErrorActionPreference = 'Continue'
 $ProgressPreference    = 'SilentlyContinue'
 
-$Version = '1.0.47'
+$Version = '1.0.48'
 $Repo    = 'CEM888AI/cem888'
 $Slug    = "free-v$Version"
 $BaseDl  = "https://github.com/$Repo/releases/download/$Slug"
@@ -31,12 +31,15 @@ $Root    = if ($env:CEM888_HOME) { $env:CEM888_HOME } else { Join-Path $env:USER
 $Bundle  = Join-Path $Root "free\v$Version"
 $Pkg     = "cem888-free-v$Version-windows-amd64.tar.gz"
 
-$C_MINT = 'Green'; $C_CORAL = 'DarkYellow'; $C_DIM = 'DarkGray'; $C_B = 'White'
+$ESC = [char]27
+$C_CYAN  = "$ESC[38;2;58;219;232m"   # #3ADBE8 - brand cyan
+$C_CORAL = "$ESC[38;2;255;138;107m"  # #FF8A6B - brand coral
+$C_DIM   = "$ESC[2m"; $C_B = "$ESC[1m"; $C_N = "$ESC[0m"
 
 function Say  ($m) { Write-Host "  $m" }
-function Head1($m) { Write-Host ""; Write-Host "  $m" -ForegroundColor $C_CORAL }
-function Ok   ($m) { Write-Host "  [ok] $m" -ForegroundColor $C_MINT }
-function Die  ($m) { Write-Host ""; Write-Host "  [x] $m" -ForegroundColor Red; exit 1 }
+function Head1($m) { Write-Host ""; Write-Host "  $C_CORAL$m$C_N" }
+function Ok   ($m) { Write-Host "  $C_CYAN[ok] $m$C_N" }
+function Die  ($m) { Write-Host ""; Write-Host "  $C_CORAL[x] $m$C_N"; exit 1 }
 
 function Get-RemoteFile($Url, $Dest) {
   $dir = Split-Path -Parent $Dest
@@ -54,9 +57,9 @@ function Get-RemoteFile($Url, $Dest) {
   return (Test-Path $Dest)
 }
 
-Write-Host ("=" * 53) -ForegroundColor $C_CORAL
-Write-Host "   CEM888 - free agent install (v$Version, windows-amd64)" -ForegroundColor $C_MINT
-Write-Host ("=" * 53) -ForegroundColor $C_CORAL
+Write-Host "$C_CORAL$('=' * 53)$C_N"
+Write-Host "   $C_CYAN CEM888 - free agent install (v$Version, windows-amd64)$C_N"
+Write-Host "$C_CORAL$('=' * 53)$C_N"
 Say "Agent only - terminal chat or Telegram. No desktop app in the free lane."
 Say "You bring your own model key. Nothing is sent anywhere except your chosen provider."
 
@@ -146,7 +149,7 @@ try {
     $Model = $pool[0]
   }
 } catch {
-  Write-Host "  (could not read the model list: $($_.Exception.GetType().Name))" -ForegroundColor $C_DIM
+  Write-Host "  $C_DIM(could not read the model list: $($_.Exception.GetType().Name))$C_N"
   $Model = $PSuggest
 }
 if (-not $Model) { $Model = ($PLabel.ToLower() -replace '[^a-z0-9]+', '-').Trim('-') }
@@ -287,11 +290,11 @@ $Shim = Join-Path $Root 'cem888.cmd'
 Head1 "Checking the install"
 $verOut = ''
 if (Test-Path $Cem) { $verOut = (& $Cem --version 2>&1 | Select-Object -First 1) }
-if ($verOut) { Ok "$verOut" } else { Say "[x] engine binary did not answer --version - run: `"$Cem`" doctor" -ForegroundColor $C_CORAL }
+if ($verOut) { Ok "$verOut" } else { Write-Host "  $C_CORAL[x] engine binary did not answer --version - run: `"$Cem`" doctor$C_N" }
 
 Write-Host ""
-Write-Host "  Done. " -NoNewline -ForegroundColor $C_MINT
-Write-Host "$AgentName is installed on $PLabel ($Model)." -ForegroundColor $C_B
+Write-Host "  $C_CYAN Done. " -NoNewline
+Write-Host "$AgentName is installed on $PLabel ($Model).$C_N"
 Write-Host ""
 Write-Host "  Start talking:"
 Write-Host "     `"$Cem`" chat"
@@ -302,7 +305,7 @@ Write-Host ""
 Write-Host "  Shortcut (add to PATH for a plain 'cem888'):"
 Write-Host "     $Root"
 Write-Host ""
-Write-Host "  On cost: the free lane is tuned for cheap, fast models. When a task needs real" -ForegroundColor $C_DIM
-Write-Host "  deep reasoning, add a stronger model later - 'cem888 model' switches providers, and" -ForegroundColor $C_DIM
-Write-Host "  'cem888 fallback' wires a big model in behind the cheap one so it is only used when" -ForegroundColor $C_DIM
-Write-Host "  the cheap one fails or the task is flagged hard. Nothing to reinstall." -ForegroundColor $C_DIM
+Write-Host "  $C_DIM On cost: the free lane is tuned for cheap, fast models. When a task needs real$C_N"
+Write-Host "  $C_DIM deep reasoning, add a stronger model later - 'cem888 model' switches providers, and$C_N"
+Write-Host "  $C_DIM 'cem888 fallback' wires a big model in behind the cheap one so it is only used when$C_N"
+Write-Host "  $C_DIM the cheap one fails or the task is flagged hard. Nothing to reinstall.$C_N"
