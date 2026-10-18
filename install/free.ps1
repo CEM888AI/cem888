@@ -360,6 +360,25 @@ if (Test-Path $Manifest) {
 }
 if (-not $ManifestOk) { Die "Tier-0 authority manifest was not created at $Manifest - the agent cannot answer a single turn without it." }
 
+# -- 6c. boot gate ---------------------------------------------------------
+# Everything above can be green while the agent still refuses to start: the line
+# a turn actually dies on is agent_init.py's
+#   agent.authority = load_agent_authority(required=True)
+# and that only runs when a message is sent -- i.e. AFTER the installer said
+# "Done" (reported 2026-10-18: install looked fine, then the TUI printed
+# "Failed to initialize agent"). Run that exact call headless here, so the
+# install either PROVES the agent boots or names the reason BEFORE reporting
+# success.
+Head1 "Proving the agent boots"
+$Probe = "from agent.authority import load_agent_authority; a = load_agent_authority(required=True); print('profile:', a.profile_root)"
+$ProbeOut = @(& $VenvPy -c $Probe 2>&1)
+$ProbeCode = $LASTEXITCODE
+$ProbeOut | ForEach-Object { Write-Host "  $_" }
+if ($ProbeCode -ne 0) {
+  Die "the agent cannot boot - Tier-0 authority did not load (the reason is printed above)"
+}
+Ok "agent boots against $Root"
+
 Write-Host ""
 Write-Host "  $C_CYAN Done. " -NoNewline
 Write-Host "$AgentName is installed on $PLabel ($Model).$C_N"
