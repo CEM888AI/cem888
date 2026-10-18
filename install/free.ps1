@@ -693,25 +693,50 @@ Write-Host ""
 # creates a real profile directory per agent, so the key below EXISTS and the two
 # commands that were once wrong both work.
 Write-Host "  Profile:  $SlugName  ->  $Root"
-Write-Host "            This is a real profile. Plain 'cem888 chat' opens it;"
-Write-Host "            '$AgentName' is the agent NAME (same word here, but the flag wants"
-Write-Host "            the profile key). Other agents on this machine stay separate."
+Write-Host "            This is a real profile. Plain 'cem888 chat' opens it, and the"
+Write-Host "            name below is what the --profile flag expects."
 Write-Host ""
-Write-Host "  Switch or add agents:"
-if ($ShimOk) {
-  Write-Host "     cem888 profile list           (every agent installed here)"
-  Write-Host "     cem888 profile use <key>      (make another one the default)"
-  Write-Host "     cem888 -p <key> chat          (open one directly)"
-} else {
-  Write-Host "     `"$Cem`" profile list"
-  Write-Host "     `"$Cem`" -p <key> chat"
+
+# ⛔ THE BANNER NAMED NO SECOND AGENT (owner, 2026-10-18: "it didnt show how to
+# message second agent ... type cem888 chat --profile 'agentname'"). Printing a
+# placeholder <key> forces the customer to go read `profile list` first. So: name
+# THIS profile in the exact command, then enumerate every OTHER profile that has a
+# config on this machine and print its literal command.
+$OtherAgents = @()
+if (Test-Path $ProfilesRoot) {
+  $OtherAgents = @(Get-ChildItem -Path $ProfilesRoot -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne $SlugName -and (Test-Path (Join-Path $_.FullName 'config.yaml')) } |
+    ForEach-Object { $_.Name })
 }
+# An install made by an OLDER free installer lives at the .cem888 ROOT itself --
+# that is the built-in "default" profile and it still opens with --profile default.
+if ($Root -ne $Anchor -and (Test-Path (Join-Path $Anchor 'config.yaml'))) {
+  $OtherAgents = @('default') + $OtherAgents
+}
+$CLI = if ($ShimOk) { 'cem888' } else { "`"$Cem`"" }
+
+Write-Host "  Talk to this agent by name:"
+Write-Host "     $CLI chat --profile `"$SlugName`""
+Write-Host ""
+if ($OtherAgents.Count -gt 0) {
+  Write-Host "  Your other agents on this machine - talk to any of them:"
+  foreach ($oa in $OtherAgents) { Write-Host "     $CLI chat --profile `"$oa`"" }
+  Write-Host ""
+} else {
+  Write-Host "  Install another agent and it gets its own profile - talk to it with:"
+  Write-Host "     $CLI chat --profile `"<the-name-you-gave-it>`""
+  Write-Host ""
+}
+Write-Host "  Manage agents:"
+Write-Host "     $CLI profile list               (every agent installed here)"
+Write-Host "     $CLI profile use <profile>      (make another one the default)"
+Write-Host "     $CLI -p <profile> chat          (shorter form of --profile)"
 Write-Host ""
 Write-Host "  Start talking:"
-if ($ShimOk) { Write-Host "     cem888 chat" } else { Write-Host "     `"$Cem`" chat" }
+Write-Host "     $CLI chat"
 Write-Host ""
 Write-Host "  Check health:"
-if ($ShimOk) { Write-Host "     cem888 doctor" } else { Write-Host "     `"$Cem`" doctor" }
+Write-Host "     $CLI doctor"
 Write-Host ""
 if ($ShimOk) {
     Write-Host "  $C_CYAN[ok] cem888 command installed:$C_N $Shim"
