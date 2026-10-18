@@ -43,9 +43,9 @@ One release asset per platform (~170–190MB), plus `SHA256SUMS`:
 
 | Platform | Bundle |
 | --- | --- |
-| Linux x86_64 | `cem888-free-v1.0.47-linux-x86_64.tar.gz` |
-| macOS Apple silicon | `cem888-free-v1.0.47-darwin-arm64.tar.gz` |
-| macOS Intel | `cem888-free-v1.0.47-darwin-x86_64.tar.gz` |
+| Linux x86_64 | `cem888-free-v1.0.48-linux-x86_64.tar.gz` |
+| macOS Apple silicon | `cem888-free-v1.0.48-darwin-arm64.tar.gz` |
+| macOS Intel | `cem888-free-v1.0.48-darwin-x86_64.tar.gz` |
 
 Each bundle carries the engine wheel, the signed dependency lock for that platform, and the vendored wheels.
 
