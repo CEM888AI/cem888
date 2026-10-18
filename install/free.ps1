@@ -27,7 +27,23 @@ $Version = '1.0.48'
 $Repo    = 'CEM888AI/cem888'
 $Slug    = "free-v$Version"
 $BaseDl  = "https://github.com/$Repo/releases/download/$Slug"
-$Root    = if ($env:CEM888_HOME) { $env:CEM888_HOME } else { Join-Path $env:USERPROFILE '.cem888' }
+# An inherited CEM888_HOME is used ONLY when it is a real .cem888 home. Measured
+# 2026-10-18: CEM888_HOME had been left as 'C:\Users\<n>.cem888' (separator
+# missing), so the whole profile -- config, key, venv, everything -- was written
+# into C:\Users\<n>.cem888, a directory next to the user folder rather than
+# inside it, and the runtime then disagreed with the installer about where the
+# profile lived. Reject a malformed value out loud and use the default.
+$DefaultRoot = Join-Path $env:USERPROFILE '.cem888'
+$Root = $DefaultRoot
+if ($env:CEM888_HOME) {
+  $candidate = $env:CEM888_HOME.Trim().TrimEnd('\')
+  if ([IO.Path]::IsPathRooted($candidate) -and (Split-Path $candidate -Leaf) -eq '.cem888') {
+    $Root = $candidate
+  } else {
+    Write-Host "  ! ignoring CEM888_HOME=$($env:CEM888_HOME) - not a .cem888 home; using $DefaultRoot"
+  }
+}
+$env:CEM888_HOME = $Root
 $Bundle  = Join-Path $Root "free\v$Version"
 $Pkg     = "cem888-free-v$Version-windows-amd64.tar.gz"
 
@@ -305,6 +321,17 @@ try {
         [Environment]::SetEnvironmentVariable('Path', (@($PathParts + $ShimDir) -join ';'), 'User')
     }
     $env:Path = "$ShimDir;$env:Path"
+# A stale user-level CEM888_HOME sends every later shell to a profile this
+# installer never wrote. Point it at the home this install actually produced.
+try {
+  $uHome = [Environment]::GetEnvironmentVariable('CEM888_HOME','User')
+  if ($uHome -and $uHome.Trim().TrimEnd('\') -ne $Root) {
+    [Environment]::SetEnvironmentVariable('CEM888_HOME', $Root, 'User')
+    Write-Host "  $C_CYAN[ok] repaired CEM888_HOME:$C_N $Root (was $uHome)"
+  }
+} catch {
+  Write-Host "  $C_CORAL[x] could not repair CEM888_HOME: $($_.Exception.Message)$C_N"
+}
 } catch {
     Write-Host "  $C_CORAL[x] could not install the cem888 command: $($_.Exception.Message)$C_N"
 }
@@ -313,6 +340,25 @@ Head1 "Checking the install"
 $verOut = ''
 if (Test-Path $Cem) { $verOut = (& $Cem --version 2>&1 | Select-Object -First 1) }
 if ($verOut) { Ok "$verOut" } else { Write-Host "  $C_CORAL[x] engine binary did not answer --version - run: `"$Cem`" doctor$C_N" }
+
+# The Tier-0 authority manifest. The runtime refuses EVERY turn without it --
+# agent_init and system_prompt both load it with required=True -- and nothing in
+# the free route ever created one: the site installer mints it through
+# installer/scripts/cem-authority-manifest.py, this installer did not, so a clean
+# free install answered "required Tier-0 authority manifest is missing" to the
+# first message it ever received (reported 2026-10-18). Minted here with the
+# engine's own command so the producer and the consumer can never disagree about
+# the path.
+$Manifest = Join-Path $Root 'authority.json'
+if (Test-Path $Cem) {
+  & $Cem authority init --profile-dir $Root --agent-name $AgentName 2>&1 | ForEach-Object { Write-Host "  $_" }
+  if ($LASTEXITCODE -ne 0) { Write-Host "  $C_CORAL[x] authority init exited $LASTEXITCODE$C_N" }
+}
+$ManifestOk = $false
+if (Test-Path $Manifest) {
+  try { $null = (Get-Content -Raw $Manifest | ConvertFrom-Json); $ManifestOk = $true } catch { }
+}
+if (-not $ManifestOk) { Die "Tier-0 authority manifest was not created at $Manifest - the agent cannot answer a single turn without it." }
 
 Write-Host ""
 Write-Host "  $C_CYAN Done. " -NoNewline
