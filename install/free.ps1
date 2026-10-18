@@ -236,11 +236,79 @@ $lock   = Join-Path $Bundle 'installer\requirements-lock.hashes.txt'
 if ($LASTEXITCODE -ne 0) { Die "dependency install failed (no index, lock only)." }
 Ok "dependencies installed from the signed lock"
 
-$wheel = Get-ChildItem -Path (Join-Path $Bundle 'installer') -Filter 'cem888_agent-*.whl' | Select-Object -First 1
-if (-not $wheel) { Die "engine wheel not found in the bundle." }
-& $Uv pip install --python $VenvPy --no-index --find-links $vendor --no-deps $wheel.FullName 2>&1 | Out-Null
-if ($LASTEXITCODE -ne 0) { Die "engine wheel install failed." }
-Ok "engine installed"
+# ⛔ THIS STEP FAILED ON A CUSTOMER WINDOWS BOX (2026-10-18) AND TOLD NOBODY WHY.
+# The old line was `... $wheel.FullName 2>&1 | Out-Null` followed by a bare
+# "engine wheel install failed" -- uv's entire reason was thrown away, so the
+# report was one line with nothing under it. Three things now: pick the wheel
+# strictly, prove the file on disk is a real wheel BEFORE uv sees it (a truncated
+# extract passes Test-Path and only fails inside uv), and KEEP uv's output so a
+# failure names itself.
+$wheelDir = Join-Path $Bundle 'installer'
+$wheelCandidates = @(Get-ChildItem -Path $wheelDir -Filter 'cem888_agent-*.whl' -ErrorAction SilentlyContinue)
+if ($wheelCandidates.Count -ne 1) {
+  Die "installer bundle is incomplete - expected exactly 1 engine wheel in $wheelDir, found $($wheelCandidates.Count)."
+}
+$engineWheel = $wheelCandidates[0]
+
+function Test-Cem888Wheel([string]$Path) {
+  try {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
+    $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+      $meta = @($zip.Entries | Where-Object { $_.FullName -like '*.dist-info/METADATA' }).Count
+      $rec  = @($zip.Entries | Where-Object { $_.FullName -like '*.dist-info/RECORD' }).Count
+      return ($meta -ge 1 -and $rec -ge 1 -and $zip.Entries.Count -gt 10)
+    } finally { $zip.Dispose() }
+  } catch { return $false }
+}
+
+$wheelOk = Test-Cem888Wheel $engineWheel.FullName
+if (-not $wheelOk -and (Test-Path $pkgPath)) {
+  # Self-repair: the archive is already on disk, so re-extract only installer/.
+  Say "engine wheel looks truncated - re-extracting installer/ from the bundle archive"
+  & tar.exe -xf $pkgPath -C $Bundle './installer' 2>&1 | Out-Null
+  $wheelCandidates = @(Get-ChildItem -Path $wheelDir -Filter 'cem888_agent-*.whl' -ErrorAction SilentlyContinue)
+  if ($wheelCandidates.Count -eq 1) { $engineWheel = $wheelCandidates[0]; $wheelOk = Test-Cem888Wheel $engineWheel.FullName }
+}
+if (-not $wheelOk) {
+  Die "the engine wheel on disk is not a complete wheel ($($engineWheel.FullName), $([int]($engineWheel.Length / 1KB)) KB) - delete $Bundle and run this installer again."
+}
+Ok "engine wheel: $($engineWheel.Name) ($([math]::Round($engineWheel.Length / 1MB, 1)) MB)"
+
+# Installed through an ARGUMENT ARRAY (the form the site installer uses on
+# working Windows boxes) and retried once: a scanner holding a just-extracted
+# 7 MB file is a transient failure, not a broken bundle.
+$engineArgs = @('pip', 'install', '--python', $VenvPy, '--no-index', '--no-deps', '--find-links', $vendor, $engineWheel.FullName)
+$engineCode = 1
+$engineOut = @()
+for ($attempt = 1; $attempt -le 2; $attempt++) {
+  $engineOut = @(& $Uv @engineArgs 2>&1)
+  $engineCode = $LASTEXITCODE
+  if ($engineCode -eq 0) { break }
+  if ($attempt -lt 2) {
+    Say "engine install attempt $attempt failed - retrying once"
+    Start-Sleep -Seconds 3
+  }
+}
+if ($engineCode -ne 0) {
+  # Second, INDEPENDENT route: the venv's own pip. uv and pip fail for different
+  # reasons, so a machine where one chokes can still end up with a working engine
+  # instead of a dead installer.
+  Say "uv could not install the engine - trying the venv's own pip"
+  $pipOut = @(& $VenvPy -m pip install --no-index --no-deps $engineWheel.FullName 2>&1)
+  $pipCode = $LASTEXITCODE
+  if ($pipCode -eq 0) {
+    Ok "engine installed (pip route)"
+  } else {
+    Write-Host "  --- uv said ---"
+    $engineOut | ForEach-Object { Write-Host "  $_" }
+    Write-Host "  --- pip said ---"
+    $pipOut | ForEach-Object { Write-Host "  $_" }
+    Die "engine wheel install failed (uv exit $engineCode, pip exit $pipCode) - the reason is above."
+  }
+} else {
+  Ok "engine installed"
+}
 
 # -- 4b. GIT FOR WINDOWS (required, not optional) ---------------------------
 # ⛔ WITHOUT THIS THE AGENT HAS NO TERMINAL AND NO FILE ACCESS. Every shell and
