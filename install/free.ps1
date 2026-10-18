@@ -360,25 +360,64 @@ if ($GitBash) {
     }
   }
   if (-not $GitBash) {
-    # Pinned portable drop into the exact path the runtime searches FIRST: a plain
-    # zip, no elevation, no installer to run. Git for Windows is not a Python
-    # dependency -- the --no-index rule governs the wheel set, not this -- but the
-    # pin does: an explicit tag, never /latest/.
+    # ⛔ MinGit CANNOT SATISFY THIS, BY CONSTRUCTION -- this block used to fetch it.
+    # Measured 2026-10-18 on the pinned asset MinGit-2.56.0-64-bit.zip (39,602,073 B):
+    # it carries usr/bin/sh.exe and usr/bin/dash.exe and NO bash.exe ANYWHERE. The
+    # runtime requires bash.exe BY NAME (customer-runtime,
+    # tools/environments/local.py::_find_bash), so a MinGit drop fails one step later,
+    # at the bash probe -- on a machine that has already paid for a full reinstall.
+    # The site installer measured the identical thing and moved to PortableGit
+    # (59,958,024 B), whose archive ROOT carries bin\bash.exe AND usr\bin\bash.exe,
+    # which is exactly the layout _find_bash probes first.
+    # Git for Windows is not a Python dependency -- the --no-index rule governs the
+    # wheel set, not this -- but the pin does: an explicit tag, never /latest/.
     $gitTag = 'v2.56.0.windows.1'
-    $gitUrl = "https://github.com/git-for-windows/git/releases/download/$gitTag/MinGit-2.56.0-64-bit.zip"
     $gitDest = Join-Path $env:LOCALAPPDATA 'cem888\git'
-    $gitZip = Join-Path $env:TEMP 'cem888-mingit.zip'
-    Say "downloading portable Git ($gitTag)"
-    if (Get-RemoteFile $gitUrl $gitZip) {
+    $gitTmp = Join-Path ([System.IO.Path]::GetTempPath()) ('cem888-git-' + [Guid]::NewGuid().ToString('N'))
+    try { New-Item -ItemType Directory -Force -Path $gitTmp | Out-Null } catch { }
+    Say "fetching portable Git ($gitTag, ~57 MB, pinned, no elevation)"
+    $sfx = Join-Path $gitTmp 'portablegit.7z.exe'
+    $sfxUrl = "https://github.com/git-for-windows/git/releases/download/$gitTag/PortableGit-2.56.0-64-bit.7z.exe"
+    if (Get-RemoteFile $sfxUrl $sfx) {
       try {
-        if (-not (Test-Path $gitDest)) { New-Item -ItemType Directory -Force -Path $gitDest | Out-Null }
-        Expand-Archive -LiteralPath $gitZip -DestinationPath $gitDest -Force
-        Remove-Item -LiteralPath $gitZip -Force -ErrorAction SilentlyContinue
-      } catch { Say "could not unpack portable Git: $($_.Exception.Message)" }
+        New-Item -ItemType Directory -Force -Path $gitDest | Out-Null
+        # A 7-Zip SFX extracts the ARCHIVE ROOT into -o<dir>, so bin\ and usr\ land
+        # directly under $gitDest. -y answers its single prompt; because -o is always
+        # supplied no window is ever shown. Judged ON DISK, never on an exit code.
+        $null = Start-Process -FilePath $sfx -Wait -PassThru -WindowStyle Hidden -ArgumentList @('-y', ('-o"' + $gitDest + '"'))
+      } catch { Say "portable Git extraction reported: $($_.Exception.Message)" }
     } else {
       Say "could not download portable Git"
     }
+    Remove-Item -Recurse -Force $gitTmp -ErrorAction SilentlyContinue
     $GitBash = Get-Cem888GitBash
+    if (-not $GitBash) {
+      # Last route: the official installer (Inno Setup), silent and PER-USER into the
+      # SAME directory. /CURRENTUSER is load-bearing -- a UAC prompt nobody can see is
+      # a hang, and a hang is the failure being fixed.
+      Say "portable Git did not land - using the official installer (per-user, silent)"
+      $innoTmp = Join-Path ([System.IO.Path]::GetTempPath()) ('cem888-gitsetup-' + [Guid]::NewGuid().ToString('N'))
+      try { New-Item -ItemType Directory -Force -Path $innoTmp | Out-Null } catch { }
+      $inno = Join-Path $innoTmp 'git-setup.exe'
+      $innoUrl = "https://github.com/git-for-windows/git/releases/download/$gitTag/Git-2.56.0-64-bit.exe"
+      if (Get-RemoteFile $innoUrl $inno) {
+        try {
+          $null = Start-Process -FilePath $inno -Wait -PassThru -WindowStyle Hidden -ArgumentList @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/NOCANCEL', '/SP-', '/CURRENTUSER', ('/DIR="' + $gitDest + '"'))
+        } catch { Say "Git installer reported: $($_.Exception.Message)" }
+      } else {
+        Say "could not download the Git installer either"
+      }
+      Remove-Item -Recurse -Force $innoTmp -ErrorAction SilentlyContinue
+      $GitBash = Get-Cem888GitBash
+    }
+    if ($GitBash) {
+      foreach ($d in @("$gitDest\cmd", "$gitDest\bin", "$gitDest\usr\bin")) {
+        try {
+          $u = [Environment]::GetEnvironmentVariable('Path', 'User')
+          if ($u -notlike "*$d*") { [Environment]::SetEnvironmentVariable('Path', ($u.TrimEnd(';') + ';' + $d), 'User') }
+        } catch { }
+      }
+    }
   }
   if (-not $GitBash) {
     Die "Git for Windows could not be installed, so this agent would have NO terminal. Install it from https://git-scm.com/download/win and re-run this installer."
