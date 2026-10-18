@@ -20,8 +20,13 @@ VERSION="1.0.48"
 REPO="CEM888AI/cem888"
 SLUG="free-v${VERSION}"
 BASE_DL="https://github.com/${REPO}/releases/download/${SLUG}"
-ROOT="${CEM888_HOME:-$HOME/.cem888}"
-BUNDLE="$ROOT/free/v${VERSION}"
+# One PROFILE per agent (2026-10-18): every free install used to write straight
+# into ~/.cem888 — which IS the "default" profile — so a second agent overwrote
+# the first and `--profile <agent>` could never resolve. ANCHOR is the .cem888
+# root; ROOT is this agent's profile, resolved once the agent name is known.
+ANCHOR="${CEM888_HOME:-$HOME/.cem888}"
+ROOT="$ANCHOR"
+BUNDLE="$ANCHOR/free/v${VERSION}"
 
 C_CYAN='\033[38;2;58;219;232m'; C_CORAL='\033[38;2;255;138;107m'
 C_DIM='\033[2m'; C_B='\033[1m'; C_N='\033[0m'
@@ -67,6 +72,23 @@ AGENT_NAME="${AGENT_NAME:-my-agent}"
 printf "  Your name: "; read -r USER_NAME || true
 [ -n "${USER_NAME:-}" ] || die "a user name is required (it becomes the owner of this agent)."
 printf "  What is this agent's job? ${C_DIM}(enter to skip)${C_N}\n  > "; read -r AGENT_JOB || true
+
+# ── 1b. which PROFILE this agent lives in ─────────────────────────────────────
+SLUGNAME="$(printf '%s' "$AGENT_NAME" | tr 'A-Z' 'a-z' | tr -cs 'a-z0-9' '-' | sed 's/^-//;s/-$//' | cut -c1-64 | sed 's/-$//')"
+[ -n "$SLUGNAME" ] || SLUGNAME="agent"
+if [ "$SLUGNAME" = "default" ]; then die "'default' is reserved — pick a different agent name."; fi
+if [ "$(basename "$(dirname "$ANCHOR")")" = "profiles" ]; then
+  ROOT="$ANCHOR"                      # CEM888_HOME already names a profile
+  SLUGNAME="$(basename "$ANCHOR")"
+else
+  ROOT="$ANCHOR/profiles/$SLUGNAME"
+fi
+mkdir -p "$ROOT/state"
+export CEM888_HOME="$ROOT"
+say "profile: $SLUGNAME  ->  $ROOT"
+if [ -f "$ROOT/config.yaml" ]; then
+  say "existing profile found — updating $SLUGNAME in place (its files are kept)"
+fi
 
 head1 "2/4  Model provider"
 cat <<EOF
@@ -188,7 +210,9 @@ say "${C_DIM}python 3.14 (matches the signed wheel set)${C_N}"
 PY="$("$UV" python find 3.14 2>/dev/null)" || die "could not provision python 3.14."
 [ -n "$PY" ] || die "could not provision python 3.14."
 
-VENV="$ROOT/venv"
+# ONE engine venv per machine, at the anchor — profiles hold data only, so a
+# second agent reuses python + wheels instead of reinstalling 300MB.
+VENV="$ANCHOR/venv"
 "$PY" -m venv "$VENV" >/dev/null 2>&1 || die "could not create the venv at $VENV"
 "$UV" pip install --python "$VENV/bin/python" --no-index \
   --find-links "$BUNDLE/vendor" --require-hashes \
@@ -201,8 +225,7 @@ ok "engine installed"
 # ── 5. config (provider-neutral) ──────────────────────────────────────────────
 head1 "Writing profile"
 mkdir -p "$ROOT"
-SLUGNAME="$(printf '%s' "$AGENT_NAME" | tr 'A-Z' 'a-z' | tr -cs 'a-z0-9' '-' | sed 's/^-//;s/-$//')"
-[ -n "$SLUGNAME" ] || SLUGNAME="agent"
+# SLUGNAME was resolved in 1b (one profile per agent) — do not recompute it here.
 
 PROV_NAME="$(printf '%s' "$P_LABEL" | tr 'A-Z' 'a-z' | tr -cs 'a-z0-9' '-' | sed 's/^-//;s/-$//')"
 TG_BLOCK=""
@@ -279,6 +302,19 @@ head1 "Checking the install"
 if "$VENV/bin/cem888" --version >/dev/null 2>&1; then ok "$("$VENV/bin/cem888" --version 2>/dev/null | head -1)"
 else say "${C_CORAL}engine binary did not answer --version${C_N} — run: $VENV/bin/cem888 doctor"; fi
 
+# ── 5c. sticky default ────────────────────────────────────────────────────────
+# Plain `cem888 chat` opens the profile installed last: the runtime reads
+# active_profile from the .cem888 ROOT (cem888_constants.get_default_cem888_root
+# collapses <root>/profiles/<key> back to <root>), so it is written THERE, never
+# inside a profile.
+NATIVE_HOME="$HOME/.cem888"
+case "$ANCHOR" in
+  "$NATIVE_HOME"|"$NATIVE_HOME"/*) STICKY_ROOT="$NATIVE_HOME" ;;
+  *) STICKY_ROOT="$ANCHOR" ;;
+esac
+printf '%s\n' "$SLUGNAME" > "$STICKY_ROOT/active_profile"
+ok "active profile: $SLUGNAME"
+
 # ── 6b. Tier-0 authority manifest ─────────────────────────────────────────────
 # ⛔ THE AGENT REFUSES EVERY TURN WITHOUT THIS. agent_init and system_prompt both
 # load it with required=True. The site installers mint it through
@@ -336,6 +372,13 @@ cat <<DONE
 
 ${CYAN_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}${P_LABEL}${N_ESC} (${MODEL}).
 
+  Profile:  ${SLUGNAME}  ->  ${ROOT}
+  This is a real profile. Plain \`cem888 chat\` opens it, and other agents on
+  this machine stay separate:
+     cem888 profile list            (every agent installed here)
+     cem888 profile use <key>       (make another one the default)
+     cem888 -p <key> chat           (open one directly)
+
   Start talking:
      ${VENV}/bin/cem888 chat
 
@@ -343,7 +386,7 @@ ${CYAN_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}
      ${VENV}/bin/cem888 doctor
 
   Add it to PATH (optional):
-     echo 'export PATH="$ROOT/venv/bin:\$PATH"' >> ~/.zshrc   # or ~/.bashrc
+     echo 'export PATH="${VENV}/bin:\$PATH"' >> ~/.zshrc   # or ~/.bashrc
 
   ${DIM_ESC}On cost: the free lane is tuned for cheap, fast models. When a task needs real
   deep reasoning, add a stronger model later — \`cem888 model\` switches providers, and
