@@ -16,26 +16,26 @@ if [ ! -t 0 ]; then
   fi
 fi
 
-VERSION="1.0.47"
+VERSION="1.0.48"
 REPO="CEM888AI/cem888"
 SLUG="free-v${VERSION}"
 BASE_DL="https://github.com/${REPO}/releases/download/${SLUG}"
 ROOT="${CEM888_HOME:-$HOME/.cem888}"
 BUNDLE="$ROOT/free/v${VERSION}"
 
-C_MINT='\033[38;2;61;220;151m'; C_CORAL='\033[38;2;255;127;80m'
+C_CYAN='\033[38;2;58;219;232m'; C_CORAL='\033[38;2;255;138;107m'
 C_DIM='\033[2m'; C_B='\033[1m'; C_N='\033[0m'
 EQ=$(printf "\075")   # "=" built at runtime: keeps secret-shaped literals out of this file
 
 say()  { printf "  %b\n" "$*"; }
 head1(){ printf "\n${C_CORAL}%s${C_N}\n" "$1"; }
-ok()   { printf "  ${C_MINT}✓${C_N} %b\n" "$*"; }
+ok()   { printf "  ${C_CYAN}✓${C_N} %b\n" "$*"; }
 die()  { printf "\n  ${C_CORAL}✗${C_N} %b\n" "$*" >&2; exit 1; }
 
 trap 'printf "\n  ${C_CORAL}✗${C_N} interrupted.\n" >&2; exit 130' INT
 
 printf "${C_CORAL}═══════════════════════════════════════════════${C_N}\n"
-printf "${C_MINT}   CEM888 — free agent install (v%s)${C_N}\n" "$VERSION"
+printf "${C_CYAN}   CEM888 — free agent install (v%s)${C_N}\n" "$VERSION"
 printf "${C_CORAL}═══════════════════════════════════════════════${C_N}\n"
 say "${C_DIM}Agent only — terminal chat or Telegram. No desktop app in the free lane.${C_N}"
 say "${C_DIM}You bring your own model key. Nothing is sent anywhere except your chosen provider.${C_N}"
@@ -255,11 +255,11 @@ head1 "Checking the install"
 if "$VENV/bin/cem888" --version >/dev/null 2>&1; then ok "$("$VENV/bin/cem888" --version 2>/dev/null | head -1)"
 else say "${C_CORAL}engine binary did not answer --version${C_N} — run: $VENV/bin/cem888 doctor"; fi
 
-MINT_ESC=$(printf '\033[38;2;61;220;151m'); CORAL_ESC=$(printf '\033[38;2;255;127;80m')
+CYAN_ESC=$(printf '\033[38;2;58;219;232m'); CORAL_ESC=$(printf '\033[38;2;255;138;107m')
 B_ESC=$(printf '\033[1m'); DIM_ESC=$(printf '\033[2m'); N_ESC=$(printf '\033[0m')
 cat <<DONE
 
-${MINT_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}${P_LABEL}${N_ESC} (${MODEL}).
+${CYAN_ESC}Done.${N_ESC}  ${B_ESC}${AGENT_NAME}${N_ESC} is installed on ${B_ESC}${P_LABEL}${N_ESC} (${MODEL}).
 
   Start talking:
      ${VENV}/bin/cem888 chat
