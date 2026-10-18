@@ -622,6 +622,17 @@ Write-Host ""
 Write-Host "  $C_CYAN Done. " -NoNewline
 Write-Host "$AgentName is installed on $PLabel ($Model).$C_N"
 Write-Host ""
+# ⛔ THE BANNER CAUSED A SUPPORT TICKET THE FIRST TIME A CUSTOMER READ IT (2026-10-18).
+# It said "Distro is installed", so the next thing typed was
+#   cem888 chat --profile distro   ->   Error: Profile 'distro' does not exist
+# Nothing was uninstalled: the install put the agent in the DEFAULT profile and the
+# NAME she chose is the agent's name, not a profile name. Name the profile, and say
+# out loud that the agent name is not one.
+Write-Host "  Profile:  default  ->  $Root"
+Write-Host "            This is your agent. $AgentName is the agent NAME, not a profile"
+Write-Host "            name, so '--profile $AgentName' does not exist - plain"
+Write-Host "            'cem888 chat' opens this profile."
+Write-Host ""
 Write-Host "  Start talking:"
 if ($ShimOk) { Write-Host "     cem888 chat" } else { Write-Host "     `"$Cem`" chat" }
 Write-Host ""
