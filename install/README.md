@@ -1,6 +1,6 @@
-# Free install — agent only (record only, NOT a supported install path)
+# Free agent install — agent only, no desktop app, no subscription
 
-> **Not a supported install path.** The only supported install path is the account flow at **[cem888.ai](https://cem888.ai)**. These scripts stay in the repository as part of the engineering record.
+> **The free agent is supported, and there are two places to get it:** the free account at **[cem888.ai](https://cem888.ai)** — no payment — or this repository's [releases](https://github.com/CEM888AI/cem888/releases). These scripts install **the agent only**: no desktop app, no subscription. The **paid desktop app** is cem888.ai only and is **not** published on GitHub.
 
 The free lane is **the agent**: terminal chat, or connect it to Telegram. It does **not** include the desktop app, and the app has no free download.
 
