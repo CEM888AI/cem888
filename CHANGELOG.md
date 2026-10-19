@@ -22,8 +22,8 @@ Nothing pending. The most recent change set is `## v1.0.46` below.
 
 **Changed**
 - Public conformance suite: **15 checks** (was 12 reported / 9 at first release). Test dependencies: `pytest`, `pyyaml`.
-- Licensing (2026-10-05): the **Elastic License 2.0 is superseded by the CEM888 Source-Available Commercial License** (owner decision). Source-available, commercial, **never converts to open source**, and **free for personal, non-commercial use only** — nothing that makes money, or builds a business, is free. Commercial Use (business production use, earning from its output, proprietary redistribution, private modifications, resale, embedding, white-labeling, OEM distribution, or providing it to third parties as a hosted or managed service) requires a **paid** licence from CEM Unlimited LLC. Non-retroactive: v1.0.3 remains AGPL-3.0; versions first released under BSL 1.1 or ELv2 remain under those terms. Full text: [licensing/LICENSE.md](./LICENSE).
-- Licensing: the unreleased change to Business Source License 1.1 is superseded by the **Elastic License 2.0 (ELv2)** — source-available, and it never converts to an open-source license (owner decision). ELv2 grants broad use, including commercial internal use, with two limitations: you may not offer CEM888 to third parties as a hosted or managed service, and you may not move, change, disable or circumvent the license-key functionality. Business production use, paid client work, embedding, resale, white-labeling and OEM distribution require a valid CEM888 license key for the applicable tier or a separate commercial license from CEM Unlimited LLC. v1.0.3 remains AGPL-3.0; any version first released under BSL 1.1 remains under those BSL terms.
+- Licensing (2026-10-05): the **Elastic License 2.0 is superseded by the CEM888 Source-Available Commercial License** (owner decision). Source-available, commercial, **never converts to open source**, and **free for personal, non-commercial use only** — nothing that makes money, or builds a business, is free. Commercial Use (business production use, earning from its output, proprietary redistribution, private modifications, resale, embedding, white-labeling, OEM distribution, or providing it to third parties as a hosted or managed service) requires a **paid** licence from CEM Unlimited LLC. One licence across every release: the CEM888 Source-Available Commercial License. No open-source licence has ever applied to a CEM888 release; earlier entries in this file said otherwise and that statement is withdrawn. Full text: [licensing/LICENSE.md](./LICENSE).
+- Licensing: the unreleased change to Business Source License 1.1 is superseded by the **Elastic License 2.0 (ELv2)** — source-available, and it never converts to an open-source license (owner decision). ELv2 grants broad use, including commercial internal use, with two limitations: you may not offer CEM888 to third parties as a hosted or managed service, and you may not move, change, disable or circumvent the license-key functionality. Business production use, paid client work, embedding, resale, white-labeling and OEM distribution require a valid CEM888 license key for the applicable tier or a separate commercial license from CEM Unlimited LLC. No open-source licence has ever applied to a CEM888 release.
 
 **Known limits** (unchanged from v1.0.3)
 - Public beta, one maintainer; APIs and on-disk formats may change.
@@ -33,10 +33,10 @@ Nothing pending. The most recent change set is `## v1.0.46` below.
 
 ## v1.0.3 — first public beta
 
-First public source release of the CEM888 runtime under AGPL-3.0 (community lane) with a separate negotiated commercial license.
+First public release: the CEM888 engineering record — documentation, installers, evidence and licence text — under a negotiated commercial licence. No runtime engine source was published in this release.
 
 **Source**
-- Identity-neutral runtime source: CPython 3.14, package `cem888-agent` 1.0.3.
+- Runtime scope documented in this record (not published): CPython 3.14, package `cem888-agent` 1.0.3.
 - Tier-0 authority manifest: path and shell-mutation authority, immutable manifest.
 - Bounded context compiler: per-turn context packet with a selection receipt; superseded state excluded from current context.
 - Typed durable memory with lifecycle and supersession.
