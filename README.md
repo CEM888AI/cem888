@@ -157,7 +157,7 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 **Why isn't the source here?** Publishing the engine hands over the business without handing over a customer. The published record — architecture, enforcement limits, acceptance runs including the failures, and reproducible benchmark data — is the proof. It is not a substitute for reading the code, and this README does not pretend it is.
 
-**What is actually certified today?** DeepSeek Flash-first first-boot/continuity passed on 2026-10-01 **with documented defects**. [Status](./docs/STATUS.md) is the single source of truth, and it is updated when things fail, not only when they pass.
+**What is actually certified today?** Nothing is certified under this repository's own standard, and the standard is the point. The last full acceptance run was 2026-10-01 on the 1.0.41 artifact, and it passed the core first-boot/continuity path **with documented defects**. Most of those defects have since been closed (2026-10-14 → 2026-10-19); the free lane now publishes frozen, digest-named releases (currently free-v1.0.48); and a Windows install was accepted on real hardware on 2026-10-19. But no unchanged acceptance run has been recorded against a frozen release since, and the paid lane has not been proven end to end — install, agent, Workspace, entitlement. [Status](./docs/STATUS.md) is the single source of truth, and it is updated when things fail, not only when they pass.
 
 **Is the benchmark self-reported?** It is a live agent run with per-question data and the scoring script published in [benchmarks](https://github.com/CEM888AI/benchmarks), plus an independent runtime evaluation published as a dataset. Judge it on the artifacts, not the number.
 
@@ -168,9 +168,9 @@ Public beta. The release lane is deliberately narrow: **finish and certify the c
 | Surface | Current status |
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
-| **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on 2026-10-01 with documented defects; fixes and a frozen-artifact rerun are still required before full certification. |
-| **Free agent downloads** (`install/free.sh`, `install/free.ps1`, plus this repository's releases) | Two download locations for the free agent: the free account at **[cem888.ai](https://cem888.ai)** and this repository. The paid desktop app is cem888.ai only — not on GitHub. The Windows script has not been accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
-| **Claude Code / Codex native adapters** | Planned. Host observation exercised on the engineering surface; neither adapter is packaged, certified or shipped. |
+| **Customer product artifact** | Last full acceptance run: **2026-10-01**, on the **1.0.41** artifact, core first-boot/continuity passed **with documented defects**. Most of that defect list is now closed (2026-10-14 → 2026-10-19). No acceptance run has been recorded against a frozen release since, and the paid lane is unproven end to end — so it is not certified. |
+| **Free agent downloads** (`install/free.sh`, `install/free.ps1`, plus this repository's releases) | Two download locations for the free agent: the free account at **[cem888.ai](https://cem888.ai)** and this repository. The paid desktop app is cem888.ai only — not on GitHub. Frozen, digest-named releases publish here: current is **free-v1.0.48** (2026-10-18), four platforms plus `SHA256SUMS`. The Windows installer was **accepted on real hardware by the owner on 2026-10-19** — a second agent on the same machine, `cem888 chat --profile <key>` resolves. |
+| **Claude Code / Codex native adapters** | Both run in the paid app and are under active repair — defects closed across 2026-10-08 → 2026-10-18. Neither adapter is certified. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
 
 The customer artifact is a **promotion and certification target**, not assumed correct because a mechanism exists elsewhere. Full table: **[Technical Status](./docs/STATUS.md)**.
