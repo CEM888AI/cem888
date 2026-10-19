@@ -44,8 +44,8 @@ The lane has produced a frozen candidate artifact:
 
 | | |
 |---|---|
-| Current release line | **v1.0.46** (2026-10-15) — digest recorded with the artifact |
-| Earlier frozen candidate | `cem888_agent-1.0.41-py3-none-any.whl` |
+| Current release line | **v1.0.46** (2026-10-15) — the release line, **not frozen**: no artifact digest is published for it |
+| Frozen candidate artifact | `cem888_agent-1.0.41-py3-none-any.whl` — the size, digest and release commit below belong to this artifact, not to v1.0.46 |
 | Size | 3,963,252 bytes |
 | SHA-256 | `0d090610d74ebaa56edaf5ebb7a0efc568f26b859f2cd23e26b30f43350f9d5a` |
 | Release commit | `5342bac3` |
