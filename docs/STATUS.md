@@ -24,7 +24,7 @@ The CEM engineering runtime is the ancestor. It is **not** the website customer 
 
 | Capability | Current public status | Customer-release requirement |
 | --- | --- | --- |
-| Authoritative current state + supersession | **Customer first-boot path exercised; explicit supersession worked, but duplicate-current defect remains** | Fix uniqueness defect and re-run on new frozen artifact |
+| Authoritative current state + supersession | **Explicit supersession works; the duplicate-current defect is fixed (v1.0.46) and regression-tested.** Two related gaps stay open: a state write can still be retired across hosts on a shared phrasing key, and legacy superseded rows are excluded on read rather than repaired on open | Re-run on the current frozen release |
 | Bounded working-state compilation | **Implemented on the CEM engineering path** | Re-prove on frozen customer artifact |
 | Typed active-work lifecycle | **Customer first-boot path exercised** | Greeting/open-work hygiene defect must be fixed and re-run |
 | Multi-session write safety | **Restart continuity + duplicate/retry dedup observed on customer install** | Concurrent-writer contention still needs hostile proof |
@@ -35,30 +35,29 @@ The CEM engineering runtime is the ancestor. It is **not** the website customer 
 | Mutation provenance | **Not complete** | Mechanically reconstruct why current state changed |
 | Authority-aware deep memory search | **Partially exercised on customer install** | Fix path-sensitive silent-zero retrieval and re-run stale-state falsifier |
 | Dual owner-prohibition contract | **Specified; not customer-certified end to end** | Pass retrieval + action falsifiers on exact artifact |
-| Native Claude Code / Codex adapters | **Planned** | Implement only after current DeepSeek install gate |
+| Native Claude Code / Codex adapters | **Running in the paid app and under active repair — several defects closed 2026-10-08 to 2026-10-18. Neither adapter is certified** | Certification of each adapter against the same acceptance standard |
 | Regulated-sector certification | **Not claimed** | Deployment-specific future work |
 
 ## Current customer-release lane
 
-The lane has produced a frozen candidate artifact:
+Two lanes, two states. The **free** lane publishes frozen, digest-named releases. The **paid** lane does not yet.
 
 | | |
 |---|---|
-| Current release line | **v1.0.46** (2026-10-15) — the release line, **not frozen**: no artifact digest is published for it |
-| Frozen candidate artifact | `cem888_agent-1.0.41-py3-none-any.whl` — the size, digest and release commit below belong to this artifact, not to v1.0.46 |
-| Size | 3,963,252 bytes |
-| SHA-256 | `0d090610d74ebaa56edaf5ebb7a0efc568f26b859f2cd23e26b30f43350f9d5a` |
-| Release commit | `5342bac3` |
-| Deployed | 2026-10-01, health-checked at that revision |
+| Current free release | **free-v1.0.48** — 2026-10-18 — four platform bundles (darwin-arm64, darwin-x86_64, linux-x86_64, windows-amd64) plus `SHA256SUMS`, every file digest-published as a release-asset SHA-256 |
+| `SHA256SUMS` SHA-256 | `aee07bdfc77d1c65306336abe7b68200c0d7be0a3a563a8a5d8af361b43f9792` |
+| Previous free release | **free-v1.0.47** — 2026-10-17, same shape |
+| Retired | the **v1.0.46** wheel — it was built with the builder `PROVENANCE.md` forbids, and while it was the shipped wheel the free release refused to publish at all. Re-cut, not patched |
+| Last artifact with a **full** acceptance run | `cem888_agent-1.0.41-py3-none-any.whl` — 3,963,252 bytes — SHA-256 `0d090610d74ebaa56edaf5ebb7a0efc568f26b859f2cd23e26b30f43350f9d5a` — release commit `5342bac3` — deployed 2026-10-01, health-checked at that revision |
+| Paid lane | **not frozen.** The paid carrier currently ships a wheel set its own lock cannot satisfy, so a paid install falls back to an index — open, and paid delivery is therefore unproven end to end |
 
 ```text
-promote customer-relevant changes together         [done]
-  -> rebuild wheel (1.0.40 -> 1.0.41)              [done]
-  -> rebuild platform bundles                      [done]
-  -> freeze artifact + digests                     [done — hash above]
-  -> publish + verify shipped bundle               [done — health-checked]
-  -> run install conformance                       [IN PROGRESS]
-  -> run clean-install / upgrade / retry tests     [IN PROGRESS]
+promote customer-relevant changes together         [done — 1.0.40 -> 1.0.48]
+  -> rebuild wheel + platform bundles              [done — free lane publishing since v1.0.47]
+  -> freeze artifact + digests                     [done — free-v1.0.48, digest-named]
+  -> publish + verify shipped bundle               [done — four platforms + SHA256SUMS]
+  -> run install conformance on the frozen release [OPEN]
+  -> run clean-install / upgrade / retry tests     [PARTIAL — upgrade path proven once, retry not]
   -> external beta / partner handoff               [gated on the above]
 ```
 
@@ -74,6 +73,12 @@ A newly installed customer agent was exercised through first boot, durable typed
 Observed defects included duplicate current decision state, one path-sensitive hybrid-retrieval empty result, shared-root residue, MCP stdio noise, an empty duplicate Chroma lane, memory-typing/open-work hygiene issues, and a doctor false negative.
 
 Full artifact details, evidence boundary, and non-claims: **[Fresh-install acceptance — 2026-10-01](./FRESH_INSTALL_ACCEPTANCE_2026-10-01.md)**.
+
+### What has been closed since that run
+
+The list above is the record of 2026-10-01, not the state of the build today. Between 2026-10-14 and 2026-10-19 the following were fixed and closed: the release refused to publish and shipped a wheel built by a forbidden builder; the free installer gave every agent on a machine one directory, so a second agent overwrote the first and `cem888 chat --profile <key>` could never resolve (**accepted on real Windows hardware by the owner, 2026-10-19**); the paid install could land a mute agent behind an unpinned package-source failure, with no shell and zero skills; the Workspace app was fetched, verified, then silently skipped, and the installer judged success on an exit code instead of the artifact; the paid payload shipped no tool-receipt or memory-disposition code at all; a provider key with no funding installed a mute agent instead of saying so; the subscription lane was dead at both ends and a picked subscription was never wired; entitlement minting did not exist on the host; fresh installs defaulted to an unlisted model alias; the transcript was rewritten non-atomically and erased mid-turn; every agent reply was stored twice; context injection was deduplicated for one host only; and the shipped identity text documented context caps the runtime did not enforce.
+
+**What that does not establish:** those are fixes with their own evidence, not a pass of the acceptance standard. No acceptance run has been recorded against any frozen release since **1.0.41**, and the paid lane has not been proven end to end (install → agent → Workspace → entitlement).
 
 ## Published non-conformant baseline
 
@@ -151,6 +156,6 @@ CEM888 has a coherent operating architecture and meaningful engineering proof, b
 
 The next milestone is simple to state:
 
-> **Run the same acceptance test unchanged against 1.0.41, close the items it still fails, and only then promote the artifact to customer-certified.**
+> **Run the same acceptance test unchanged against the current frozen release (free-v1.0.48), close the items it still fails, then run it against the paid carrier. Only then is either lane customer-certified.**
 
-1.0.41 is cut, frozen and digest-named (above); the earlier locale-codec class is repaired with a release guard that fails loudly if its own detector stops detecting. The defects still open against the customer artifact are the ones the October 1 run found and the re-exercise re-confirmed — they are tracked, not closed, and the artifact is not represented as conformant until the unchanged test passes on it.
+The free lane is cut, frozen and digest-named (above); the earlier locale-codec class is repaired with a release guard that fails loudly if its own detector stops detecting. What remains open is not the October 1 defect list — most of that list is closed — but the standard itself: no unchanged acceptance run exists on the current release, the paid lane's delivery is unproven, and the two supersession gaps above are open. Neither lane is represented as conformant until the unchanged test passes on the exact artifact.
