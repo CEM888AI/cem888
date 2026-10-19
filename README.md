@@ -34,13 +34,17 @@
 
 ---
 
-## Download
+## Get CEM888
 
-**[Get CEM888 — desktop app, engine, subscription → cem888.ai](https://cem888.ai)**
+The desktop app is the product: the agent, persistent state, action authority and verification
+receipts, with a subscription attached. It is sold and downloaded only at
+[cem888.ai](https://cem888.ai/) — the paid product is not published on GitHub.
 
-That account flow is **the only supported install path**: create an account, configure the agent,
-download the installer built for your machine. This repository is the engineering record — it is
-not an install path, and nothing here is a substitute for it.
+The agent on its own is free, and there are two places to get it: [cem888.ai](https://cem888.ai/)
+with a free account — no payment — or this repository's
+[releases](https://github.com/CEM888AI/cem888/releases). Same agent either way: no desktop app, no
+subscription. Commands are in
+[install/README.md](https://github.com/CEM888AI/cem888/blob/main/install/README.md).
 
 ---
 
@@ -48,7 +52,7 @@ not an install path, and nothing here is a substitute for it.
 <tr>
 <td align="center" width="33%"><b>The whole product</b><br/><sub>Desktop app, engine and subscription — one account, one download.</sub></td>
 <td align="center" width="33%"><b>Your machine, your keys</b><br/><sub>State stays on your disk. Model access is bring-your-own-key.</sub></td>
-<td align="center" width="33%"><b>Account, not a script</b><br/><sub>Install, activate and update through cem888.ai — not through this repository.</sub></td>
+<td align="center" width="33%"><b>Product, not a script</b><br/><sub>The paid desktop app is downloaded and activated through cem888.ai.</sub></td>
 </tr>
 </table>
 
@@ -107,7 +111,7 @@ Every result links to its source. **Failures are published next to passes**, bec
 | Check | Result | Scope | Source |
 | --- | --- | --- | --- |
 | Public conformance suite | **15 / 15 pass** | Tier-0 authority manifest loading (fail-closed) + layer classification, superseded-state exclusion, supersession lifecycle, context-receipt provenance | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) |
-| Independent runtime evaluation (2026-09-18) | **9 / 9 outcomes pass — one mechanism PARTIAL** | Durable state, kill-and-recover, model swap, verified execution, unknown state, provenance, contradiction/freshness, failure recovery. **Two findings are published, not softened:** (1) **authority boundary — PASS on outcome, PARTIAL on mechanism attribution** (the refusal observed was prompt-obeyed, not a hard runtime gate blocking a call mid-execution); (2) the same run found a **storage-hygiene defect — supersession set `superseded_by` without flipping the old row's `lifecycle_status` off `active`,** so a reader trusting `lifecycle_status` alone sees two current records | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
+| Independent runtime evaluation (2026-09-18) | **9 / 9 pass, one defect recorded** | Durable state, kill-and-recover, model swap, verified execution, unknown state, provenance, contradiction/freshness, failure recovery. **Two findings are published, not softened:** (1) **authority boundary — PASS on outcome, PARTIAL on mechanism attribution** (the refusal observed was prompt-obeyed, not a hard runtime gate blocking a call mid-execution); (2) the same run found a **storage-hygiene defect — supersession set `superseded_by` without flipping the old row's `lifecycle_status` off `active`,** so a reader trusting `lifecycle_status` alone sees two current records. **That defect is fixed in v1.0.46 — supersession now closes the prior row's lifecycle in the same transaction that names its successor — and regression-tested.** | [Hugging Face dataset](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation) |
 | Fresh-install acceptance (2026-10-01) | **Core first-boot / continuity path passed — with documented defects** | Durable state, automatic exhale, two fresh-process restarts, explicit supersession, live retrieval/index surfaces, evidence-verified file action, retry deduplication | [FRESH_INSTALL_ACCEPTANCE_2026-10-01.md](./docs/FRESH_INSTALL_ACCEPTANCE_2026-10-01.md) |
 | Claude Code host observation (2026-10-03) | **Turn-level continuity changed live engineering behavior** | Project state + repo/deploy/install constraints arrived automatically; owner prohibition blocked a protected edit; Claude used injected context while diagnosing a Codex connector profile conflict | [case study](https://github.com/CEM888AI/runtime-case-studies/blob/main/case-study-claude-code-turn-level-continuity.md) |
 | Earlier installed customer artifact | **2 PASS / 9 FAIL — NON-CONFORMANT** | Historical install-conformance baseline, retained deliberately to show the harness can reject a build | [STATUS.md](./docs/STATUS.md#published-non-conformant-baseline) |
@@ -149,11 +153,11 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 **Does my data leave my machine?** No. Customer agents run on the customer's machine or customer-controlled infrastructure, not on a shared CEM888 execution service. Model access is bring-your-own-key.
 
-**Can I install from this repository?** No. **[cem888.ai](https://cem888.ai)** is the only supported install path — desktop app, engine, subscription — as the CHANGELOG states. This repository is the public engineering record; the **engine source** is not published here, and the scripts under `install/` exist for the record, not as a supported route.
+**Can I install from this repository?** Yes — the **free agent**, which is supported here and at [cem888.ai](https://cem888.ai). The **paid product** is not on GitHub; it comes only from cem888.ai. This repository is also the public engineering record: the **engine source** is not published here.
 
 **Why isn't the source here?** Publishing the engine hands over the business without handing over a customer. The published record — architecture, enforcement limits, acceptance runs including the failures, and reproducible benchmark data — is the proof. It is not a substitute for reading the code, and this README does not pretend it is.
 
-**What is actually certified today?** DeepSeek Flash-first first-boot/continuity passed on 2026-10-01 **with documented defects**; the Claude Code adapter has live host observation; the Codex connector is **not** certified. [Status](./docs/STATUS.md) is the single source of truth, and it is updated when things fail, not only when they pass.
+**What is actually certified today?** DeepSeek Flash-first first-boot/continuity passed on 2026-10-01 **with documented defects**. [Status](./docs/STATUS.md) is the single source of truth, and it is updated when things fail, not only when they pass.
 
 **Is the benchmark self-reported?** It is a live agent run with per-question data and the scoring script published in [benchmarks](https://github.com/CEM888AI/benchmarks), plus an independent runtime evaluation published as a dataset. Judge it on the artifacts, not the number.
 
@@ -165,9 +169,8 @@ Public beta. The release lane is deliberately narrow: **finish and certify the c
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on 2026-10-01 with documented defects; fixes and a frozen-artifact rerun are still required before full certification. |
-| **Repo install scripts** (`install/free.sh`, `install/free.ps1`) — **not a supported install path** | Present in the record only; the account flow at **[cem888.ai](https://cem888.ai)** is the only supported install path. The Windows script has not been accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
-| **Claude Code native adapter** | Live turn-level continuity exercised 2026-10-03; host observation published. Packaging and certification remain separate from the frozen DeepSeek customer artifact. |
-| **Codex native adapter** | Connector exists; live diagnosis found contradictory profile guards preventing successful turns. Fix and certification still required. |
+| **Free agent downloads** (`install/free.sh`, `install/free.ps1`, plus this repository's releases) | Two download locations for the free agent: the free account at **[cem888.ai](https://cem888.ai)** and this repository. The paid desktop app is cem888.ai only — not on GitHub. The Windows script has not been accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
+| **Claude Code / Codex native adapters** | Planned. Host observation exercised on the engineering surface; neither adapter is packaged, certified or shipped. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
 
 The customer artifact is a **promotion and certification target**, not assumed correct because a mechanism exists elsewhere. Full table: **[Technical Status](./docs/STATUS.md)**.
@@ -182,7 +185,7 @@ The website is the account, onboarding and download surface. Customer agents run
 
 ## Repository scope
 
-This repository is the **public engineering record** for the CEM888 runtime — architecture, honest status, and the evidence behind every claim. It is not the production-development authority and it is not an install path.
+This repository is the **public engineering record** for the CEM888 runtime — architecture, honest status, and the evidence behind every claim. It is not the production-development authority, and the paid product is not distributed here.
 
 **What is deliberately not here:** the runtime source, the agent system prompt and prompt stack, the action-authority implementation, the memory and indexing implementation, provider routing, the context/breathing cycle, credentials and auth internals, customer data and state, and per-file provenance. Those are proprietary; publishing them would hand over the engine without handing over the business. Third-party notices are preserved in **[licenses/third-party/MIT-NOTICE.txt](./licenses/third-party/MIT-NOTICE.txt)**.
 
@@ -201,7 +204,7 @@ This repository is the **public engineering record** for the CEM888 runtime — 
 
 ## License
 
-**The published record in this repository** — documentation, matrices, case-study text — is licensed under the **[CEM888 Source-Available Commercial License](./LICENSE)**: read it, audit it, cite it, quote it, fork it for personal non-commercial use. It **never converts** to an open-source licence.
+**The published record in this repository** — documentation, matrices, case-study text — is licensed under the **[CEM888 Source-Available Commercial License](https://github.com/CEM888AI/cem888/blob/main/LICENSE)**: read it, audit it, cite it, quote it, fork it for personal non-commercial use. It **never converts** to an open-source licence.
 
 **The runtime itself** is proprietary software distributed under that same licence: broad rights to use what you install, **free for personal, non-commercial use**, with commercial deployment, paid client work, embedding, resale, white-labeling, OEM distribution and hosted service requiring a valid CEM888 licence key for the applicable tier or a separate commercial licence from **CEM Unlimited LLC**.
 
@@ -213,6 +216,8 @@ This repository is the **public engineering record** for the CEM888 runtime — 
 | Embed, resell, white-label, or OEM-distribute it | **No** — separate commercial licence |
 | Provide it to third parties as a hosted or managed service | **No** — prohibited |
 | Move, change, disable, or circumvent the licence-key functionality | **No** — prohibited |
+
+Commercial licensing and tiers: [CEM888 Pro tiers — cem888.ai/workspace](https://cem888.ai/workspace) · [commercial licence, by enquiry — cem888.ai/enterprise.html](https://cem888.ai/enterprise.html)
 
 **Release history — one licence, no exceptions.** Every version distributed on or after **2026-10-05** is licensed under the **[CEM888 Source-Available Commercial License](./LICENSE)**, and that is the only licence the Software has ever been distributed under. **What v1.0.3 actually was: the audit record.** Every release in this repository is the engineering record — documentation, installers, evidence and licence text — and no runtime engine source has ever been published here (all 52 commits since the repository's first commit contain documentation, install tooling and examples only). Earlier versions of this section named an open-source release of v1.0.3; that was wrong, is withdrawn, and grants nothing.
 
