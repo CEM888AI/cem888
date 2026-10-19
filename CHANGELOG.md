@@ -8,6 +8,32 @@ Status labels follow [docs/STATUS.md](./docs/STATUS.md): a mechanism listed here
 
 Nothing pending. The most recent change set is `## v1.0.46` below.
 
+## v1.0.48 — 2026-10-18
+
+**Free lane, published and digest-named.** Four platform bundles — darwin-arm64,
+darwin-x86_64, linux-x86_64, windows-amd64 — plus `SHA256SUMS`, with every file's SHA-256
+published as a release-asset digest.
+
+- Brand re-skin: the free installer and the shipped CLI use CEM888 cyan (`#3ADBE8`) and coral
+  (`#FF8A6B`) instead of the retired green palette.
+- Same engine as the 1.0.48 wheel, cut to CPython 3.14 bytecode (no source ships).
+
+**Installer fix, 2026-10-19.** The free installer gave every agent on a machine the *default*
+profile directory, so a second install wrote over the first and `cem888 chat --profile <key>`
+could never resolve. Now: one profile per agent (`~/.cem888/profiles/<key>`), and the closing
+banner names the real command. **Accepted on real Windows hardware by the owner on 2026-10-19.**
+
+## v1.0.47 — 2026-10-17
+
+**The release channel publishes again.** The free release had been refusing to publish silently
+since 2026-10-05 while the docroot advanced, and the wheel it was still serving had been built
+with the builder `customer-runtime/PROVENANCE.md` forbids. Re-cut rather than patched: 1.0.47
+ships `cem888_agent-1.0.47` compiled to CPython 3.14 bytecode (no source), each platform's wheel
+set, and the signed dependency lock. Nothing installs from a remote index.
+
+Agent only — terminal chat or Telegram, no desktop app. Bring your own provider key: DeepSeek
+Flash, GLM Flash, GPT Luna, OpenAI, Anthropic, OpenRouter, or any OpenAI-compatible endpoint.
+
 ## v1.0.46 — 2026-10-15
 
 **Source move.** This tree was republished from the current customer runtime: **83 files advanced, none added, none removed** — the public surface did not grow. It had been frozen at 2026-10-05 while the working source moved on, and that drift produced a published claim that was false (see "Public conformance suite" below).
