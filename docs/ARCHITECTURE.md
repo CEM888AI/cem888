@@ -25,7 +25,7 @@ That separation is a release discipline, not an architectural caveat. The archit
 | Surface | Current evidence |
 | --- | --- |
 | Public conformance | **12 tests across 4 invariants — 12 / 12 pass** |
-| Independent runtime evaluation | **9 / 9 pass** |
+| Independent runtime evaluation | **9 / 9 outcomes pass — 1 mechanism PARTIAL** (authority boundary PARTIAL on mechanism attribution; supersession/`lifecycle_status` defect found and published) |
 | Owner-prohibition organ | **8 / 8 pass** on the live CEM engineering runtime |
 | Prohibition-gate | **Available guard; repo/live parity established; intentionally not wired into active CEM configuration** |
 | Structured-verification organ | **53 / 53 pass** on its covered live engineering-runtime paths |
