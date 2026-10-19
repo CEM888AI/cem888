@@ -34,20 +34,21 @@
 
 ---
 
-## Two lanes
+## Download
 
-**[Paid download — desktop app, engine, subscription → cem888.ai](https://cem888.ai)**
+**[Get CEM888 — desktop app, engine, subscription → cem888.ai](https://cem888.ai)**
 
-**Repo installer (free lane): agent only — no engine, no subscription.** Commands and what the
-installer does: [`install/README.md`](./install/README.md).
+That account flow is **the only supported install path**: create an account, configure the agent,
+download the installer built for your machine. This repository is the engineering record — it is
+not an install path, and nothing here is a substitute for it.
 
 ---
 
 <table>
 <tr>
-<td align="center" width="33%"><b>Agent, not a chat box</b><br/><sub>Terminal chat, or your own Telegram bot. The free lane has no desktop app.</sub></td>
-<td align="center" width="33%"><b>Your key, your machine</b><br/><sub>Bring your own model access. State stays on your machine, not on a shared service.</sub></td>
-<td align="center" width="33%"><b>Nothing to sign up for</b><br/><sub>One command, five questions, no account. Switch models later without reinstalling.</sub></td>
+<td align="center" width="33%"><b>The whole product</b><br/><sub>Desktop app, engine and subscription — one account, one download.</sub></td>
+<td align="center" width="33%"><b>Your machine, your keys</b><br/><sub>State stays on your disk. Model access is bring-your-own-key.</sub></td>
+<td align="center" width="33%"><b>Account, not a script</b><br/><sub>Install, activate and update through cem888.ai — not through this repository.</sub></td>
 </tr>
 </table>
 
@@ -148,7 +149,7 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 **Does my data leave my machine?** No. Customer agents run on the customer's machine or customer-controlled infrastructure, not on a shared CEM888 execution service. Model access is bring-your-own-key.
 
-**Can I install from this repository?** Yes — the **free lane**, which is the **agent only: no engine, no subscription**. The commands are in [`install/README.md`](./install/README.md). The paid product — desktop app, engine, subscription — comes from **[cem888.ai](https://cem888.ai)**. The **engine source** is not published here. Paid tiers, native-host adapters and the desktop app go through **[cem888.ai](https://cem888.ai)**: create an account, configure the agent, download the installer for your machine.
+**Can I install from this repository?** No. **[cem888.ai](https://cem888.ai)** is the only supported install path — desktop app, engine, subscription — as the CHANGELOG states. This repository is the public engineering record; the **engine source** is not published here, and the scripts under `install/` exist for the record, not as a supported route.
 
 **Why isn't the source here?** Publishing the engine hands over the business without handing over a customer. The published record — architecture, enforcement limits, acceptance runs including the failures, and reproducible benchmark data — is the proof. It is not a substitute for reading the code, and this README does not pretend it is.
 
@@ -158,14 +159,13 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 ## Current stage
 
-Public beta. The release lane is deliberately narrow: **finish and certify the free first-boot path, then expand provider and native-host support from measured evidence.**
+Public beta. The release lane is deliberately narrow: **finish and certify the customer first-boot path, then expand provider and native-host support from measured evidence.**
 
 | Surface | Current status |
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | DeepSeek Flash-first fresh-install continuity path passed on 2026-10-01 with documented defects; fixes and a frozen-artifact rerun are still required before full certification. |
-| **Free agent installer (macOS / Linux)** | Shipped and live: provider-neutral, five prompts, bring-your-own-key. |
-| **Free agent installer (Windows)** | Shipped as `install/free.ps1` for x86_64 with the same five prompts. Not yet accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
+| **Repo install scripts** (`install/free.sh`, `install/free.ps1`) — **not a supported install path** | Present in the record only; the account flow at **[cem888.ai](https://cem888.ai)** is the only supported install path. The Windows script has not been accepted on real hardware — the first acceptance run is pending, and this line changes when it passes or fails. |
 | **Claude Code native adapter** | Live turn-level continuity exercised 2026-10-03; host observation published. Packaging and certification remain separate from the frozen DeepSeek customer artifact. |
 | **Codex native adapter** | Connector exists; live diagnosis found contradictory profile guards preventing successful turns. Fix and certification still required. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
@@ -182,7 +182,7 @@ The website is the account, onboarding and download surface. Customer agents run
 
 ## Repository scope
 
-This repository is the **public engineering record** for the CEM888 runtime — architecture, honest status, the free agent installer, and the evidence behind every claim. It is not the production-development authority.
+This repository is the **public engineering record** for the CEM888 runtime — architecture, honest status, and the evidence behind every claim. It is not the production-development authority and it is not an install path.
 
 **What is deliberately not here:** the runtime source, the agent system prompt and prompt stack, the action-authority implementation, the memory and indexing implementation, provider routing, the context/breathing cycle, credentials and auth internals, customer data and state, and per-file provenance. Those are proprietary; publishing them would hand over the engine without handing over the business. Third-party notices are preserved in **[licenses/third-party/MIT-NOTICE.txt](./licenses/third-party/MIT-NOTICE.txt)**.
 
@@ -198,7 +198,6 @@ This repository is the **public engineering record** for the CEM888 runtime — 
 | [PUBLIC_CONFORMANCE.md](./docs/PUBLIC_CONFORMANCE.md) | The 15-check suite and how to read it |
 | [STATUS.md](./docs/STATUS.md) | What is certified right now, including known defects |
 | [FRESH_INSTALL_ACCEPTANCE_2026-10-01.md](./docs/FRESH_INSTALL_ACCEPTANCE_2026-10-01.md) | A full acceptance run, written up as it happened |
-| [install/README.md](./install/README.md) | What the free installer does, and why it is shaped that way |
 
 ## License
 
