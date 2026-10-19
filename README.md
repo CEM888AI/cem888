@@ -6,8 +6,8 @@
 
 <br/>
 
-<a href="#install-the-free-agent">
-  <img src="./assets/readme-btn-download.svg" alt="Download the free agent" width="380" height="60" />
+<a href="https://cem888.ai">
+  <img src="./assets/readme-btn-paid.svg" alt="Download CEM888 — paid product: desktop app, engine, subscription" width="380" height="60" />
 </a>
 &nbsp;
 <a href="https://cem888.ai">
@@ -34,45 +34,12 @@
 
 ---
 
-## Install the free agent
+## Two lanes
 
-One command. No account, no signup. The free lane is the **agent itself** — terminal chat, or
-connect it to Telegram. There is no desktop app in it.
+**[Paid download — desktop app, engine, subscription → cem888.ai](https://cem888.ai)**
 
-<p align="center">
-  <img src="./assets/readme-install.png?v=2" width="78%" alt="The installer asking for agent name, your name, the agent's job, a provider and a key" />
-</p>
-
-**macOS and Linux**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.sh | bash
-```
-
-**Windows** — PowerShell, Windows 10 1803 or newer (x86_64)
-
-```powershell
-irm https://raw.githubusercontent.com/CEM888AI/cem888/main/install/free.ps1 | iex
-```
-
-It asks five things — **agent name**, **your name**, the **agent's job** (or enter to skip), a
-**provider**, and your **API key**. Then it installs and tells you how to start it.
-
-**Cheapest first, on purpose:** DeepSeek Flash · GLM Flash · GPT Luna — plus OpenAI · Anthropic ·
-OpenRouter · any OpenAI-compatible endpoint. Bring your own key; nothing is proxied through us.
-
-Deep reasoning later, without reinstalling:
-
-```bash
-cem888 model        # switch the default provider/model
-cem888 fallback     # a strong model behind the cheap one, only reached when needed
-```
-
-macOS (Apple silicon and Intel), Linux x86_64 and Windows x86_64. Windows **arm64** is not in this
-release: the published wheel set is `windows-amd64`, and shipping a script that cannot find its own
-wheels is worse than saying so.
-
-**[What the installer does, what it downloads, and why the checks are shaped that way](./install/README.md)**
+**Repo installer (free lane): agent only — no engine, no subscription.** Commands and what the
+installer does: [`install/README.md`](./install/README.md).
 
 ---
 
@@ -181,7 +148,7 @@ These compose with CEM888. Nothing here requires replacing the stack you already
 
 **Does my data leave my machine?** No. Customer agents run on the customer's machine or customer-controlled infrastructure, not on a shared CEM888 execution service. Model access is bring-your-own-key.
 
-**Can I install from this repository?** The **free agent** installs from this repository with the one command above — that is the whole point of it. The **engine source** is not published here. Paid tiers, native-host adapters and the desktop app go through **[cem888.ai](https://cem888.ai)**: create an account, configure the agent, download the installer for your machine.
+**Can I install from this repository?** Yes — the **free lane**, which is the **agent only: no engine, no subscription**. The commands are in [`install/README.md`](./install/README.md). The paid product — desktop app, engine, subscription — comes from **[cem888.ai](https://cem888.ai)**. The **engine source** is not published here. Paid tiers, native-host adapters and the desktop app go through **[cem888.ai](https://cem888.ai)**: create an account, configure the agent, download the installer for your machine.
 
 **Why isn't the source here?** Publishing the engine hands over the business without handing over a customer. The published record — architecture, enforcement limits, acceptance runs including the failures, and reproducible benchmark data — is the proof. It is not a substitute for reading the code, and this README does not pretend it is.
 
