@@ -575,7 +575,7 @@ For a technical review:
 3. **[STATUS.md](./STATUS.md)** — artifact/release status.
 4. **[ENFORCEMENT_MATRIX.md](./ENFORCEMENT_MATRIX.md)** — what can be hard-blocked at different host boundaries.
 5. **[Current Engineering Status](https://github.com/CEM888AI/runtime-case-studies/blob/main/current-engineering-status.md)** — live engineering evidence and release progression.
-6. **[Independent Runtime Evaluation](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation)** — 9 / 9 external evaluation artifact.
+6. **[Independent Runtime Evaluation](https://huggingface.co/datasets/CEM888AI/cem888-independent-runtime-evaluation)** — 9 / 9 outcomes pass, one mechanism PARTIAL; the supersession defect that run found is published on the row, not softened.
 7. **[Benchmarks](https://github.com/CEM888AI/benchmarks)** — published benchmark evidence.
 
 ---
