@@ -121,6 +121,29 @@ The runtime evaluation was run by an AI engineering assistant on Hugging Face Jo
 
 **Benchmark of record:** BEAM-10M **77.2%** (154.4 / 200), live agent, no answer-key access. Per-question data, scoring script and methodology: **[CEM888AI/benchmarks](https://github.com/CEM888AI/benchmarks)**. Other runs in that repository are labeled experimental or measure a different benchmark, and are not substitutes for this number.
 
+## Closed since this page was last published — 2026-10-19 → 2026-10-23
+
+Eleven defects were closed on the engineering board in the four days this page went stale. Each one
+carries its own evidence on the board; none of them is a certification pass, and the two are not the
+same sentence.
+
+| Closed | What was broken | What is true now |
+| --- | --- | --- |
+| 2026-10-23 | **Every publish to `main` was refused.** The updater carrier had drifted from the engine, so no release could be cut from this repository. | The carrier is regenerated from the engine in the same commit, and releases publish again. |
+| 2026-10-23 | **Minting a paid token invalidated every sibling token** — `Download not found`, plus a status lamp that latched on forever. | Mints no longer evict siblings, and an apply that ends on a conflict no longer latches the indicator. |
+| 2026-10-23 | **Receipts and checkpoints shipped without their teaching or their harness** on the customer carrier. | Teaching and harness now travel with the carrier on all four platform tracks. |
+| 2026-10-23 | **A connected Gemini CLI host got no chat room** — the room list was hardcoded to three hosts. | The room list follows the hosts actually connected. |
+| 2026-10-23 | **A redundant edit was reported to the owner as a failed write** ("the file was not modified"). | A no-op edit reports as a no-op. A failure and a no-change are different outcomes. |
+| 2026-10-23 | **A 600 s approval expiry was recorded as "User denied this command"** — the agent blamed the owner for its own timeout. | Expiry is recorded as expiry, attributed to the runtime, not the operator. |
+| 2026-10-19 | **The paid offer page had nowhere to type a password** — a paying member could not sign in. | The sign-in field exists on the offer page. |
+| 2026-10-19 | **The Windows paid carrier shipped a wheel set its own lock file could not satisfy** — every install failed on dependency resolution. | Lock and wheel agree; the offline install completes from the carrier alone. |
+| 2026-10-19 | **Mac Intel shipped a `cp314` lock against a `cp311` runtime** — the offline install could not resolve on Intel hardware. | The Intel track resolves against the runtime it actually ships. |
+| 2026-10-19 | **Four machines, four platform tracks** — download, app, agent, updater and button, run by the owner on real hardware. Passed; the per-machine wheel pin is still a follow-up. | Recorded as an owner-executed install pass, not as conformance to the acceptance standard. |
+
+**What this does not establish.** No unchanged acceptance run has been recorded against a frozen
+release since 2026-10-01, and the paid lane is still unproven end to end — install, agent, Workspace,
+entitlement. Read [Status](./docs/STATUS.md) before treating any row above as a product guarantee.
+
 ## How it fits
 
 CEM888 attaches at lifecycle seams. It does not replace a partner's agent architecture:
