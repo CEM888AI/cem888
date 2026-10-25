@@ -21,6 +21,8 @@
 <br/>
 
 [![Release](https://img.shields.io/github/v/release/CEM888AI/cem888?include_prereleases&style=flat-square&labelColor=050A0F&label=release)](https://github.com/CEM888AI/cem888/releases)
+[![Free agent](https://img.shields.io/github/v/release/CEM888AI/cem888?filter=free-v*&style=flat-square&labelColor=050A0F&color=3ADBE8&label=free%20agent)](https://github.com/CEM888AI/cem888/releases/latest)
+[![Update](https://img.shields.io/badge/update-cem888_update-FF8A6B?style=flat-square&labelColor=050A0F)](./install/README.md#update)
 [![License](https://img.shields.io/badge/license-source--available_commercial-3ADBE8?style=flat-square&labelColor=050A0F)](./LICENSE)
 [![Stage](https://img.shields.io/badge/stage-public_beta-B8943A?style=flat-square&labelColor=050A0F)](./docs/STATUS.md)
 [![Conformance](https://img.shields.io/badge/public_conformance-15%2F15_pass-3ADBE8?style=flat-square&labelColor=050A0F)](./docs/PUBLIC_CONFORMANCE.md)
@@ -45,6 +47,12 @@ with a free account — no payment — or this repository's
 [releases](https://github.com/CEM888AI/cem888/releases). Same agent either way: no desktop app, no
 subscription. Commands are in
 [install/README.md](https://github.com/CEM888AI/cem888/blob/main/install/README.md).
+
+**Maintained, with regular updates.** Fixes and new releases of the free agent are published here
+regularly. Already installed? Run `cem888 update`. Your config, keys, memories and skills are kept,
+the download is checksum-verified, and the update rolls back if an agent stops booting. Details,
+and the one-time command for installs made before 2026-10-25:
+[install/README.md#update](./install/README.md#update).
 
 ---
 
@@ -192,7 +200,7 @@ Public beta. The release lane is deliberately narrow: **finish and certify the c
 | --- | --- |
 | **CEM engineering runtime** | Operating and used to prove product-relevant mechanisms. It is not the website customer artifact. |
 | **Customer product artifact** | Last full acceptance run: **2026-10-01**, on the **1.0.41** artifact, core first-boot/continuity passed **with documented defects**. Most of that defect list is now closed (2026-10-14 → 2026-10-19). No acceptance run has been recorded against a frozen release since, and the paid lane is unproven end to end — so it is not certified. |
-| **Free agent downloads** (`install/free.sh`, `install/free.ps1`, plus this repository's releases) | Two download locations for the free agent: the free account at **[cem888.ai](https://cem888.ai)** and this repository. The paid desktop app is cem888.ai only — not on GitHub. Frozen, digest-named releases publish here: current is **free-v1.0.48** (2026-10-18), four platforms plus `SHA256SUMS`. The Windows installer was **accepted on real hardware by the owner on 2026-10-19** — a second agent on the same machine, `cem888 chat --profile <key>` resolves. |
+| **Free agent downloads** (`install/free.sh`, `install/free.ps1`, plus this repository's releases) | Two download locations for the free agent: the free account at **[cem888.ai](https://cem888.ai)** and this repository. The paid desktop app is cem888.ai only — not on GitHub. Frozen, digest-named releases publish here: current is **free-v1.0.55** (2026-10-25), four platforms plus `SHA256SUMS`. Existing installs update in place with `cem888 update` (macOS / Linux; the Windows updater is not published yet). The Windows installer was **accepted on real hardware by the owner on 2026-10-19** — a second agent on the same machine, `cem888 chat --profile <key>` resolves. |
 | **Claude Code / Codex native adapters** | Both run in the paid app and are under active repair — defects closed across 2026-10-08 → 2026-10-18. Neither adapter is certified. |
 | **High-consequence / regulated deployments** | Product direction; compliance scoped per deployment. |
 
