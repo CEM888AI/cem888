@@ -16,7 +16,7 @@ if [ ! -t 0 ]; then
   fi
 fi
 
-VERSION="1.0.48"
+VERSION="1.0.55"
 REPO="CEM888AI/cem888"
 SLUG="free-v${VERSION}"
 BASE_DL="https://github.com/${REPO}/releases/download/${SLUG}"
