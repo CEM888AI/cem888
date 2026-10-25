@@ -17,6 +17,15 @@ if [ ! -t 0 ]; then
 fi
 
 VERSION="1.0.55"
+# The newest published free release, so this one-liner never installs a stale
+# agent again (v1.0.48 sat here for a week while the engine moved on). The pin
+# above is only the fallback for when GitHub's API cannot be reached.
+if [ -n "${CEM888_FREE_VERSION:-}" ]; then VERSION="$CEM888_FREE_VERSION"
+else
+  _latest="$(curl -fsSL "https://api.github.com/repos/CEM888AI/cem888/releases?per_page=30" 2>/dev/null \
+    | grep -o '"tag_name": *"free-v[0-9][0-9.]*"' | head -1 | sed 's/.*free-v//; s/"$//')" || true
+  [ -n "${_latest:-}" ] && VERSION="$_latest"
+fi
 REPO="CEM888AI/cem888"
 SLUG="free-v${VERSION}"
 BASE_DL="https://github.com/${REPO}/releases/download/${SLUG}"
@@ -366,6 +375,25 @@ if [ "$BOOT_CODE" -ne 0 ]; then
 fi
 ok "agent boots against $ROOT"
 
+# ── 6d. updates ───────────────────────────────────────────────────────────────
+# `cem888 update` runs <root>/scripts/cem888-update.sh. A free install used to
+# have none, so the command fell through to a PyPI upgrade of a package name
+# CEM888 does not publish there. This shim runs the newest published updater
+# (install/update.sh). An updater that is not ours (a cem888.ai install) is
+# never replaced.
+mkdir -p "$ANCHOR/scripts"
+UPD="$ANCHOR/scripts/cem888-update.sh"
+if [ ! -e "$UPD" ] || grep -q "CEM888-GITHUB-FREE-UPDATER" "$UPD" 2>/dev/null; then
+  cat > "$UPD" <<'SH'
+#!/usr/bin/env bash
+# CEM888-GITHUB-FREE-UPDATER shim — always runs the newest published updater.
+exec bash <(curl -fsSL "https://raw.githubusercontent.com/CEM888AI/cem888/main/install/update.sh") "$@"
+SH
+  chmod 755 "$UPD"
+  [ -s "$ANCHOR/.install_method" ] || printf 'bundle\n' > "$ANCHOR/.install_method"
+  ok "updates: cem888 update"
+fi
+
 # ⛔ THE BANNER NAMED NO SECOND AGENT (owner, 2026-10-18: "it didnt show how to
 # message second agent ... type cem888 chat --profile 'agentname'"). A placeholder
 # <key> makes the customer go read `profile list` first, so enumerate the real
@@ -419,6 +447,9 @@ ${OTHER_AGENTS}
 
   Check health:
      ${VENV}/bin/cem888 doctor
+
+  Get new releases and fixes (free updates, published regularly):
+     ${VENV}/bin/cem888 update
 
   Add it to PATH (optional):
      echo 'export PATH="${VENV}/bin:\$PATH"' >> ~/.zshrc   # or ~/.bashrc
