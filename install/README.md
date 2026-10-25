@@ -55,13 +55,16 @@ One release asset per platform (~170–190MB), plus `SHA256SUMS`:
 
 | Platform | Bundle |
 | --- | --- |
-| Linux x86_64 | `cem888-free-v1.0.48-linux-x86_64.tar.gz` |
-| macOS Apple silicon | `cem888-free-v1.0.48-darwin-arm64.tar.gz` |
-| macOS Intel | `cem888-free-v1.0.48-darwin-x86_64.tar.gz` |
+| Linux x86_64 | `cem888-free-v<version>-linux-x86_64.tar.gz` |
+| macOS Apple silicon | `cem888-free-v<version>-darwin-arm64.tar.gz` |
+| macOS Intel | `cem888-free-v<version>-darwin-x86_64.tar.gz` |
+| Windows x86_64 | `cem888-free-v<version>-windows-amd64.tar.gz` |
+
+The installer takes the newest `free-v*` release ([latest](https://github.com/CEM888AI/cem888/releases/latest)); set `CEM888_FREE_VERSION=1.0.55` to pin one.
 
 Each bundle carries the engine wheel, the signed dependency lock for that platform, and the vendored wheels.
 
-**The engine ships as CPython 3.14 bytecode — there is no `.py` source in the bundle.** The rest of the runtime source stays proprietary; what you get is the same artefact a customer install receives.
+**The engine ships as CPython 3.14 bytecode — there is no engine `.py` source in the bundle.** The rest of the runtime source stays proprietary; what you get is the same artefact a customer install receives.
 
 ## How the install stays honest
 
@@ -71,6 +74,34 @@ Each bundle carries the engine wheel, the signed dependency lock for that platfo
 - **The model id is checked against the provider.** After you paste a key, the installer reads that provider's own model list. If the suggested model isn't offered, it shows you what is and lets you pick — so a guessed model name can never leave you with a broken install.
 
 Everything lands under `~/.cem888/` and can be removed by deleting that directory.
+
+## Update
+
+The free agent is maintained: fixes and new releases are published here regularly as `free-v*` releases, each with `SHA256SUMS`.
+
+```bash
+cem888 update
+```
+
+An install made before 2026-10-25 runs the updater once by hand; after that, `cem888 update` works:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/CEM888AI/cem888/main/install/update.sh | bash
+```
+
+`--check` reports whether a newer release exists without changing anything.
+
+What the update does, in order:
+
+- Finds the newest `free-v*` release and stops if you already have it.
+- Downloads your platform's bundle and verifies it against `SHA256SUMS` before extracting.
+- Refuses to swap the engine while an agent from this install is running (`--force` overrides).
+- Installs the dependencies from the bundle's signed lock and the new engine wheel into `~/.cem888/venv`, with no package index.
+- Leaves every agent's `config.yaml`, `.env` (your keys), `authority.json`, memories and skills untouched. New starter skills are added, and an existing skill is never overwritten.
+- Proves each agent that booted before the update still boots after it. If one does not, the previous engine is put back.
+- Writes a receipt line to `~/.cem888/free/update-history.log`, and keeps the previous release on disk for rollback.
+
+Windows: a one-command updater is not published yet.
 
 ## Uninstall
 
