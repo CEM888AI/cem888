@@ -23,7 +23,7 @@ param(
 $ErrorActionPreference = 'Continue'
 $ProgressPreference    = 'SilentlyContinue'
 
-$Version = '1.0.48'
+$Version = '1.0.55'
 $Repo    = 'CEM888AI/cem888'
 $Slug    = "free-v$Version"
 $BaseDl  = "https://github.com/$Repo/releases/download/$Slug"
