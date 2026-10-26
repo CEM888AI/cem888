@@ -235,7 +235,7 @@ This repository is the **public engineering record** for the CEM888 runtime — 
 
 ## License
 
-**The published record in this repository** — documentation, matrices, case-study text — is licensed under the **[CEM888 Source-Available Commercial License](https://github.com/CEM888AI/cem888/blob/main/LICENSE)**: read it, audit it, cite it, quote it, fork it for personal non-commercial use. It **never converts** to an open-source licence.
+**The published record in this repository** — documentation, matrices, case-study text — is licensed under the **[CEM888 Source-Available Commercial License](https://github.com/CEM888AI/cem888/blob/main/LICENSE)**: read and audit the public engineering record; runtime source is proprietary and not publicly distributed. It **never converts** to an open-source licence.
 
 **The runtime itself** is proprietary software distributed under that same licence: broad rights to use what you install, **free for personal, non-commercial use**, with commercial deployment, paid client work, embedding, resale, white-labeling, OEM distribution and hosted service requiring a valid CEM888 licence key for the applicable tier or a separate commercial licence from **CEM Unlimited LLC**.
 
