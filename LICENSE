@@ -9,9 +9,12 @@
 ---
 
 ## 0. Plain-language summary (not a substitute for the terms below)
-CEM888 is **source-available**: you can read, audit, and modify the source. It is
-**free only for personal, non-commercial use** — running the **Free tier** of your
-own agent on your own machine. **Nobody makes money on it, and nobody builds a
+The **standalone CEM888 runtime** may be downloaded, installed, tried, and run
+without payment for personal, non-commercial purposes. This permission covers
+**the runtime only, not the separate CEM888 desktop application**. Runtime source
+is proprietary and is not publicly distributed; any source access is separately
+authorized for audit or licensed internal modification. The free runtime download
+is not permission to copy the technology into another product or commercialize it. **Nobody makes money on it, and nobody builds a
 business on it, for free.** If you use it to earn revenue, or your business runs on
 it, or you build a product or service on it, you need a paid license. To use
 **Pro/Business** features, or to deploy CEM888 **for other people** (clients,
@@ -24,7 +27,9 @@ features you are entitled to.
 
 ## 1. Definitions
 - **Software** — the CEM888 agent runtime, CLI, plugins, connectors, source code,
-  binaries, updates, and documentation.
+  binaries, updates, and documentation **distributed as the standalone runtime**.
+  The separately distributed CEM888 desktop application is not included in the
+  Free tier or granted rights under this runtime license.
 - **Source** — the human-readable source of the Software, published for audit.
 - **License Key** — the Ed25519-signed JSON file that states your tier,
   entitlements, seats, and expiry. See `LICENSE-KEY-ISSUER-SPEC.md`.
@@ -47,7 +52,8 @@ features you are entitled to.
 ## 2. Grant
 Subject to this License and to a valid License Key, the Licensor grants you a
 non-exclusive, non-transferable, revocable license to:
-1. read, audit, and modify the Source;
+1. read and audit Source only if the Licensor separately provides access; modify
+   Source only for licensed internal use, not for redistribution;
 2. install and run the Software on hardware you control for **personal,
    non-commercial use** — this is the Free tier, and it never covers Commercial Use;
 3. use the Software for **Commercial Use, or in the operation of a business, only
@@ -55,8 +61,10 @@ non-exclusive, non-transferable, revocable license to:
    license for an organization; and
 4. exercise Reseller and OEM rights **only** under a separate written agreement.
 
-## 3. Free tier (no License Key required)
-**The Free tier is personal and non-commercial only.** It may not be used to earn
+## 3. Free standalone runtime (no paid License Key required)
+**Only the standalone runtime may be downloaded, evaluated, and run without
+payment for personal, non-commercial use. The CEM888 desktop app is separate
+and is not included in this permission.** It may not be used to earn
 revenue, in the operation of a business, or inside a product or service offered to
 anyone else — those uses require a paid license. It is granted at no charge and is
 limited to: **one host connector
@@ -91,7 +99,8 @@ You **may not**:
    platform/OEM license, and never runs on the Free tier;
 3. offer the Software, or its functionality, as a **Hosted Service**;
 4. run **multi-tenant** instances;
-5. **rebrand, redistribute, or fork** the Software under another name;
+5. **rebrand, redistribute, or fork** the Software under another name, or
+   redistribute modified Source, without prior written consent;
 6. **resell, sublicense, or perform Client Deployments** without a Reseller/OEM
    license;
 7. circumvent, disable, or alter any **feature gate**, or forge, alter, or
@@ -130,6 +139,9 @@ This License, and any dispute arising out of or relating to it, is governed by t
 laws of the State of **Florida**, United States, without regard to conflict-of-law
 principles, and the state and federal courts located in Marion County, Florida have
 exclusive jurisdiction. (Source: `CEM888AI/legal` §7.)
+
+All rights not expressly granted are reserved. Publication or disclosure of
+source code is not a grant of any license beyond those stated here.
 
 ## 12. Contact
 **CEM888.AI Licensing** — legal@cem888.ai
